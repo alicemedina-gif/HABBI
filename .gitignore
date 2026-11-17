@@ -1,0 +1,34 @@
+# Backups e cópias
+habbi-backup-*/
+*.zip
+*.bak
+*.orig
+*~
+
+# Temporários e logs
+*.tmp
+*.temp
+*.log
+dump.txt
+.cache/
+
+# Dependências e builds gerados
+node_modules/
+dist/
+build/
+coverage/
+.parcel-cache/
+
+# Credenciais e ambiente
+.env
+.env.*
+*.pem
+*.key
+secrets.*
+
+# Sistema operacional / editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

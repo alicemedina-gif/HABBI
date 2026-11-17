@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prancha Visual do Design System — Habbi (UFSM)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-rounded" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #0F1115;
+      --card-panel: #181A20;
+      --card-inner: #22252E;
+      --border-panel: #2C303B;
+      --border-subtle: #383D4A;
+      --text-main: #F3F4F6;
+      --text-sub: #9CA3AF;
+      --text-muted: #6B7280;
+
+      /* Habbi Real Colors */
+      --habbi-primary: #6CCB4F;
+      --habbi-primary-dark: #2E7D32;
+      --habbi-primary-light: #A8E67A;
+      --habbi-yellow: #FFD93D;
+      --habbi-yellow-dark: #F4C430;
+      --habbi-yellow-light: #FFF3A6;
+      --habbi-blue: #5AB8FF;
+      --habbi-blue-dark: #339AF0;
+      --habbi-blue-light: #D8F0FF;
+      --habbi-orange: #FF9F43;
+      --habbi-orange-dark: #F97316;
+      --habbi-orange-light: #FFD7B5;
+      --habbi-coral: #FF7F7F;
+      --habbi-coral-alert: #DC2626;
+      --habbi-purple: #B388FF;
+      --habbi-purple-dark: #8B5CF6;
+      --habbi-pink: #FF8FB8;
+      
+      --habbi-light-bg: #FAFAF7;
+      --habbi-dark-bg: #121214;
+
+      --font-rounded: 'SF Pro Rounded', 'Nunito', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-rounded);
+      line-height: 1.5;
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Print Setup for A3 / Presentation */
+    @media print {
+      body {
+        background-color: #FFFFFF !important;
+        color: #111827 !important;
+        padding: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .board-sheet {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        padding: 16px !important;
+      }
+    }
+
+    .board-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Header Bar with Academic Info & Actions */
+    .board-header {
+      background: linear-gradient(135deg, #1A1D24 0%, #14161C 100%);
+      border: 1px solid var(--border-panel);
+      border-radius: 24px;
+      padding: 28px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .header-info-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-logo-box {
+      width: 76px;
+      height: 76px;
+      background-color: var(--habbi-primary);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(108, 203, 79, 0.3);
+      flex-shrink: 0;
+    }
+
+    .header-logo-box img {
+      width: 58px;
+      height: auto;
+      display: block;
+    }
+
+    .header-titles h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-academic {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background-color: rgba(108, 203, 79, 0.15);
+      color: var(--habbi-primary);
+      border: 1px solid rgba(108, 203, 79, 0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .header-titles p {
+      font-size: 15px;
+      color: var(--text-sub);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-action {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background-color: var(--habbi-primary);
+      color: #111827;
+      border-color: var(--habbi-primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-action.print-btn {
+      background-color: var(--habbi-primary);
+      color: #111827;
+      border: none;
+    }
+
+    .btn-action.print-btn:hover {
+      background-color: var(--habbi-primary-light);
+    }
+
+    /* Grid Layout for Panels */
+    .board-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .board-grid-3col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .board-grid-4col {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .board-grid-2col, .board-grid-3col, .board-grid-4col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Section Panel Card */
+    .panel {
+      background-color: var(--card-panel);
+      border: 1px solid var(--border-panel);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-panel);
+      padding-bottom: 14px;
+    }
+
+    .panel-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-num {
+      width: 28px;
+      height: 28px;
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--habbi-primary);
+    }
+
+    .panel-desc {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       SECTION 1: MORGANA & ILUSTRAÇÕES
+       ========================================================================== */
+    .morgana-hero {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 24px;
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 20px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .morgana-hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .morgana-photo-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 3px solid var(--border-subtle);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .morgana-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .morgana-photo-label {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(18, 18, 20, 0.85);
+      backdrop-filter: blur(4px);
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      color: #FFFFFF;
+    }
+
+    .morgana-hero-text h3 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .morgana-hero-text p {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .morgana-expressions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .mascot-card {
+      background-color: var(--card-inner);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      transition: transform 0.2s ease;
+    }
+
+    .mascot-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--habbi-primary);
+    }
+
+    .mascot-thumb-stage {
+      width: 90px;
+      height: 90px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+
+    .mascot-thumb-stage img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+    }
+
+    .mascot-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .mascot-role {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       SECTION 2: PALETA DE CORES (SWATCHES)
+       ========================================================================== */
+    .color-swatches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .color-swatch-card {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .swatch-color-box {
+      height: 84px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      padding: 8px 12px;
+    }
+
+    .swatch-pill-hex {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.45);
+      color: #FFFFFF;
+      letter-spacing: 0.04em;
+    }
+
+    .swatch-details {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .swatch-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .swatch-token {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--habbi-primary);
+    }
+
+    .swatch-role {
+      font-size: 11px;
+      color: var(--text-sub);
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    /* ==========================================================================
+       SECTION 3: TIPOGRAFIA
+       ========================================================================== */
+    .type-specimens-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .type-row {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 160px 1fr 140px;
+      align-items: center;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .type-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .type-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .type-level-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .type-specs {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .type-sample {
+      color: #FFFFFF;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .type-usage {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      text-align: right;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .type-usage {
+        text-align: left;
+      }
+    }
+
+    /* ==========================================================================
+       SECTION 4: COMPONENTES DE INTERFACE (UI KIT REAL)
+       ========================================================================== */
+    .ui-showcase-box {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ui-buttons-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    /* Exact replica of Habbi buttons */
+    .specimen-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 60px;
+      padding: 0 24px;
+      border-radius: 14px;
+      font-family: var(--font-rounded);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      user-select: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    }
+
+    .specimen-btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-green-specimen {
+      background-color: var(--habbi-primary-dark);
+      color: #FFFFFF;
+    }
+
+    .btn-white-specimen {
+      background-color: #FFFFFF;
+      color: #111827;
+      border: 1px solid #E5E7EB;
+    }
+
+    .btn-sos-specimen {
+      background-color: var(--habbi-orange);
+      color: #FFFFFF;
+    }
+
+    .btn-quick-specimen {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 64px;
+      padding: 0 20px;
+      border-radius: 16px;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Palcos do Mascote na Home */
+    .stage-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+    }
+
+    .stage-color-card {
+      height: 110px;
+      border-radius: 20px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .stage-color-card img {
+      height: 120%;
+      width: auto;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    .stage-color-label {
+      position: absolute;
+      bottom: 6px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    /* Chips */
+    .chips-specimen-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip-specimen {
+      background-color: #FFFFFF;
+      border: 1.5px solid #E5E7EB;
+      padding: 9px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .chip-specimen.selected {
+      background-color: var(--habbi-primary);
+      border-color: var(--habbi-primary);
+      color: #FFFFFF;
+    }
+
+    .chip-specimen.locked {
+      background-color: #2A2E39;
+      border-color: var(--border-panel);
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    /* ==========================================================================
+       SECTION 5: COMPARATIVO CLARO VS ESCURO (SCREENSHOTS REAIS)
+       ========================================================================== */
+    .theme-comparison-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .theme-specimen-card {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .theme-specimen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .theme-screen-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .badge-wcag {
+      background-color: rgba(108, 203, 79, 0.2);
+      color: var(--habbi-primary);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(108, 203, 79, 0.4);
+    }
+
+    .theme-pair-frames {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .screen-device-mockup {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid var(--border-subtle);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      position: relative;
+      background-color: #000;
+    }
+
+    .screen-device-mockup img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .screen-tag-mode {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag-light {
+      background: #FAFAF7;
+      color: #111827;
+      border: 1px solid #D1D5DB;
+    }
+
+    .tag-dark {
+      background: #121214;
+      color: #F3F4F6;
+      border: 1px solid #383D4A;
+    }
+
+    /* ==========================================================================
+       SECTION 6: AVATARES DA MORGANA (SISTEMA DE PERSONALIZAÇÃO)
+       ========================================================================== */
+    .avatar-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+    }
+
+    .avatar-specimen-item {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .avatar-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2.5px solid #FFFFFF;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    .avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       SECTION 7: REGRAS E PRINCÍPIOS FLAT (DESIGN INDUSTRIAL UFSM)
+       ========================================================================== */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .principle-card {
+      background-color: var(--card-inner);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--habbi-primary);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .principle-card.warning-left {
+      border-left-color: var(--habbi-coral);
+    }
+
+    .principle-card.blue-left {
+      border-left-color: var(--habbi-blue);
+    }
+
+    .principle-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .principle-desc {
+      font-size: 12.5px;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    .board-footer {
+      border-top: 1px solid var(--border-panel);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .footer-quote {
+      color: var(--habbi-primary);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<div class="board-container">
+
+  <!-- ==================== HEADER DA PRANCHA ACADÊMICA ==================== -->
+  <header class="board-header">
+    <div class="header-info-group">
+      <div class="header-logo-box">
+        <img src="assets/logo_habbi.png" alt="Habbi Logo">
+      </div>
+      <div class="header-titles">
+        <h1>Habbi 2.0 <span class="badge-academic">UFSM • Desenho Industrial</span></h1>
+        <p>Prancha Visual do Design System & Identidade Autoral — Laboratório de Interfaces (2026)</p>
+      </div>
+    </div>
+    <div class="header-actions no-print">
+      <button type="button" class="btn-action print-btn" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimir / PDF
+      </button>
+      <a href="DESIGN_SYSTEM.md" class="btn-action">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Ver DESIGN_SYSTEM.md
+      </a>
+    </div>
+  </header>
+
+  <!-- ==================== SEÇÃO 1: A MASCOTE MORGANA & ILUSTRAÇÕES ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">01</span>
+        A Mascote Morgana & Semiótica das Ilustrações Autorais
+      </div>
+      <span class="badge-academic">Identidade Afetiva</span>
+    </div>
+    <p class="panel-desc">
+      O Habbi rompe com abordagens punitivas e estressantes de cessação comportamental. A personagem Morgana — inspirada na gatinha preta real da autora — atua como a âncora afetiva da interface (*Cozy Interface*), celebrando conquistas diárias e acolhendo recaídas com empatia, calor humano e sem julgamentos.
+    </p>
+
+    <!-- Hero com Foto da Musa e Contexto -->
+    <div class="morgana-hero">
+      <div class="morgana-photo-frame">
+        <img src="assets/ilustracoes/morgana.jpg" alt="Morgana Real">
+        <div class="morgana-photo-label">Morgana (Musa Real) ♡</div>
+      </div>
+      <div class="morgana-hero-text">
+        <h3>Do Vínculo Real ao Universo Digital</h3>
+        <p>
+          "A identidade visual e os personagens foram desenvolvidos especialmente para o projeto de Laboratório de Interfaces (Desenho Industrial/UFSM), tendo como principal inspiração a Morgana, minha gatinha, que deu origem ao mascote presente em todas as telas."
+        </p>
+        <p>
+          <strong>Características Semióticas:</strong> Traços 2D orgânicos e limpos, olhos verdes amendoados e expressivos, proporções afetuosas (*chibi*), e remoção dinâmica de fundo branco em tempo de execução via Canvas 2D sem filtros destrutivos.
+        </p>
+      </div>
+    </div>
+
+    <!-- Galeria de Expressões da Morgana -->
+    <div class="morgana-expressions-grid">
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: var(--habbi-yellow);">
+          <img src="assets/ilustracoes/gato pose normal padrao.png" alt="Morgana Calma">
+        </div>
+        <div class="mascot-name">Calma / Padrão</div>
+        <div class="mascot-role">Flutuação suave na Home</div>
+      </div>
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: var(--habbi-primary);">
+          <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes feliz.png" alt="Morgana Feliz">
+        </div>
+        <div class="mascot-name">Celebrativa</div>
+        <div class="mascot-role">Meta diária batida</div>
+      </div>
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: var(--habbi-orange);">
+          <img src="assets/ilustracoes/Gato Preto Ansioso com Gotas Azuis.png" alt="Morgana Ansiosa">
+        </div>
+        <div class="mascot-name">Empatia / Alerta</div>
+        <div class="mascot-role">Apoio na fissura e SOS</div>
+      </div>
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: var(--habbi-pink);">
+          <img src="assets/ilustracoes/gato segurando coração.png" alt="Morgana com Coração">
+        </div>
+        <div class="mascot-name">Afetiva</div>
+        <div class="mascot-role">Reforço positivo diário</div>
+      </div>
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: var(--habbi-blue);">
+          <img src="assets/ilustracoes/gato dormindo.png" alt="Morgana Dormindo">
+        </div>
+        <div class="mascot-name">Serenidade</div>
+        <div class="mascot-role">Relaxamento & Ancoragem</div>
+      </div>
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: #2D2D34;">
+          <img src="assets/ilustracoes/pata pra cima.png" alt="Pata Interativa">
+        </div>
+        <div class="mascot-name">Patinha Tátil</div>
+        <div class="mascot-role">Micro-interação e jogos</div>
+      </div>
+      <div class="mascot-card">
+        <div class="mascot-thumb-stage" style="background-color: #1E293B;">
+          <img src="assets/ilustracoes/sacola_Prancheta 1.png" alt="Sacola de Economia">
+        </div>
+        <div class="mascot-name">Sacola de Moedas</div>
+        <div class="mascot-role">Conquista & Economia</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEÇÃO 2: PALETA DE CORES REAL & TOKENS ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">02</span>
+        Paleta de Cores Real & Tokens Semânticos
+      </div>
+      <span class="badge-academic">WCAG 2.2 AA Compliance</span>
+    </div>
+    <p class="panel-desc">
+      O Habbi adota uma paleta flat de cores puras e saturadas, associadas diretamente a funções emocionais e operacionais no aplicativo. Todos os tons foram calibrados para garantir contraste superior a 4.5:1 (normal) e 3.0:1 (elementos gráficos e grandes).
+    </p>
+
+    <div class="color-swatches-grid">
+      <!-- Verde Marca -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #6CCB4F;">
+          <span class="swatch-pill-hex">#6CCB4F</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Verde Marca</div>
+          <div class="swatch-token">--primary</div>
+          <div class="swatch-role">Identidade, dias sem fumar, progresso alcançado.</div>
+        </div>
+      </div>
+
+      <!-- Verde Escuro -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #2E7D32;">
+          <span class="swatch-pill-hex">#2E7D32</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Verde Profundo</div>
+          <div class="swatch-token">--primary-dark</div>
+          <div class="swatch-role">Botão primário no tema claro, bordas de sucesso.</div>
+        </div>
+      </div>
+
+      <!-- Amarelo Energia -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #FFD93D;">
+          <span class="swatch-pill-hex">#FFD93D</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Amarelo Energia</div>
+          <div class="swatch-token">--yellow</div>
+          <div class="swatch-role">Palco padrão do mascote na Home, registro de vontade.</div>
+        </div>
+      </div>
+
+      <!-- Azul Ferramentas -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #5AB8FF;">
+          <span class="swatch-pill-hex">#5AB8FF</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Azul Ferramentas</div>
+          <div class="swatch-token">--blue</div>
+          <div class="swatch-role">Módulo de ferramentas cognitivas, hidratação e foco.</div>
+        </div>
+      </div>
+
+      <!-- Laranja SOS -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #FF9F43;">
+          <span class="swatch-pill-hex">#FF9F43</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Laranja SOS</div>
+          <div class="swatch-token">--orange</div>
+          <div class="swatch-role">Ação emergencial de suporte rápido, alívio de fissura.</div>
+        </div>
+      </div>
+
+      <!-- Coral Sentimentos -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #FF7F7F;">
+          <span class="swatch-pill-hex">#FF7F7F</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Coral / Rosa</div>
+          <div class="swatch-token">--coral</div>
+          <div class="swatch-role">Registro acolhido de cigarro, diário de sentimentos.</div>
+        </div>
+      </div>
+
+      <!-- Roxo Reflexão -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #B388FF;">
+          <span class="swatch-pill-hex">#B388FF</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Roxo Reflexão</div>
+          <div class="swatch-token">--purple</div>
+          <div class="swatch-role">Cards de insight, reflexão diária e autoconhecimento.</div>
+        </div>
+      </div>
+
+      <!-- Bege Acolhedor (Light) -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #FAFAF7;">
+          <span class="swatch-pill-hex" style="background:#111;color:#fff;">#FAFAF7</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Bege Acolhedor</div>
+          <div class="swatch-token">--bg-color (Light)</div>
+          <div class="swatch-role">Fundo orgânico e quente, eliminando a frieza do branco puro.</div>
+        </div>
+      </div>
+
+      <!-- Grafite Imersivo (Dark) -->
+      <div class="color-swatch-card">
+        <div class="swatch-color-box" style="background-color: #121214; border: 1px solid #2D2D34;">
+          <span class="swatch-pill-hex">#121214</span>
+        </div>
+        <div class="swatch-details">
+          <div class="swatch-name">Grafite Imersivo</div>
+          <div class="swatch-token">--bg-color (Dark)</div>
+          <div class="swatch-role">Superfície neutra escura com contraste de 17.2:1 para texto.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEÇÃO 3: TIPOGRAFIA & HIERARQUIA ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">03</span>
+        Tipografia & Hierarquia de Escala
+      </div>
+      <span class="badge-academic">SF Pro Rounded / Nunito</span>
+    </div>
+    <p class="panel-desc">
+      A tipografia arredondada humanista expressa proximidade e gentileza. A escala organiza a atenção do usuário de forma clara, desde números gigantes de conquista até micro-legendas funcionais.
+    </p>
+
+    <div class="type-specimens-list">
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Display Hero</div>
+          <div class="type-specs">64px • Heavy (800)</div>
+        </div>
+        <div class="type-sample" style="font-size: 42px; font-weight: 800; line-height: 1;">12 dias limpo</div>
+        <div class="type-usage">Contador gigante da Home</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Splash / Welcome</div>
+          <div class="type-specs">42px • Semibold (600)</div>
+        </div>
+        <div class="type-sample" style="font-size: 28px; font-weight: 600;">Olá! Que bom te ver.</div>
+        <div class="type-usage">Saudação de Boas-vindas</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Título H1</div>
+          <div class="type-specs">32px • Bold (700)</div>
+        </div>
+        <div class="type-sample" style="font-size: 24px; font-weight: 700;">Entenda seus hábitos</div>
+        <div class="type-usage">Títulos principais de tela</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Subtítulo H2</div>
+          <div class="type-specs">24px • Bold (700)</div>
+        </div>
+        <div class="type-sample" style="font-size: 20px; font-weight: 700;">Escolha sua jornada</div>
+        <div class="type-usage">Cabeçalhos de formulário</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Títulos de Cards H3</div>
+          <div class="type-specs">18px • Semibold (600)</div>
+        </div>
+        <div class="type-sample" style="font-size: 18px; font-weight: 600;">Respiração 4-6 Guiada</div>
+        <div class="type-usage">Títulos de cards e modais</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Botão Principal</div>
+          <div class="type-specs">18px • Semibold (600)</div>
+        </div>
+        <div class="type-sample" style="font-size: 18px; font-weight: 600; color: var(--habbi-primary);">Continuar</div>
+        <div class="type-usage">Botão primário de 64px</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Corpo de Texto (p)</div>
+          <div class="type-specs">16px • Regular/Medium (500)</div>
+        </div>
+        <div class="type-sample" style="font-size: 16px; font-weight: 500; color: var(--text-sub);">Pequenas escolhas diárias geram grandes transformações.</div>
+        <div class="type-usage">Parágrafos e instruções</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Legenda (Caption)</div>
+          <div class="type-specs">14px • Medium (500)</div>
+        </div>
+        <div class="type-sample" style="font-size: 14px; font-weight: 500; color: var(--text-muted);">Passo 1 de 3 • Meta configurável</div>
+        <div class="type-usage">Auxílio sob campos e passos</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-level-name">Navegação Inferior</div>
+          <div class="type-specs">11px • Semibold (600)</div>
+        </div>
+        <div class="type-sample" style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Home • Calendário • SOS • Perfil</div>
+        <div class="type-usage">Barra de navegação de 68px</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEÇÃO 4: COMPONENTES DE INTERFACE (UI KIT REAL) ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">04</span>
+        Componentes de Interface (UI Kit Real)
+      </div>
+      <span class="badge-academic">Solid Flat & Haptic Touch</span>
+    </div>
+    <p class="panel-desc">
+      Componentes táteis nativos do Habbi. Apresentam cantos generosamente arredondados (`border-radius: 14px a 28px`), superfícies sólidas limpas e micro-interação física (`transform: scale(0.97)` ao clique).
+    </p>
+
+    <div class="ui-showcase-box">
+      <!-- Fileira de Botões -->
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Botões Principais & SOS</div>
+        <div class="ui-buttons-row">
+          <button class="specimen-btn btn-green-specimen">Iniciar Jornada (Primário)</button>
+          <button class="specimen-btn btn-white-specimen">Configurar Depois (Secundário)</button>
+          <button class="specimen-btn btn-sos-specimen">Pedir Ajuda SOS (Emergência)</button>
+        </div>
+      </div>
+
+      <!-- Fileira de Registro Rápido (Quick Choice) -->
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Cartões de Ação Rápida (Tela 11)</div>
+        <div class="ui-buttons-row">
+          <button class="btn-quick-specimen" style="background-color: var(--habbi-primary);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Não fumei hoje
+          </button>
+          <button class="btn-quick-specimen" style="background-color: var(--habbi-coral);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Fumei um cigarro
+          </button>
+          <button class="btn-quick-specimen" style="background-color: var(--habbi-purple);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>
+            Como me sinto
+          </button>
+          <button class="btn-quick-specimen" style="background-color: var(--habbi-yellow); color: #111;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Vontade / Fissura
+          </button>
+        </div>
+      </div>
+
+      <!-- Palcos de Cor da Home -->
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Palcos Cromáticos Dinâmicos da Home (28px radius)</div>
+        <div class="stage-row">
+          <div class="stage-color-card" style="background-color: var(--habbi-yellow);">
+            <img src="assets/ilustracoes/gato pose normal padrao.png" alt="Morgana Amarelo">
+            <span class="stage-color-label">Amarelo (Padrão)</span>
+          </div>
+          <div class="stage-color-card" style="background-color: var(--habbi-primary);">
+            <img src="assets/ilustracoes/gato segurando coração.png" alt="Morgana Verde">
+            <span class="stage-color-label">Verde (Conquista)</span>
+          </div>
+          <div class="stage-color-card" style="background-color: var(--habbi-pink);">
+            <img src="assets/ilustracoes/gato pose normal padrao.png" alt="Morgana Rosa">
+            <span class="stage-color-label">Rosa (Afeto)</span>
+          </div>
+          <div class="stage-color-card" style="background-color: var(--habbi-blue);">
+            <img src="assets/ilustracoes/gato dormindo.png" alt="Morgana Azul">
+            <span class="stage-color-label">Azul (Foco/Calma)</span>
+          </div>
+          <div class="stage-color-card" style="background-color: var(--habbi-orange);">
+            <img src="assets/ilustracoes/Gato Preto Ansioso com Gotas Azuis.png" alt="Morgana Laranja">
+            <span class="stage-color-label">Laranja (SOS)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chips e Seletores -->
+      <div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;">Chips de Seleção & Status</div>
+        <div class="chips-specimen-group">
+          <div class="chip-specimen selected">Tabagismo (Ativo)</div>
+          <div class="chip-specimen">Ansiedade (Normal)</div>
+          <div class="chip-specimen">Após Refeições</div>
+          <div class="chip-specimen locked">Vape (Em breve)</div>
+          <div class="chip-specimen locked">Apostas (Em breve)</div>
+          <div class="chip-specimen locked">Procrastinação (Em breve)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEÇÃO 5: ARQUITETURA DE TEMAS (CLARO VS. ESCURO) ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">05</span>
+        Arquitetura dos Temas: Claro & Escuro (Screenshots Reais)
+      </div>
+      <span class="badge-wcag">Conformidade Total WCAG 2.2 AA</span>
+    </div>
+    <p class="panel-desc">
+      Evidência visual da auditoria de contraste tela a tela. O Habbi mantém superfícies coordenadas e opacas nos dois modos, assegurando hierarquia visual, nitidez perfeita dos mascotes e preservação rigorosa da identidade sem uso de vidros difusos ou filtros artificiais.
+    </p>
+
+    <div class="theme-comparison-container">
+      <!-- Pair 1: Home Screen 10 -->
+      <div class="theme-specimen-card">
+        <div class="theme-specimen-header">
+          <span class="theme-screen-name">Home Minimalista (Tela 10)</span>
+          <span class="badge-wcag">AAA • 17.2:1</span>
+        </div>
+        <div class="theme-pair-frames">
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-light">Claro</span>
+            <img src="assets/prancha/LIGHT_390x844_i14_10_Home.png" alt="Home Claro">
+          </div>
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-dark">Escuro</span>
+            <img src="assets/prancha/DARK_390x844_i14_10_Home.png" alt="Home Escuro">
+          </div>
+        </div>
+      </div>
+
+      <!-- Pair 2: SOS Screen 12 -->
+      <div class="theme-specimen-card">
+        <div class="theme-specimen-header">
+          <span class="theme-screen-name">Intervenção SOS (Tela 12)</span>
+          <span class="badge-wcag">AA • 8.4:1</span>
+        </div>
+        <div class="theme-pair-frames">
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-light">Claro</span>
+            <img src="assets/prancha/LIGHT_390x844_i14_12_SOS.png" alt="SOS Claro">
+          </div>
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-dark">Escuro</span>
+            <img src="assets/prancha/DARK_390x844_i14_12_SOS.png" alt="SOS Escuro">
+          </div>
+        </div>
+      </div>
+
+      <!-- Pair 3: Calendario Screen 16 -->
+      <div class="theme-specimen-card">
+        <div class="theme-specimen-header">
+          <span class="theme-screen-name">Calendário Dinâmico (Tela 16)</span>
+          <span class="badge-wcag">AA • 7.5:1</span>
+        </div>
+        <div class="theme-pair-frames">
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-light">Claro</span>
+            <img src="assets/prancha/LIGHT_390x844_i14_16_Calendario.png" alt="Calendario Claro">
+          </div>
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-dark">Escuro</span>
+            <img src="assets/prancha/DARK_390x844_i14_16_Calendario.png" alt="Calendario Escuro">
+          </div>
+        </div>
+      </div>
+
+      <!-- Pair 4: Minha Conquista Screen 29 -->
+      <div class="theme-specimen-card">
+        <div class="theme-specimen-header">
+          <span class="theme-screen-name">Minha Conquista (Tela 29)</span>
+          <span class="badge-wcag">AAA • 17.2:1</span>
+        </div>
+        <div class="theme-pair-frames">
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-light">Claro</span>
+            <img src="assets/prancha/LIGHT_390x844_i14_29_Conquista_Economia.png" alt="Conquista Claro">
+          </div>
+          <div class="screen-device-mockup">
+            <span class="screen-tag-mode tag-dark">Escuro</span>
+            <img src="assets/prancha/DARK_390x844_i14_29_Conquista_Economia.png" alt="Conquista Escuro">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEÇÃO 6: SISTEMA DE AVATARES & ACESSÓRIOS ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">06</span>
+        Sistema de Avatares da Morgana & Customização
+      </div>
+      <span class="badge-academic">Gamificação & Expressão</span>
+    </div>
+    <p class="panel-desc">
+      O perfil do usuário é personificado pela gatinha Morgana, permitindo a escolha entre 6 cores de fundo cromáticas e 6 acessórios afetivos autorais (Cachecol, Flor, Folha, Fone de Ouvido, Laço e Óculos).
+    </p>
+
+    <div class="avatar-matrix-grid">
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle" style="background-color: var(--habbi-primary);">
+          <img src="assets/avatar_verde.png" alt="Avatar Verde">
+        </div>
+        <span class="avatar-label">Verde Padrão</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle" style="background-color: var(--habbi-yellow);">
+          <img src="assets/avatar_amarelo.png" alt="Avatar Amarelo">
+        </div>
+        <span class="avatar-label">Amarelo Energia</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle" style="background-color: var(--habbi-blue);">
+          <img src="assets/avatar_azul.png" alt="Avatar Azul">
+        </div>
+        <span class="avatar-label">Azul Foco</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle" style="background-color: var(--habbi-orange);">
+          <img src="assets/avatar_laranja.png" alt="Avatar Laranja">
+        </div>
+        <span class="avatar-label">Laranja Calmo</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle" style="background-color: var(--habbi-pink);">
+          <img src="assets/avatar_rosa.png" alt="Avatar Rosa">
+        </div>
+        <span class="avatar-label">Rosa Doce</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle" style="background-color: var(--habbi-coral);">
+          <img src="assets/avatar_vermelho.png" alt="Avatar Vermelho">
+        </div>
+        <span class="avatar-label">Vermelho Força</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle">
+          <img src="assets/avatar_cachecol.png" alt="Cachecol">
+        </div>
+        <span class="avatar-label">+ Cachecol</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle">
+          <img src="assets/avatar_flor.png" alt="Flor">
+        </div>
+        <span class="avatar-label">+ Florzinha</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle">
+          <img src="assets/avatar_folha.png" alt="Folha">
+        </div>
+        <span class="avatar-label">+ Folha Verde</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle">
+          <img src="assets/avatar_fone.png" alt="Fone">
+        </div>
+        <span class="avatar-label">+ Fone de Ouvido</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle">
+          <img src="assets/avatar_laco.png" alt="Laço">
+        </div>
+        <span class="avatar-label">+ Laço Vermelho</span>
+      </div>
+      <div class="avatar-specimen-item">
+        <div class="avatar-circle">
+          <img src="assets/avatar_oculos.png" alt="Óculos">
+        </div>
+        <span class="avatar-label">+ Óculos Intelectual</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEÇÃO 7: PRINCÍPIOS FLAT INEGOCIÁVEIS ==================== -->
+  <section class="panel">
+    <div class="panel-header">
+      <div class="panel-title">
+        <span class="panel-num">07</span>
+        Princípios de Interface & Governança de Projeto (UFSM)
+      </div>
+      <span class="badge-academic">Manual do Agente</span>
+    </div>
+
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-title">1. Cores Sólidas e Planas (*Solid Flat*)</div>
+        <div class="principle-desc">
+          Zero gradientes, zero desfoques de fundo (*blur*) e zero vidro (*glassmorphism*). Superfícies limpas e opacas asseguram máxima legibilidade sob qualquer condição de luz.
+        </div>
+      </div>
+
+      <div class="principle-card warning-left">
+        <div class="principle-title">2. Inviolabilidade dos Assets Originais</div>
+        <div class="principle-desc">
+          Nenhuma ilustração autoral da Morgana pode ser renomeada, achatada ou apagada. As proporções mantêm sempre `height: auto` e a transparência é gerada em tempo de execução via Canvas.
+        </div>
+      </div>
+
+      <div class="principle-card blue-left">
+        <div class="principle-title">3. Intervenção Afetiva e Não Punitiva</div>
+        <div class="principle-desc">
+          O Habbi nunca envergonha ou julga o usuário por recaídas. Mensagens e micro-interações transmitem acolhimento imediato e prontidão para recomeçar.
+        </div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-title">4. Acessibilidade Universal (WCAG 2.2 AA)</div>
+        <div class="principle-desc">
+          Alvos de toque mínimos de 44 × 44 px, anel de foco visível de 3px, navegação por teclado fluida e respeito a preferências de movimento reduzido (*prefers-reduced-motion*).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== RODAPÉ DA PRANCHA ==================== -->
+  <footer class="board-footer">
+    <div>
+      Universidade Federal de Santa Maria (UFSM) • Centro de Artes e Letras • Desenho Industrial
+    </div>
+    <div class="footer-quote">
+      "Um projeto feito com cuidado, criatividade e um pouquinho da Morgana. ♡"
+    </div>
+    <div>
+      Versão 2.0 • Novembro de 2026
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

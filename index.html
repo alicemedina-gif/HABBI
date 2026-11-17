@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habbi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-rounded" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="main-content">
+  <div class="device-container">
+    <div class="device-screen">
+      <div class="toast-notice" id="toast-notice">
+        <span class="toast-message">Registrado com sucesso</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <header class="status-bar" id="status-bar">
+        <span id="status-time">09:41</span>
+        <div class="status-icons"><div class="status-dot"></div></div>
+      </header>
+      <div class="app-screen-container">
+        <!-- SCREEN 1: SPLASH -->
+        <section class="screen active" data-screen="1" style="background-image:url('assets/splash_screen.png');background-size:cover;background-position:center;background-repeat:no-repeat;justify-content:center;align-items:center;text-align:center;padding:32px;color:#fff;gap:0;overflow:hidden;position:relative;">
+          <div style="width:100%; display:flex; justify-content:center; overflow:visible; margin-bottom:24px; margin-top:-380px;">
+            <img src="assets/logo_habbi.png" alt="Habbi" style="width:460px; min-width:460px; max-width:none; height:auto; flex-shrink:0; display:block; margin-left:-15px;">
+          </div>
+          
+          <!-- Frase e progresso posicionados de forma absoluta na base -->
+          <div style="position:absolute; bottom:80px; left:0; width:100%; display:flex; flex-direction:column; align-items:center; text-align:center; z-index:10; padding:0 24px;">
+            <span style="color:rgba(255,255,255,0.9);font-size:16px;font-weight:600;display:block;margin-bottom:24px;">Um hábito de cada vez.</span>
+            <div style="width:110px;height:6px;background:rgba(255,255,255,0.3);border-radius:3px;overflow:hidden;">
+              <div style="height:100%;background:#fff;border-radius:3px;animation:load 1.8s ease-in-out infinite;"></div>
+            </div>
+          </div>
+          <style>@keyframes load{0%{width:0}100%{width:100%}}</style>
+        </section>
+
+        <!-- SCREEN 2: BOAS-VINDAS -->
+        <section class="screen welcome-layout" data-screen="2" style="background-image:url('assets/boas_vindas.png');background-size:cover;background-position:center;background-repeat:no-repeat;">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;flex:1;padding:60px 28px 8px;">
+            <h1 style="color:var(--text-primary);font-weight:600;font-size:42px;margin-bottom:6px;margin-top:0;">Olá!</h1>
+            <p style="color:var(--text-secondary);font-size:18px;font-weight:600;margin:0;">Que bom te ver por aqui!</p>
+          </div>
+          <div class="welcome-hill" style="align-items:stretch; width:100%;">
+            <button class="btn" id="btn-welcome-login" style="background:#fff;color:var(--text-primary);font-weight:500;width:100%;">Entrar</button>
+            <button class="btn" id="btn-welcome-signup" style="background:#fff;color:var(--text-primary);font-weight:500;width:100%;">Criar conta</button>
+          </div>
+        </section>
+        <!-- SCREEN 3: ONBOARDING 1 -->
+        <section class="screen" data-screen="3" style="background-image:url('assets/onboarding_entenda_habitos.png');background-size:cover;background-position:center;background-repeat:no-repeat;justify-content:space-between;padding:32px 24px 28px;">
+          <div>
+            <div class="onboarding-top"><span class="caption">1 de 3</span></div>
+            <h1 style="margin-top:12px;margin-bottom:6px;line-height:1.15;">Entenda seus<br>hábitos</h1>
+            <p class="caption" style="font-size:18px;">Conheça seus padrões.</p>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;padding-bottom:12px;z-index:10;">
+            <div class="onboarding-progress"><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div></div>
+            <button class="btn btn-primary" id="btn-onboarding-1-next" style="width:130px;height:50px;">Próximo</button>
+          </div>
+        </section>
+
+        <!-- SCREEN 4: ONBOARDING 2 -->
+        <section class="screen" data-screen="4" style="background-image:url('assets/onboarding_identifique_gatilhos.png');background-size:cover;background-position:center;background-repeat:no-repeat;justify-content:space-between;padding:32px 24px 28px;">
+          <div>
+            <div class="onboarding-top"><span class="caption">2 de 3</span></div>
+            <h1 style="margin-top:12px;margin-bottom:6px;line-height:1.15;white-space:nowrap;">Identifique gatilhos</h1>
+            <p class="caption" style="font-size:18px;">Descubra o que te leva aos vícios.</p>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;padding-bottom:12px;z-index:10;">
+            <div class="onboarding-progress"><div class="progress-dot"></div><div class="progress-dot active"></div><div class="progress-dot"></div></div>
+            <div class="wl-onb-notif-actions" style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+              <button class="btn btn-primary" id="btn-onboarding-2-next" onclick="handleOnboardingRemindersChoice(true)" style="width:170px;height:48px;">Ativar lembretes</button>
+              <button type="button" class="wl-subtle-link-btn" id="btn-onboarding-2-skip" onclick="handleOnboardingRemindersChoice(false)">Agora não</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREEN 5: ONBOARDING 3 -->
+        <section class="screen" data-screen="5" style="background-image:url('assets/onboarding_transforme_comportamentos.png');background-size:cover;background-position:center;background-repeat:no-repeat;justify-content:space-between;padding:32px 24px 28px;">
+          <div>
+            <div class="onboarding-top"><span class="caption">3 de 3</span></div>
+            <h1 style="margin-top:12px;margin-bottom:6px;line-height:1.15;">Transforme<br>comportamentos</h1>
+            <p class="caption" style="font-size:18px;">Pequenas escolhas diárias geram grandes mudanças.</p>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;padding-bottom:12px;z-index:10;">
+            <div class="onboarding-progress"><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot active"></div></div>
+            <button class="btn btn-primary" id="btn-onboarding-3-next" style="width:130px;height:50px;">Começar</button>
+          </div>
+        </section>
+        <!-- SCREEN 6: JORNADA -->
+        <section class="screen" data-screen="6">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleJourneyBack()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2 style="font-size:22px; line-height:1.2; margin:0;">Escolha sua jornada</h2>
+          </div>
+          <p class="caption mb-24" style="margin-top:-8px;">Comece por onde quiser transformar.</p>
+          <div class="chips-container flex-col" id="journey-chips-list" style="gap:12px;margin-bottom:24px;">
+            <div class="chip selected" data-journey="Tabagismo" style="padding:18px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;">
+              <span style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18"/><path d="M3 16h14a2 2 0 0 1 0 4"/><path d="M18 8c0-3-2-5-5-5s-5 2-5 5"/></svg>Tabagismo</span>
+              <span class="pill-tag green" style="background-color:transparent;color:#ffffff;font-weight:600;">Disponível</span>
+            </div>
+            <div class="chip locked" style="padding:18px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;"><span style="font-weight:600;font-size:16px;">Vape</span><span class="pill-tag">Em breve</span></div>
+            <div class="chip locked" style="padding:18px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;"><span style="font-weight:600;font-size:16px;">Álcool</span><span class="pill-tag">Em breve</span></div>
+            <div class="chip locked" style="padding:18px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;"><span style="font-weight:600;font-size:16px;">Apostas</span><span class="pill-tag">Em breve</span></div>
+            <div class="chip locked" style="padding:18px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;"><span style="font-weight:600;font-size:16px;">Redes Sociais</span><span class="pill-tag">Em breve</span></div>
+            <div class="chip locked" style="padding:18px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;"><span style="font-weight:600;font-size:16px;">Procrastinação</span><span class="pill-tag">Em breve</span></div>
+          </div>
+          <div class="grow"></div>
+          <button class="btn btn-primary" id="btn-journey-submit">Continuar</button>
+        </section>
+
+        <!-- SCREEN 7: CONFIG 1 -->
+        <section class="screen" data-screen="7">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="goToScreen(5)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2 style="font-size:20px; line-height:1.2; margin:0;">Configuração</h2>
+          </div>
+          <h1 class="mb-16" style="font-size:24px; margin-top:8px;">Quantos cigarros você fuma por dia?</h1>
+          <div class="slider-container mb-24">
+            <div class="slider-val-box" id="cigarettes-per-day-val" style="font-size:38px;font-weight:600;">12</div>
+            <span class="caption">cigarros</span>
+            <input type="range" min="1" max="40" value="12" class="custom-range" id="cigarettes-slider" aria-label="Meta diária de cigarros">
+          </div>
+          <div class="divider"></div>
+          <h2 class="mb-12">Há quantos anos você fuma?</h2>
+          <div class="chips-container" id="years-smoking-chips" style="margin-bottom:16px;">
+            <div class="chip selected" data-years="Menos de 1">Menos de 1</div>
+            <div class="chip" data-years="1 - 5 anos">1 - 5 anos</div>
+            <div class="chip" data-years="5 - 10 anos">5 - 10 anos</div>
+            <div class="chip" data-years="10+ anos">10+ anos</div>
+          </div>
+          <div class="divider"></div>
+          <h2 class="mb-12">Preço médio do maço/carteira (R$)</h2>
+          <div class="form-group" style="margin-bottom:0;">
+            <input type="number" id="cigarettes-pack-price" class="form-input" min="1" max="100" step="0.01" value="10.00" aria-label="Preço do maço de cigarros" style="font-size: 16px; font-weight: 600; text-align: center;">
+            <span class="caption" style="display:block; text-align:center; margin-top:4px; color:var(--text-muted);">Usado para calcular a sua economia diária.</span>
+          </div>
+          <div class="grow"></div>
+          <button class="btn btn-primary" id="btn-config-1-submit">Continuar</button>
+        </section>
+        <!-- SCREEN 8: MOTIVACOES -->
+        <section class="screen" data-screen="8">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="goToScreen(7)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2 style="font-size:20px; line-height:1.2; margin:0;">Configuração</h2>
+          </div>
+          <h1 class="mb-8" style="font-size:24px; margin-top:8px;">O que te motiva a mudar?</h1>
+          <p class="caption mb-24">Escolha quantas quiser.</p>
+          <div id="motivations-chips-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;">
+            <div class="chip selected text-center" data-val="Saude" style="padding:22px 10px;border-radius:16px;">
+              <div style="display:flex;justify-content:center;margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+              <span>Saúde</span>
+            </div>
+            <div class="chip text-center" data-val="Economia" style="padding:22px 10px;border-radius:16px;">
+              <div style="display:flex;justify-content:center;margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary-dark)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+              <span>Economia</span>
+            </div>
+            <div class="chip text-center" data-val="Familia" style="padding:22px 10px;border-radius:16px;">
+              <div style="display:flex;justify-content:center;margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--blue-dark)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <span>Família</span>
+            </div>
+            <div class="chip text-center" data-val="Exercicios" style="padding:22px 10px;border-radius:16px;">
+              <div style="display:flex;justify-content:center;margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><circle cx="12" cy="5" r="2"/><path d="M12 7v8"/><path d="M10 15l2 4 2-4"/><path d="M9 11l-3 2"/><path d="M15 11l3 2"/></svg></div>
+              <span>Exercícios</span>
+            </div>
+            <div class="chip text-center" data-val="Qualidade" style="padding:22px 10px;border-radius:16px;">
+              <div style="display:flex;justify-content:center;margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+              <span>Qualidade de vida</span>
+            </div>
+            <div class="chip text-center" data-val="Outro" style="padding:22px 10px;border-radius:16px;">
+              <div style="display:flex;justify-content:center;margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+              <span>Outro</span>
+            </div>
+          </div>
+          <div class="grow"></div>
+          <button class="btn btn-primary" id="btn-motivations-submit">Continuar</button>
+        </section>
+
+        <!-- SCREEN 9: GATILHOS -->
+        <section class="screen" data-screen="9">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="goToScreen(8)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2 style="font-size:20px; line-height:1.2; margin:0;">Configuração</h2>
+          </div>
+          <h1 class="mb-8" style="font-size:24px; margin-top:8px;">O que te faz querer fumar?</h1>
+          <p class="caption mb-24">Escolha quantas quiser.</p>
+          <div id="triggers-chips-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;">
+            <div class="chip selected" data-val="Estresse">Estresse</div>
+            <div class="chip" data-val="Ansiedade">Ansiedade</div>
+            <div class="chip" data-val="Trabalho">Trabalho</div>
+            <div class="chip" data-val="Cafe">Café</div>
+            <div class="chip" data-val="Apos refeicoes">Após refeições</div>
+            <div class="chip" data-val="Socializacao">Socialização</div>
+            <div class="chip" data-val="Tedio">Tédio</div>
+            <div class="chip" data-val="Bebida alcoolica">Bebida alcoólica</div>
+            <div class="chip" data-val="Outro">Outro</div>
+          </div>
+          <div class="grow"></div>
+          <button class="btn btn-primary" id="btn-triggers-submit">Continuar</button>
+        </section>
+        <!-- SCREEN 10: HOME -->
+        <section class="screen" data-screen="10" style="padding:0; overflow:hidden;">
+
+          <!-- Header compacto -->
+          <div class="home-v2-header">
+            <div>
+              <span id="home-greeting-label" class="home-v2-greeting">Bom dia,</span>
+              <span class="home-v2-name">Alice! 👋</span>
+            </div>
+            <div class="home-v2-savings" onclick="goToScreen(29)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span id="home-savings-top" class="top-savings-value-text">R$ 0,00</span>
+            </div>
+          </div>
+
+          <!-- Mascote protagonista -->
+          <div class="home-v2-mascot-area">
+            <img id="home-mascot-img" src="assets/ilustracoes/gato com ponto de nterrogação.png" alt="Mascote Habbi" class="home-v2-mascot">
+          </div>
+
+          <!-- Número em destaque -->
+          <div class="home-v2-stats">
+            <div class="home-v2-number-block">
+              <span id="home-display-days" class="home-v2-display-number">0</span>
+              <span class="home-v2-display-label">dias sem fumar</span>
+            </div>
+
+            <!-- Semana compacta -->
+            <div class="home-v2-week" id="home-week-row">
+              <div class="home-v2-day"><span class="home-v2-day-label">S</span><div class="home-v2-day-dot success"></div></div>
+              <div class="home-v2-day"><span class="home-v2-day-label">T</span><div class="home-v2-day-dot success"></div></div>
+              <div class="home-v2-day"><span class="home-v2-day-label">Q</span><div class="home-v2-day-dot success"></div></div>
+              <div class="home-v2-day"><span class="home-v2-day-label">Q</span><div class="home-v2-day-dot success"></div></div>
+              <div class="home-v2-day"><span class="home-v2-day-label">S</span><div class="home-v2-day-dot warning"></div></div>
+              <div class="home-v2-day"><span class="home-v2-day-label">S</span><div class="home-v2-day-dot warning"></div></div>
+              <div class="home-v2-day"><span class="home-v2-day-label">D</span><div class="home-v2-day-dot empty"></div></div>
+            </div>
+          </div>
+
+          <!-- CTAs -->
+          <div class="home-v2-actions">
+            <!-- Botão SOS pequeno -->
+            <button class="home-v2-sos-btn" id="btn-home-sos" onclick="goToScreen(12)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              SOS — Estou com vontade
+            </button>
+
+            <!-- CTA principal único -->
+            <button class="btn btn-primary home-v2-cta" onclick="openRegisterSheet()">
+              Registrar agora
+            </button>
+          </div>
+
+        </section>
+
+        <!-- SCREEN 11: REGISTRO RÁPIDO -->
+        <section class="screen" data-screen="11">
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:28px;">
+            <h2 style="margin-bottom:0;">Como está agora?</h2>
+            <div style="cursor:pointer;padding:4px;" onclick="handleBackFromScreen(11)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          </div>
+          <div class="quick-register-grid">
+            <button class="btn-quick-choice no-smoke" id="btn-quick-no-smoke"><img src="assets/icone_nao_fumei.png" alt="Não fumei hoje"><span>Não fumei hoje</span></button>
+            <button class="btn-quick-choice urge" id="btn-quick-urge"><img src="assets/icone_vontade.png" alt="Tive vontade"><span>Tive vontade</span></button>
+            <button class="btn-quick-choice smoke" id="btn-quick-smoke"><img src="assets/icone_cigarro.png" alt="Fumei"><span>Fumei</span></button>
+            <button class="btn-quick-choice mood" onclick="goToScreen(25)"><img src="assets/icone_sentimentos.png" alt="Como estou"><span>Como estou</span></button>
+          </div>
+          <div class="grow"></div>
+        </section>
+
+        <!-- SCREEN 12: SOS HUB (SIMPLIFICADO E ACOLHEDOR) -->
+        <!-- SCREEN 12: SOS HUB (SIMPLIFICADO & DIRETO) -->
+        <section class="screen wl-sos-screen" data-screen="12">
+          <!-- Cabeçalho Simplificado -->
+          <div class="wl-sos-header">
+            <button type="button" class="wl-sos-back-btn" onclick="handleBackFromScreen(12)" aria-label="Voltar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <span class="wl-sos-header-tag">SOS</span>
+          </div>
+
+          <!-- Título e Subtítulo limpos -->
+          <div class="wl-sos-hero">
+            <h1 class="wl-sos-title">Vamos por partes.</h1>
+            <p class="wl-sos-subtitle">Só os próximos minutos.</p>
+          </div>
+
+          <!-- Cronômetro Redesenhado: bloco verde suave sólido -->
+          <div class="wl-sos-timer-card">
+            <span class="wl-sos-timer-tag">Uma pausa de 5 minutos</span>
+            <div class="wl-sos-timer-display" id="wl-sos-timer-display">05:00</div>
+            <div class="wl-sos-timer-track">
+              <div class="wl-sos-timer-bar" id="wl-sos-timer-bar" style="width: 100%;"></div>
+            </div>
+
+            <!-- Botão Iniciar quando não iniciado -->
+            <button type="button" class="wl-sos-start-pause-btn" id="btn-sos-timer-start" onclick="startSosTimer()">
+              Começar pausa
+            </button>
+
+            <!-- Controles Pausar / Continuar e Reiniciar (visíveis após iniciar) -->
+            <div class="wl-sos-timer-actions" id="wl-sos-active-controls" style="display:none;">
+              <button type="button" class="wl-sos-timer-btn primary" id="btn-sos-timer-toggle" onclick="toggleSosTimer()">
+                <span id="wl-sos-timer-btn-text">Pausar</span>
+              </button>
+              <button type="button" class="wl-sos-timer-btn secondary" id="btn-sos-timer-reset" onclick="resetSosTimer()">
+                Reiniciar
+              </button>
+            </div>
+          </div>
+
+          <!-- Grade 2x2 compacta de Estratégias: só ícone e nome -->
+          <div class="wl-sos-actions-grid">
+            <button type="button" class="wl-sos-card card-respirar" onclick="handleSosChoice('respirar')">
+              <div class="wl-sos-card-icon-box">
+                <img src="assets/icon_vento.png" alt="Respirar" class="wl-sos-card-icon-img">
+              </div>
+              <span class="wl-sos-card-title">Respirar</span>
+            </button>
+
+            <button type="button" class="wl-sos-card card-distrair" onclick="handleSosChoice('distrair')">
+              <div class="wl-sos-card-icon-box">
+                <img src="assets/icon_jogo.png" alt="Distrair" class="wl-sos-card-icon-img">
+              </div>
+              <span class="wl-sos-card-title">Distrair</span>
+            </button>
+
+            <button type="button" class="wl-sos-card card-agua" onclick="handleSosChoice('agua')">
+              <div class="wl-sos-card-icon-box">
+                <img src="assets/icon_agua.png" alt="Beber água" class="wl-sos-card-icon-img">
+              </div>
+              <span class="wl-sos-card-title">Beber água</span>
+            </button>
+
+            <button type="button" class="wl-sos-card card-calmar" onclick="handleSosChoice('ancoragem')">
+              <div class="wl-sos-card-icon-box">
+                <img src="assets/icon_flor.png" alt="Me acalmar" class="wl-sos-card-icon-img">
+              </div>
+              <span class="wl-sos-card-title">Me acalmar</span>
+            </button>
+          </div>
+
+          <!-- Acesso Secundário Discreto -->
+          <button type="button" class="wl-sos-support-btn" onclick="openSosSupportModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span>Preciso de alguém</span>
+          </button>
+
+          <div class="wl-sos-footer">
+            <button type="button" class="wl-sos-dismiss-btn" onclick="goToScreen(10)">
+              Voltar ao início
+            </button>
+          </div>
+          <img src="assets/ilustracoes/gato_escondido_arbusto_cropped.png" class="wl-corner-bush-silhouette" alt="Silhueta do gatinho na moita" aria-hidden="true" onerror="this.onerror=null;this.src='assets/ilustracoes/gato escondido arbusto.png';">
+        </section>
+
+        <!-- SCREEN 13: INTERVENÇÃO (RESPIRAÇÃO & ANCORAGEM GUIADAS) -->
+        <section class="screen wl-intervention-screen" data-screen="13">
+          <img id="wl-interv-silhouette" class="wl-interv-bg-silhouette" src="assets/ilustracoes/gato_dormindo_cropped.png" alt="Silhueta de fundo do gatinho dormindo" aria-hidden="true" onerror="this.onerror=null;this.src='assets/ilustracoes/gato dormindo.png';">
+          <div class="wl-interv-header">
+            <button type="button" class="btn-back wl-interv-back-btn" onclick="handleInterventionBack()" aria-label="Voltar para o SOS">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </button>
+            <span class="wl-interv-title-tag" id="intervention-execution-title">Respiração 4-6</span>
+            <button type="button" class="btn-back wl-interv-sound-btn" id="btn-interv-sound-toggle" onclick="toggleBreathingSound()" title="Ativar/Desativar som suave" aria-label="Som suave">
+              <svg id="wl-interv-sound-off-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+              <svg id="wl-interv-sound-on-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
+          </div>
+
+          <div id="intervention-interactive-container" class="wl-interv-stage"></div>
+
+          <div class="wl-interv-bottom-controls" id="intervention-bottom-controls"></div>
+        </section>
+
+        <!-- MODAL: BEBER ÁGUA -->
+        <div class="wl-sos-modal-overlay" id="wl-sos-water-modal" onclick="if(event.target===this)closeSosWaterModal()">
+          <div class="wl-sos-modal-sheet" role="dialog" aria-modal="true">
+            <div class="wl-calc-sheet-handle"></div>
+            <div class="wl-sos-modal-content">
+              <img src="assets/ilustracoes/gato_na_caixa_cropped.png" alt="Habbi te oferecendo água" class="wl-sos-modal-mascot" onerror="this.onerror=null;this.src='assets/ilustracoes/gato na caixa.png';">
+              <h2 class="wl-sos-modal-title">Que tal um copo de água?</h2>
+              <p class="wl-sos-modal-desc">Beba devagar, sentindo a temperatura da água. Esse gesto simples quebra o impulso automático e relaxa seu corpo.</p>
+              <div class="wl-sos-modal-actions">
+                <button type="button" class="wl-dark-pill-btn" onclick="finishWaterAction()">Já bebi!</button>
+                <button type="button" class="wl-light-pill-btn" onclick="closeSosWaterModal()">Voltar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL: PRECISO DE ALGUÉM -->
+        <div class="wl-sos-modal-overlay" id="wl-sos-support-modal" onclick="if(event.target===this)closeSosSupportModal()">
+          <div class="wl-sos-modal-sheet" role="dialog" aria-modal="true">
+            <div class="wl-calc-sheet-handle"></div>
+            <div class="wl-sos-modal-header" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;">
+              <h3 style="margin:0;font-size:18px;font-weight:800;color:#1E293B;">Preciso de alguém</h3>
+              <button type="button" class="wl-close-circle" onclick="closeSosSupportModal()">✕</button>
+            </div>
+            <p class="wl-sos-modal-desc" style="text-align:left; margin-bottom:14px;">Você não precisa enfrentar isso sozinho. Escolha uma das opções:</p>
+            <div class="wl-sos-support-options">
+              <button type="button" class="wl-sos-support-opt" onclick="handleCvvContact()">
+                <div class="wl-sos-opt-icon yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                <div class="wl-sos-opt-text">
+                  <strong>Ligar 188 (CVV)</strong>
+                  <span>Apoio emocional gratuito e sigiloso 24h</span>
+                </div>
+              </button>
+              <button type="button" class="wl-sos-support-opt" onclick="copySupportMessage()">
+                <div class="wl-sos-opt-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <div class="wl-sos-opt-text">
+                  <strong>Mensagem de apoio pronta</strong>
+                  <span>Copiar texto acolhedor para WhatsApp</span>
+                </div>
+              </button>
+            </div>
+            <button type="button" class="wl-light-pill-btn" style="width:100%;margin-top:14px;" onclick="closeSosSupportModal()">Fechar</button>
+          </div>
+        </div>
+
+        <!-- MODAL: FEEDBACK PÓS-ATIVIDADE ("E AGORA?") -->
+        <div class="wl-sos-modal-overlay" id="wl-sos-feedback-modal" onclick="if(event.target===this)closeSosFeedbackModal()">
+          <div class="wl-sos-modal-sheet" role="dialog" aria-modal="true">
+            <div class="wl-calc-sheet-handle"></div>
+            <div class="wl-sos-feedback-content" id="wl-sos-feedback-step-ask">
+              <img src="assets/ilustracoes/gato_identifique_cropped.png" alt="Mascote Habbi" class="wl-sos-modal-mascot" onerror="this.onerror=null;this.src='assets/ilustracoes/identifique_gatilhos.png';">
+              <h2 class="wl-sos-modal-title">E agora?</h2>
+              <p class="wl-sos-modal-desc">Como você está se sentindo após essa pausa?</p>
+              <div class="wl-sos-feedback-options">
+                <button type="button" class="wl-sos-feedback-btn passed" onclick="handleSosFeedbackAnswer('passou')">
+                  <strong>Passou!</strong>
+                  <small>Consegui superar a vontade</small>
+                </button>
+                <button type="button" class="wl-sos-feedback-btn decreased" onclick="handleSosFeedbackAnswer('diminuiu')">
+                  <strong>Diminuiu</strong>
+                  <small>Estou me sentindo mais calmo</small>
+                </button>
+                <button type="button" class="wl-sos-feedback-btn still" onclick="handleSosFeedbackAnswer('ainda')">
+                  <strong>Ainda tô com vontade</strong>
+                  <small>Quero tentar outra estratégia</small>
+                </button>
+              </div>
+            </div>
+            <div class="wl-sos-feedback-result" id="wl-sos-feedback-step-result" style="display:none;"></div>
+          </div>
+        </div>
+        <!-- SCREEN 14: FERRAMENTAS -->
+        <section class="screen" data-screen="14">
+          <div class="detail-header mb-20" style="display:flex; align-items:center; gap:14px;">
+            <div class="btn-back" onclick="handleBackFromScreen(14)" aria-label="Voltar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </div>
+            <div>
+              <h2 style="margin:0; font-size:24px; font-weight:800; line-height:1.2; color:var(--text-primary);">Ferramentas</h2>
+              <p class="caption" style="margin:2px 0 0; font-size:13px; color:var(--text-secondary);">Exercícios e apoio prático</p>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:14px; width:100%;">
+            <!-- 1. Respiração Guiada 4-6 -->
+            <div class="wl-quest-card blue" onclick="openToolFromFerramentas('respiracao')">
+              <div class="wl-quest-info">
+                <span class="wl-quest-tag">3 MINUTOS • ACALMAR</span>
+                <h3>Respiração<br>Guiada 4-6</h3>
+              </div>
+              <div class="wl-quest-cat-wrapper">
+                <img src="assets/tool_respira.png" alt="Respiração" class="wl-quest-cat-img">
+              </div>
+            </div>
+
+            <!-- 2. Minijogos de Foco -->
+            <div class="wl-quest-card green" onclick="openToolFromFerramentas('minijogos')">
+              <div class="wl-quest-info">
+                <span class="wl-quest-tag">DISTRAÇÃO COGNITIVA</span>
+                <h3>4 Minijogos<br>de Foco</h3>
+              </div>
+              <div class="wl-quest-cat-wrapper">
+                <img src="assets/tool_minijogos.png" alt="Minijogos" class="wl-quest-cat-img">
+              </div>
+            </div>
+
+            <!-- 3. Cortar Fissura Agora (patinha apontando para baixo) -->
+            <div class="wl-quest-card orange" onclick="openToolFromFerramentas('sos')">
+              <div class="wl-quest-info">
+                <span class="wl-quest-tag">EMERGÊNCIA • SOS</span>
+                <h3>Cortar Fissura<br>Agora</h3>
+              </div>
+              <div class="wl-quest-cat-wrapper">
+                <img src="assets/tool_pata_baixo.png" alt="Cortar Fissura" class="wl-quest-cat-img">
+              </div>
+            </div>
+
+            <!-- 4. Registrar Humor do Dia -->
+            <div class="wl-quest-card purple" onclick="openToolFromFerramentas('gatilhos')">
+              <div class="wl-quest-info">
+                <span class="wl-quest-tag">PADRÕES &amp; EMOÇÕES</span>
+                <h3>Registrar Humor<br>do Dia</h3>
+              </div>
+              <div class="wl-quest-cat-wrapper">
+                <img src="assets/tool_gatilhos.png" alt="Registrar Humor do Dia" class="wl-quest-cat-img">
+              </div>
+            </div>
+          </div>
+          <div class="grow"></div>
+          <img src="assets/ilustracoes/gato_escondido_arbusto_cropped.png" class="wl-corner-bush-silhouette" alt="Silhueta do gatinho na moita" aria-hidden="true" onerror="this.onerror=null;this.src='assets/ilustracoes/gato escondido arbusto.png';">
+        </section>
+
+        <!-- SCREEN 15: MINIJOGOS -->
+        <section class="screen" data-screen="15">
+          <div class="detail-header mb-16 wl-minijogos-header">
+            <div class="wl-minijogos-header-left">
+              <button type="button" class="btn-back wl-minijogos-back" onclick="handleMinijogosBack()" aria-label="Voltar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              </button>
+              <h2 class="wl-minijogos-title">Minijogos</h2>
+            </div>
+            <div class="wl-pager-nav-dots wl-pager-nav-header" role="tablist" aria-label="Navegação entre abas">
+              <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Ir para Conquista"></button>
+              <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Ir para Início"></button>
+              <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Página atual: Minijogos"></button>
+            </div>
+          </div>
+          <div id="minijogos-menu-list" class="games-grid-2x2">
+            <!-- 1. Memória Rápida -->
+            <div class="game-grid-card" id="btn-game-memory" role="button" tabindex="0">
+              <div class="game-icon-square teal">
+                <img src="assets/memoria_icon.png" alt="Memória Rápida" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/memoria_Prancheta 1.png';">
+              </div>
+              <div class="game-grid-card-info">
+                <span class="game-grid-card-title">Memória</span>
+              </div>
+            </div>
+
+            <!-- 2. Sequência Numérica -->
+            <div class="game-grid-card" id="btn-game-sequence" role="button" tabindex="0">
+              <div class="game-icon-square green">
+                <img src="assets/sequencia_icon.png" alt="Sequência Numérica" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/sequencia_Prancheta 1.png';">
+              </div>
+              <div class="game-grid-card-info">
+                <span class="game-grid-card-title">Sequência</span>
+              </div>
+            </div>
+
+            <!-- 3. Matemática Básica -->
+            <div class="game-grid-card" id="btn-game-math" role="button" tabindex="0">
+              <div class="game-icon-square purple">
+                <img src="assets/matematica_icon.png" alt="Matemática Básica" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/matematica_Prancheta 1.png';">
+              </div>
+              <div class="game-grid-card-info">
+                <span class="game-grid-card-title">Matemática</span>
+              </div>
+            </div>
+
+            <!-- 4. Jogo do Tap -->
+            <div class="game-grid-card" id="btn-game-reflex" role="button" tabindex="0">
+              <div class="game-icon-square yellow">
+                <img src="assets/patinha_icon.png" alt="Jogo do Tap" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/patinha_icon.png';">
+              </div>
+              <div class="game-grid-card-info">
+                <span class="game-grid-card-title">Jogo do Tap</span>
+              </div>
+            </div>
+          </div>
+          <div id="game-execution-panel" style="display:none;flex-direction:column;flex:1;width:100%;height:100%;position:relative;overflow:hidden;">
+            <img id="game-screen-bg-silhouette" class="game-screen-bg-silhouette" alt="" aria-hidden="true">
+            <div style="display:flex;justify-content:center;margin-bottom:12px;position:relative;z-index:2;">
+              <span class="game-instructions-banner" id="game-instructions">Instruções do jogo</span>
+            </div>
+            <div id="game-board-container" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;position:relative;z-index:2;"></div>
+            <div class="game-quit-bar" style="position:relative;z-index:2;">
+              <button type="button" class="btn-quit-game-styled" id="btn-quit-game" onclick="quitInlineGame()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <span>Sair do jogo</span>
+              </button>
+            </div>
+          </div>
+          <div class="grow"></div>
+        </section>
+        <!-- SCREEN 16: CALENDÁRIO -->
+        <!-- SCREEN 16: CALENDÁRIO -->
+        <section class="screen wl-cal-screen" data-screen="16">
+          <div class="wl-cal-screen-wrap">
+            <header class="wl-cal-header">
+              <div class="wl-cal-nav-group">
+                <button type="button" class="wl-cal-nav-arrow" onclick="changeCalendarMonth(-1)" aria-label="Mês anterior" title="Mês anterior">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <div class="wl-cal-title-box">
+                  <h2 class="wl-cal-month-title" id="wl-cal-month-title">Calendário</h2>
+                  <button type="button" class="wl-cal-today-chip" id="wl-cal-today-btn" onclick="resetCalendarToToday()" style="display:none;">Hoje</button>
+                </div>
+                <button type="button" class="wl-cal-nav-arrow" onclick="changeCalendarMonth(1)" aria-label="Próximo mês" title="Próximo mês">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+              <button type="button" class="wl-close-circle" onclick="handleBackFromScreen(16)" aria-label="Fechar calendário">✕</button>
+            </header>
+
+            <div class="wl-cal-main-card">
+              <div class="wl-cal-weekdays">
+                <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+              </div>
+              <div class="calendar-month-grid wl-clean-cal-grid" id="calendar-month-grid"></div>
+              <div class="wl-cal-legend">
+                <span class="wl-cal-legend-item"><i class="dot green"></i>Dentro da meta</span>
+                <span class="wl-cal-legend-item"><i class="dot pink"></i>Acima da meta</span>
+                <span class="wl-cal-legend-item"><i class="dot neutral"></i>Sem registro</span>
+              </div>
+            </div>
+
+            <div class="wl-cal-month-metrics">
+              <div class="wl-cal-metric-box">
+                <strong id="wl-cal-stat-clean">0</strong>
+                <span>Sem fumar</span>
+              </div>
+              <div class="wl-cal-metric-box">
+                <strong id="wl-cal-stat-goal">0</strong>
+                <span>Na meta</span>
+              </div>
+              <div class="wl-cal-metric-box">
+                <strong id="wl-cal-stat-urges">0</strong>
+                <span>Vontades</span>
+              </div>
+            </div>
+
+            <div class="wl-cal-summary-card" id="wl-cal-summary-card">
+              <div class="wl-cal-summary-top">
+                <span class="wl-cal-selected-date" id="wl-cal-selected-date-label">Hoje</span>
+                <span class="wl-cal-goal-pill neutral" id="wl-cal-daily-goal-pill">Sem registros</span>
+              </div>
+              <div class="wl-cal-goal-bar-track">
+                <div class="wl-cal-goal-bar-fill neutral" id="wl-cal-goal-bar-fill" style="width:0%"></div>
+                <div class="wl-cal-goal-bar-over" id="wl-cal-goal-bar-over" style="width:0%"></div>
+              </div>
+              <div class="wl-cal-day-events-wrap" id="wl-cal-day-events-wrap"></div>
+            </div>
+
+            <div class="wl-cal-pill-actions">
+              <button type="button" class="wl-cal-btn primary wl-cal-btn-full" onclick="openRegisterFromCalendar()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Adicionar registro</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREEN 17: ESTATÍSTICAS -->
+        <section class="screen" data-screen="17">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleBackFromScreen(17)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <div><h2 style="margin-bottom:2px;">Meu progresso</h2><span class="caption">Histórico e evolução</span></div>
+          </div>
+          <div class="stats-grid mb-16">
+            <div class="stats-card"><div class="stats-icon-badge green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span class="stats-number" id="stats-clean-days">0</span><span class="caption">Dias sem fumar</span></div>
+            <div class="stats-card"><div class="stats-icon-badge orange"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><span class="stats-number" id="stats-cigs-avoided">0</span><span class="caption">Cigarros evitados</span></div>
+            <div class="stats-card"><div class="stats-icon-badge teal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><span class="stats-number" id="stats-total-saved">R$ 0,00</span><span class="caption">Economizado</span></div>
+            <div class="stats-card"><div class="stats-icon-badge purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><span class="stats-number" id="stats-urges-overcome">0</span><span class="caption">Vontades superadas</span></div>
+          </div>
+
+          <!-- Acessos integrados de Meu Progresso: Histórico Completo -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div class="menu-list-item" onclick="openProgressSubScreen(19)" style="cursor:pointer;">
+              <span style="display:flex; align-items:center; gap:12px;" class="label">
+                <span class="wl-hub-icon green" style="width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </span>
+                <div>
+                  <div style="font-weight:700;font-size:15px;color:var(--text-primary);">Histórico completo</div>
+                  <div class="caption" style="font-size:12px;color:var(--text-muted);">Linha do tempo de todos os seus registros</div>
+                </div>
+              </span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <div class="grow"></div>
+          <img src="assets/ilustracoes/gato_escondido_arbusto_cropped.png" class="wl-corner-bush-silhouette" alt="Silhueta do gatinho na moita" aria-hidden="true" onerror="this.onerror=null;this.src='assets/ilustracoes/gato escondido arbusto.png';">
+        </section>
+
+        <!-- SCREEN 19: HISTÓRICO -->
+        <section class="screen" data-screen="19">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleBackFromScreen(19)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <div><h2 style="margin-bottom:2px;">Histórico</h2><span class="caption">Últimos registros</span></div>
+          </div>
+          <div class="history-timeline" id="history-timeline-container" style="max-height:480px;overflow-y:auto;padding-right:4px;"></div>
+          <div class="grow"></div>
+        </section>
+        <!-- SCREEN 21: PERFIL -->
+        <section class="screen" data-screen="21">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleBackFromScreen(21)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Perfil</h2>
+          </div>
+
+          <!-- PROFILE HEADER CENTRALIZED (COMPACTO & EQUILIBRADO) -->
+          <div class="profile-card-top">
+            <div class="profile-avatar-clickable" onclick="goToScreen(26)" title="Alterar avatar">
+              <div class="avatar-circle-wrapper profile-avatar-circle">
+                <img id="profile-avatar-img" src="assets/avatar_verde.png" alt="Avatar">
+              </div>
+              <div class="profile-avatar-badge" title="Alterar avatar">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              </div>
+            </div>
+
+            <h3 id="profile-display-name">Visitante</h3>
+            <span id="profile-display-sub" class="caption">Crie uma conta para salvar seus dados</span>
+
+            <!-- Bloco NÃO AUTENTICADO: Criar conta / Entrar -->
+            <div id="profile-unauth-box" class="profile-auth-actions" style="margin-top:6px; max-width:280px;">
+              <button type="button" class="btn btn-primary" onclick="goToScreen(24)" style="flex:1; height:42px; border-radius:999px; font-size:14px; font-weight:700;">Criar conta</button>
+              <button type="button" class="btn btn-secondary" onclick="goToScreen(23)" style="flex:1; height:42px; border-radius:999px; font-size:14px; font-weight:700;">Entrar</button>
+            </div>
+
+            <!-- Bloco AUTENTICADO: Editar perfil discreto e bem visível -->
+            <div id="profile-auth-box" class="profile-auth-actions" style="display:none; margin-top:6px;">
+              <button type="button" class="profile-edit-btn" onclick="userState.accountReturnScreen=21; goToScreen(28)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+                <span id="profile-edit-btn-text">Editar perfil</span>
+              </button>
+            </div>
+          </div>
+
+
+
+          <!-- Sair da conta discreto em vermelho (quando autenticado) -->
+          <div id="profile-logout-item" style="display:none; justify-content:center; margin-top:20px;">
+            <button type="button" class="profile-logout-btn" onclick="handleProfileLogout()">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span id="profile-logout-text">Sair da conta</span>
+            </button>
+          </div>
+
+          <div class="grow"></div>
+        </section>
+
+        <!-- SCREEN 22: CONFIGURAÇÕES -->
+        <section class="screen" data-screen="22">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleBackFromScreen(22)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Configurações</h2>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Notificações</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Lembretes</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="menu-list-item" id="settings-theme" style="cursor:pointer;"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Tema</span><div style="display:flex;align-items:center;gap:8px;"><span class="caption" id="theme-status-label" style="font-weight:600;">Claro</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+            <div class="menu-list-item" id="settings-lang" style="cursor:pointer;" onclick="cycleAppLanguage()"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="settings-lang-label">Idioma</span></span><div style="display:flex;align-items:center;gap:8px;"><span class="caption" id="settings-lang-value" style="font-weight:600; color:var(--text-primary);">Português (BR)</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+            <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Backup e dados</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Privacidade</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Ajuda e suporte</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="menu-list-item" onclick="goToScreen(27)" style="cursor:pointer;"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Sobre o Habbi</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="menu-list-item" id="settings-logout" style="cursor:pointer;margin-top:20px;border-color:var(--coral);color:var(--coral);"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sair</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="grow"></div>
+        </section>
+
+        <!-- SCREEN 23: LOGIN -->
+        <section class="screen" data-screen="23">
+          <div class="detail-header mb-24">
+            <div class="btn-back" onclick="handleBackFromScreen(23)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Entrar</h2>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:16px;">
+            <div class="form-group">
+              <label class="form-label" for="login-email">E-mail</label>
+              <input type="email" id="login-email" class="form-input" placeholder="seuemail@exemplo.com">
+            </div>
+            
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" for="login-password">Senha</label>
+              <input type="password" id="login-password" class="form-input" placeholder="Sua senha">
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; width:100%;">
+            <label style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-secondary); cursor:pointer; font-weight:500;">
+              <input type="checkbox" id="login-remember" style="accent-color:var(--primary); width:18px; height:18px; border-radius:4px; cursor:pointer;">
+              Lembrar de mim
+            </label>
+            <a href="#" onclick="alert('Link de recuperação de senha enviado para o seu e-mail!'); return false;" style="font-size:14px; color:var(--primary); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
+          </div>
+          
+          <button class="btn btn-primary" id="btn-login-submit" style="margin-top:0;">Entrar</button>
+
+          <div style="text-align:center; margin-top:20px; margin-bottom:16px; color:var(--text-secondary); font-size:14px; font-weight:500;">
+            ou entrar com
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:center; margin-bottom:20px;">
+            <button onclick="simulateSocialLogin('Google')" class="btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:8px; flex:1; height:48px; border-radius:var(--border-radius-md); font-size:14px; font-weight:600; cursor:pointer; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); font-family:var(--font-family);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
+              Google
+            </button>
+            <button onclick="simulateSocialLogin('Apple')" class="btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:8px; flex:1; height:48px; border-radius:var(--border-radius-md); font-size:14px; font-weight:600; cursor:pointer; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); font-family:var(--font-family);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.6.69-1.12 1.83-.98 2.94 1.12.09 2.25-.56 2.91-1.37z"/></svg>
+              Apple
+            </button>
+          </div>
+
+          <div style="text-align:center; margin-bottom:12px;">
+            <button type="button" onclick="goToScreen(10)" class="wl-subtle-link-btn" style="background:none; border:none; color:var(--text-secondary); font-size:13.5px; font-weight:600; cursor:pointer; text-decoration:underline; min-height:44px; min-width:44px; display:inline-flex; align-items:center; justify-content:center; padding:10px 16px;">Continuar como visitante &rarr;</button>
+          </div>
+
+          <div style="text-align:center; color:var(--text-secondary); font-size:14px; font-weight:500; margin-bottom:12px;">
+            Não tem uma conta? <a href="#" onclick="goToScreen(24); return false;" style="color:var(--primary); text-decoration:none; font-weight:600;">Cadastre-se</a>
+          </div>
+          <div class="grow"></div>
+        </section>
+
+        <!-- SCREEN 24: REGISTER -->
+        <section class="screen" data-screen="24">
+          <div class="detail-header mb-24">
+            <div class="btn-back" onclick="handleBackFromScreen(24)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Criar conta</h2>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:16px;">
+            <div class="form-group">
+              <label class="form-label" for="register-name">Nome</label>
+              <input type="text" id="register-name" class="form-input" placeholder="Seu nome">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="register-email">E-mail</label>
+              <input type="email" id="register-email" class="form-input" placeholder="seuemail@exemplo.com">
+            </div>
+            
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" for="register-password">Senha</label>
+              <input type="password" id="register-password" class="form-input" placeholder="Crie uma senha">
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:24px; width:100%;">
+            <input type="checkbox" id="register-terms" style="accent-color:var(--primary); width:18px; height:18px; border-radius:4px; cursor:pointer; margin-top:2px;">
+            <label for="register-terms" style="font-size:13px; color:var(--text-secondary); cursor:pointer; font-weight:500; line-height:1.4;">
+              Eu concordo com os <a href="#" onclick="alert('Termos de Uso'); return false;" style="color:var(--primary); text-decoration:none; font-weight:600;">Termos de Uso</a> e <a href="#" onclick="alert('Políticas de Privacidade'); return false;" style="color:var(--primary); text-decoration:none; font-weight:600;">Políticas de Privacidade</a>.
+            </label>
+          </div>
+          
+          <button class="btn btn-primary" id="btn-register-submit" style="margin-top:0;">Criar conta</button>
+
+          <div style="text-align:center; margin-top:20px; margin-bottom:16px; color:var(--text-secondary); font-size:14px; font-weight:500;">
+            ou cadastrar-se com
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:center; margin-bottom:20px;">
+            <button onclick="simulateSocialLogin('Google')" class="btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:8px; flex:1; height:48px; border-radius:var(--border-radius-md); font-size:14px; font-weight:600; cursor:pointer; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); font-family:var(--font-family);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
+              Google
+            </button>
+            <button onclick="simulateSocialLogin('Apple')" class="btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:8px; flex:1; height:48px; border-radius:var(--border-radius-md); font-size:14px; font-weight:600; cursor:pointer; border:1px solid var(--border-color); background:var(--card-bg); color:var(--text-primary); font-family:var(--font-family);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.6.69-1.12 1.83-.98 2.94 1.12.09 2.25-.56 2.91-1.37z"/></svg>
+              Apple
+            </button>
+          </div>
+
+          <div style="text-align:center; color:var(--text-secondary); font-size:14px; font-weight:500; margin-bottom:12px;">
+            Já tem uma conta? <a href="#" onclick="goToScreen(23); return false;" style="color:var(--primary); text-decoration:none; font-weight:600;">Faça login</a>
+          </div>
+          <div class="grow"></div>
+        </section>
+          <div class="grow"></div>
+        </section>
+
+        <!-- SCREEN 25: REGISTRO DE SENTIMENTOS -->
+        <section class="screen" data-screen="25">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleBackFromScreen(25)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Como você está?</h2>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:18px; flex:1; overflow-y:auto; padding-right:2px;">
+            <div>
+              <span class="caption" style="display:block; margin-bottom:10px; font-weight:600; color:var(--text-primary);">Selecione seu humor hoje:</span>
+              <div class="mood-selector-grid">
+                <div class="mood-card" data-mood="Feliz">
+                  <div class="mood-emoji-svg">
+                    <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes feliz.png" alt="Feliz" style="width:34px; height:34px; object-fit:contain;">
+                  </div>
+                  <span>Feliz</span>
+                </div>
+                <div class="mood-card" data-mood="Calmo">
+                  <div class="mood-emoji-svg">
+                    <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes calmo.png" alt="Calmo" style="width:34px; height:34px; object-fit:contain;">
+                  </div>
+                  <span>Calmo</span>
+                </div>
+                <div class="mood-card" data-mood="Ansioso">
+                  <div class="mood-emoji-svg">
+                    <img src="assets/ilustracoes/Gato Preto Ansioso com Gotas Azuis.png" alt="Ansioso" style="width:34px; height:34px; object-fit:contain;">
+                  </div>
+                  <span>Ansioso</span>
+                </div>
+                <div class="mood-card" data-mood="Triste">
+                  <div class="mood-emoji-svg">
+                    <img src="assets/ilustracoes/Gatinho Preto Triste com Olhos Verdes.png" alt="Triste" style="width:34px; height:34px; object-fit:contain;">
+                  </div>
+                  <span>Triste</span>
+                </div>
+                <div class="mood-card" data-mood="Irritado">
+                  <div class="mood-emoji-svg">
+                    <img src="assets/ilustracoes/Rosto de Gato Preto Irritado.png" alt="Irritado" style="width:34px; height:34px; object-fit:contain;">
+                  </div>
+                  <span>Irritado</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <span class="caption" style="display:block; margin-bottom:8px; font-weight:600; color:var(--text-primary);">O que está influenciando seu humor?</span>
+              <div class="chips-container" id="mood-influence-chips" style="gap:8px; margin-bottom:0;">
+                <div class="chip" data-val="Sono">💤 Sono</div>
+                <div class="chip" data-val="Exercício">🏃 Exercício</div>
+                <div class="chip" data-val="Trabalho">💼 Trabalho</div>
+                <div class="chip" data-val="Relações">🤝 Relações</div>
+                <div class="chip" data-val="Alimentação">🥗 Alimentação</div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="mood-notes" style="font-size:14px;">O que aconteceu? (opcional)</label>
+              <textarea id="mood-notes" class="form-input" style="height:90px; padding:12px; resize:none; font-size:14px;" placeholder="Escreva um breve comentário sobre o seu dia..."></textarea>
+            </div>
+          </div>
+          
+          <button class="btn btn-primary" id="btn-mood-submit" style="margin-top:12px; height:56px; font-size:16px;">Salvar Registro</button>
+        </section>
+        <!-- SCREEN 26: ESCOLHA SEU AVATAR -->
+        <section class="screen" data-screen="26">
+          <div class="detail-header mb-16">
+            <div class="btn-back" onclick="handleBackFromScreen(26)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Escolha seu Avatar</h2>
+          </div>
+          
+          <div class="avatar-selector-grid">
+            <!-- 6 Novos Avatares Ilustrados -->
+            <div class="avatar-option-card" data-avatar="cachecol" data-color="cachecol" onclick="selectUserAvatar('cachecol')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_cachecol.png" alt="Cachecol">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="flor" data-color="flor" onclick="selectUserAvatar('flor')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_flor.png" alt="Flor">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="folha" data-color="folha" onclick="selectUserAvatar('folha')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_folha.png" alt="Folha">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="fone" data-color="fone" onclick="selectUserAvatar('fone')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_fone.png" alt="Fone de ouvido">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="laco" data-color="laco" onclick="selectUserAvatar('laco')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_laco.png" alt="Laço na cabeça">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="oculos" data-color="oculos" onclick="selectUserAvatar('oculos')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_oculos.png" alt="Óculos">
+              </div>
+            </div>
+
+            <!-- 6 Avatares Clássicos Coloridos -->
+            <div class="avatar-option-card" data-avatar="verde" data-color="verde" onclick="selectUserAvatar('verde')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_verde.png" alt="Verde">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="azul" data-color="azul" onclick="selectUserAvatar('azul')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_azul.png" alt="Azul">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="amarelo" data-color="amarelo" onclick="selectUserAvatar('amarelo')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_amarelo.png" alt="Amarelo">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="laranja" data-color="laranja" onclick="selectUserAvatar('laranja')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_laranja.png" alt="Laranja">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="rosa" data-color="rosa" onclick="selectUserAvatar('rosa')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_rosa.png" alt="Rosa">
+              </div>
+            </div>
+
+            <div class="avatar-option-card" data-avatar="vermelho" data-color="vermelho" onclick="selectUserAvatar('vermelho')">
+              <div class="avatar-circle-wrapper">
+                <img src="assets/avatar_vermelho.png" alt="Vermelho">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREEN 27: SOBRE O HABBI -->
+        <section class="screen" data-screen="27">
+          <div class="detail-header mb-24">
+            <div class="btn-back" onclick="handleBackFromScreen(27)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Sobre o Habbi</h2>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; align-items:center; padding:0 8px; flex:1; overflow-y:auto; width:100%;">
+            <div style="text-align:center; margin-bottom: 22px;">
+              <div style="width: 190px; height: 190px; margin: 0 auto 12px auto; border-radius: 50%; overflow: hidden; border: 5px solid var(--card-bg, #ffffff); box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12); background-color: #F4F7F4;">
+                <img src="assets/ilustracoes/morgana.jpg" alt="Morgana" style="width:100%; height:100%; object-fit:cover; display:block;">
+              </div>
+              <div style="font-size:18px; font-weight:800; color:var(--text-primary); letter-spacing:-0.3px;">Morgana</div>
+              <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-top:2px;">A inspiração do mascote</div>
+            </div>
+            
+            <div class="card" style="padding: 24px 20px; width: 100%; margin-bottom: 20px; line-height: 1.6; border-radius: 20px; background-color: var(--card-bg); border: 1px solid var(--border-color); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03); color: var(--text-primary);">
+              <h1 style="font-size: 20px; font-weight: 800; color: var(--text-primary); margin: 0 0 16px 0; letter-spacing: -0.3px; text-align: left;">Sobre o Habbi</h1>
+              
+              <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 14px 0; text-align: left; font-weight: 500; line-height: 1.6;">
+                O Habbi é um projeto acadêmico desenvolvido na disciplina de Laboratório de Interfaces do curso de Desenho Industrial da Universidade Federal de Santa Maria (UFSM).
+              </p>
+              
+              <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 14px 0; text-align: left; font-weight: 500; line-height: 1.6;">
+                A proposta surgiu da ideia de criar um aplicativo que tornasse a mudança de hábitos mais leve e acolhedora, unindo design, tecnologia e ilustrações autorais.
+              </p>
+              
+              <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 14px 0; text-align: left; font-weight: 500; line-height: 1.6;">
+                A identidade visual e os personagens foram desenvolvidos especialmente para o projeto, tendo como principal inspiração a <strong style="color:var(--text-primary);">Morgana</strong>, minha gatinha, que deu origem ao mascote presente nas telas do aplicativo.
+              </p>
+              
+              <p style="font-size: 14px; color: var(--text-secondary); margin: 0 0 16px 0; text-align: left; font-weight: 500; line-height: 1.6;">
+                Inicialmente voltado à redução do tabagismo, o Habbi foi pensado para futuramente acompanhar a transformação de outros hábitos, sempre valorizando as pequenas conquistas de cada pessoa.
+              </p>
+              
+              <p style="font-size: 13.5px; color: var(--primary-dark, #2E7D32); margin: 0; text-align: center; font-style: italic; font-weight: 600; line-height: 1.5;">
+                Um projeto feito com cuidado, criatividade e um pouquinho da Morgana. ♡
+              </p>
+            </div>
+            
+            <div style="text-align:center; padding:8px; font-size:12.5px; font-weight:600; color:var(--text-muted); margin-top:auto; margin-bottom:8px;">
+              Versão 1.2.0 • UFSM
+            </div>
+          </div>
+        </section>
+
+        <!-- SCREEN 28: MINHA CONTA -->
+        <section class="screen" data-screen="28">
+          <div class="detail-header mb-24">
+            <div class="btn-back" onclick="handleBackFromScreen(28)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <h2>Minha Conta</h2>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:24px; flex:1; padding:0 8px; width:100%;">
+            <div class="form-group">
+              <label class="form-label" for="edit-account-name">Nome</label>
+              <input type="text" id="edit-account-name" class="form-input" placeholder="Seu nome">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="edit-account-email">E-mail</label>
+              <input type="email" id="edit-account-email" class="form-input" placeholder="seuemail@exemplo.com">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="edit-account-password">Nova Senha (opcional)</label>
+              <input type="password" id="edit-account-password" class="form-input" placeholder="Digite para alterar sua senha">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit-account-meta">Meta Diária (cigarros/dia)</label>
+              <input type="number" id="edit-account-meta" class="form-input" min="1" placeholder="Ex: 11">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="edit-account-pack-price">Preço do Maço (R$)</label>
+              <input type="number" id="edit-account-pack-price" class="form-input" min="1" max="100" step="0.01" placeholder="Ex: 10.00">
+            </div>
+            
+            <div class="grow"></div>
+            
+            <button class="btn btn-primary" id="btn-save-account-changes" style="height:54px; font-size:16px; margin-top:20px;">Salvar Alterações</button>
+          </div>
+          </section>
+
+          <!-- SCREEN 29: ECONOMIA -->
+          <section class="screen" data-screen="29" style="padding: 20px 16px;">
+            <div class="detail-header mb-16">
+              <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: var(--text-primary);">Sua Economia</h2>
+              <span class="caption" style="color: var(--text-muted);">Veja o valor acumulado ao evitar o cigarro.</span>
+            </div>
+
+            <!-- Poupado Card -->
+            <div class="card" style="padding: 24px 16px; text-align: center; margin-bottom: 16px; background-color: var(--primary-light); border: 1.5px solid var(--primary-dark);">
+              <span class="caption" style="color: var(--primary-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Economizado</span>
+              <h1 id="savings-total-value" style="font-size: 40px; font-weight: 800; color: var(--primary-dark); margin: 8px 0 12px 0; letter-spacing: -1px;">R$ 0,00</h1>
+              
+              <!-- Comparison Box -->
+              <div style="background-color: var(--card-bg); border-radius: 12px; padding: 14px 12px; border: 1px solid var(--border-color); margin-top: 10px;">
+                <p id="savings-comparison-text" style="font-size: 13.5px; line-height: 1.5; color: var(--text-secondary); margin: 0; font-weight: 500;">
+                  Calculando economia...
+                </p>
+              </div>
+            </div>
+
+            <!-- Histórico Title -->
+            <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: var(--text-primary);">Histórico de Poupança</h3>
+              <span class="caption" style="color: var(--text-muted);">Últimos ganhos</span>
+            </div>
+
+            <!-- Savings Timeline -->
+            <div id="savings-history-container" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto; padding-right: 4px;">
+              <!-- Rendered dynamically inside app.js -->
+            </div>
+          </section>
+
+        </div><!-- app-screen-container -->
+
+      <!-- META EXCEEDED MODAL -->
+      <div id="meta-exceeded-modal" class="custom-modal" style="display:none;">
+        <div class="modal-content">
+          <h3>Meta Excedida</h3>
+          <p>Você registrou o cigarro nº <strong id="modal-logged-cigs">12</strong>. Sua meta de hoje era de <strong id="modal-meta-cigs">11</strong>.</p>
+          <p class="caption" style="margin-top:4px; font-size:12px;">Como esta não é uma recaída, o que deseja fazer com a meta de amanhã?</p>
+          <div style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:16px;">
+            <button class="btn btn-secondary" id="btn-keep-meta" style="height:48px; font-size:13px; font-weight:600; padding:0 12px; line-height:1.2;">Manter em <span id="modal-keep-val">11</span></button>
+            <button class="btn btn-primary" id="btn-reduce-meta" style="height:48px; font-size:13px; font-weight:600; padding:0 12px; line-height:1.2;">Reduzir para <span id="modal-reduce-val">10</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TUTORIAL INTERATIVO DE PRIMEIROS PASSOS -->
+      <div class="habbi-tutorial-overlay" id="habbi-tutorial-overlay" style="display:none;" aria-live="polite">
+        <div class="habbi-tutorial-spotlight" id="habbi-tutorial-spotlight"></div>
+        <div class="habbi-tutorial-popover" id="habbi-tutorial-popover" role="dialog" aria-modal="true" aria-labelledby="habbi-tutorial-title">
+          <div class="habbi-tutorial-header">
+            <span class="habbi-tutorial-step-badge" id="habbi-tutorial-step-badge">1 de 6</span>
+            <button type="button" class="habbi-tutorial-skip-btn" id="habbi-tutorial-skip-btn" onclick="skipInteractiveTutorial()" aria-label="Pular tutorial">Pular</button>
+          </div>
+          <div class="habbi-tutorial-content">
+            <h3 class="habbi-tutorial-title" id="habbi-tutorial-title">Registre seu dia</h3>
+            <p class="habbi-tutorial-desc" id="habbi-tutorial-desc">Toque aqui para adicionar um cigarro e acompanhar seu consumo.</p>
+            <div id="habbi-tutorial-extra" style="display:none;"></div>
+          </div>
+          <div class="habbi-tutorial-actions">
+            <button type="button" class="habbi-tutorial-btn habbi-tutorial-btn-back" id="habbi-tutorial-btn-back" onclick="prevInteractiveTutorialStep()" aria-label="Voltar etapa">Voltar</button>
+            <button type="button" class="habbi-tutorial-btn habbi-tutorial-btn-next" id="habbi-tutorial-btn-next" onclick="nextInteractiveTutorialStep()" aria-label="Próxima etapa">Próximo</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- device-screen -->
+  </div><!-- device-container -->
+</main>
+<script src="app.js"></script>
+</body>
+</html>
