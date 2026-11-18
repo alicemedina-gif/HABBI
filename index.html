@@ -13,9 +13,10 @@
 <main class="main-content">
   <div class="device-container">
     <div class="device-screen">
-      <div class="toast-notice" id="toast-notice">
+      <div id="habbi-sr-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="toast-notice" id="toast-notice" role="status" aria-live="polite">
         <span class="toast-message">Registrado com sucesso</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <button type="button" class="toast-undo-btn" id="toast-undo-btn" style="display:none;">Desfazer</button>
       </div>
       <header class="status-bar" id="status-bar">
         <span id="status-time">09:41</span>
@@ -226,10 +227,10 @@
               </button>
             </div>
             <div class="wl-home-pager-bar">
-              <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
-                <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Ir para Conquista"></button>
-                <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Página atual: Início"></button>
-                <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Ir para Minijogos"></button>
+              <div class="wl-pager-nav-dots wl-carousel-tabs" role="tablist" aria-label="Navegação entre abas principais">
+                <button type="button" class="wl-pager-dot wl-pager-tab" id="wl-tab-conquista" role="tab" data-slide-idx="0" aria-selected="false" aria-controls="slide-conquista" tabindex="-1" onclick="navigateHorizontalCarousel(29)" title="Conquista"><span id="wl-tab-lbl-conquista">Conquista</span></button>
+                <button type="button" class="wl-pager-dot wl-pager-tab active" id="wl-tab-inicio" role="tab" data-slide-idx="1" aria-selected="true" aria-controls="slide-inicio" tabindex="0" onclick="navigateHorizontalCarousel(10)" title="Início"><span id="wl-tab-lbl-inicio">Início</span></button>
+                <button type="button" class="wl-pager-dot wl-pager-tab" id="wl-tab-minijogos" role="tab" data-slide-idx="2" aria-selected="false" aria-controls="slide-minijogos" tabindex="-1" onclick="navigateHorizontalCarousel(15)" title="Minijogos"><span id="wl-tab-lbl-minijogos">Minijogos</span></button>
               </div>
               <div class="wl-carousel-swipe-hint" id="wl-carousel-swipe-hint" style="display:none;"><span>Arraste para explorar</span></div>
             </div>
@@ -1211,6 +1212,18 @@
           <div class="habbi-flat-modal-actions">
             <button type="button" class="btn btn-primary habbi-modal-btn" id="habbi-nosmoke-modal-confirm" onclick="confirmPendingNoSmokeDay()">Confirmar dia sem fumar</button>
             <button type="button" class="btn btn-secondary habbi-modal-btn" id="habbi-nosmoke-modal-cancel" onclick="closeConfirmNoSmokeModal()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: CONFIRMAR SAÍDA DE MINIJOGO ATIVO -->
+      <div id="habbi-confirm-leave-game-modal" class="habbi-flat-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="habbi-leave-game-title" style="display:none;">
+        <div class="habbi-flat-modal-card">
+          <h3 id="habbi-leave-game-title">Sair da partida atual?</h3>
+          <p id="habbi-leave-game-desc" class="caption">Você tem um minijogo em andamento. Se trocar de aba agora, esta partida será encerrada.</p>
+          <div class="habbi-flat-modal-actions">
+            <button type="button" class="btn btn-primary habbi-modal-btn" id="habbi-leave-game-stay" onclick="closeConfirmLeaveGameModal()">Continuar jogando</button>
+            <button type="button" class="btn btn-secondary habbi-modal-btn" id="habbi-leave-game-confirm" onclick="confirmPendingLeaveGame()">Sair da partida</button>
           </div>
         </div>
       </div>

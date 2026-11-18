@@ -483,6 +483,18 @@ document.addEventListener('DOMContentLoaded', () => {
       loginEmailInvalid: 'Informe um e-mail válido para entrar.',
       registerFieldsInvalid: 'Informe seu nome e um e-mail válido para criar a conta.',
       savingsDayInProgress: 'Dia em andamento • Consolida ao encerrar o dia ou confirmar sem fumar',
+      tabConquista: 'Conquista',
+      tabHome: 'Início',
+      tabMinigames: 'Minijogos',
+      toastUndo: 'Desfazer',
+      toastEventRemoved: 'Registro removido',
+      toastEventRestored: 'Registro restaurado',
+      toastCigAdded: 'Cigarro registrado',
+      overMetaEmpathy: '+{0} acima da meta — tudo bem, recomece no próximo',
+      leaveGameTitle: 'Sair da partida atual?',
+      leaveGameDesc: 'Você tem um minijogo em andamento. Se trocar de aba agora, esta partida será encerrada.',
+      leaveGameStay: 'Continuar jogando',
+      leaveGameConfirm: 'Sair da partida',
 
       // Login / Cadastro (23, 24)
       loginTitle: 'Entrar',
@@ -936,6 +948,18 @@ document.addEventListener('DOMContentLoaded', () => {
       loginEmailInvalid: 'Please enter a valid email to sign in.',
       registerFieldsInvalid: 'Please enter your name and a valid email to create an account.',
       savingsDayInProgress: 'Day in progress • Consolidates at day end or smoke-free confirmation',
+      tabConquista: 'Goal',
+      tabHome: 'Home',
+      tabMinigames: 'Games',
+      toastUndo: 'Undo',
+      toastEventRemoved: 'Log removed',
+      toastEventRestored: 'Log restored',
+      toastCigAdded: 'Cigarette logged',
+      overMetaEmpathy: '+{0} over goal — it\'s okay, start fresh on the next one',
+      leaveGameTitle: 'Leave current game?',
+      leaveGameDesc: 'You have a minigame in progress. Switching tabs now will end this round.',
+      leaveGameStay: 'Keep playing',
+      leaveGameConfirm: 'Leave game',
 
       // Login / Signup (23, 24)
       loginTitle: 'Sign In',
@@ -1389,6 +1413,18 @@ document.addEventListener('DOMContentLoaded', () => {
       loginEmailInvalid: 'Ingresa un correo válido para iniciar sesión.',
       registerFieldsInvalid: 'Ingresa tu nombre y un correo válido para crear tu cuenta.',
       savingsDayInProgress: 'Día en curso • Se consolida al finalizar el día o confirmar sin fumar',
+      tabConquista: 'Logro',
+      tabHome: 'Inicio',
+      tabMinigames: 'Juegos',
+      toastUndo: 'Deshacer',
+      toastEventRemoved: 'Registro eliminado',
+      toastEventRestored: 'Registro restaurado',
+      toastCigAdded: 'Cigarrillo registrado',
+      overMetaEmpathy: '+{0} sobre la meta — está bien, vuelve a empezar en el próximo',
+      leaveGameTitle: '¿Salir de la partida actual?',
+      leaveGameDesc: 'Tienes un minijuego en curso. Si cambias de pestaña ahora, esta partida terminará.',
+      leaveGameStay: 'Seguir jugando',
+      leaveGameConfirm: 'Salir de la partida',
 
       // Login / Signup (23, 24)
       loginTitle: 'Iniciar sesión',
@@ -2114,6 +2150,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nsModalConfirm) nsModalConfirm.innerText = t.noSmokeModalConfirm || 'Confirmar dia sem fumar';
     const nsModalCancel = document.getElementById('habbi-nosmoke-modal-cancel');
     if (nsModalCancel) nsModalCancel.innerText = t.delModalCancel || 'Cancelar';
+
+    // Abas do Carrossel e Modal de saída de partida
+    const tabConq = document.getElementById('wl-tab-lbl-conquista');
+    if (tabConq) tabConq.innerText = t.tabConquista || 'Conquista';
+    const tabHome = document.getElementById('wl-tab-lbl-inicio');
+    if (tabHome) tabHome.innerText = t.tabHome || 'Início';
+    const tabMini = document.getElementById('wl-tab-lbl-minijogos');
+    if (tabMini) tabMini.innerText = t.tabMinigames || 'Minijogos';
+    const lgTitle = document.getElementById('habbi-leave-game-title');
+    if (lgTitle) lgTitle.innerText = t.leaveGameTitle || 'Sair da partida atual?';
+    const lgDesc = document.getElementById('habbi-leave-game-desc');
+    if (lgDesc) lgDesc.innerText = t.leaveGameDesc || 'Você tem um minijogo em andamento. Se trocar de aba agora, esta partida será encerrada.';
+    const lgStay = document.getElementById('habbi-leave-game-stay');
+    if (lgStay) lgStay.innerText = t.leaveGameStay || 'Continuar jogando';
+    const lgConfirm = document.getElementById('habbi-leave-game-confirm');
+    if (lgConfirm) lgConfirm.innerText = t.leaveGameConfirm || 'Sair da partida';
 
     // Screen 23: Login
     const s23 = document.querySelector('.screen[data-screen="23"]');
@@ -3687,6 +3739,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const idx = rec.events.findIndex(e => String(e.id) === String(eventId));
     if (idx === -1) return;
     const removed = rec.events[idx];
+    const snapshotForUndo = {
+      dateKey,
+      index: idx,
+      prevMeta: rec.meta,
+      event: JSON.parse(JSON.stringify(removed))
+    };
+
     rec.events.splice(idx, 1);
 
     if (removed.kind === 'no-smoke' && userState.cigarettesAvoided > 0) {
@@ -3701,6 +3760,26 @@ document.addEventListener('DOMContentLoaded', () => {
       delete userState.dailyRecords[dateKey];
     }
     refreshAllViews();
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    showToast(t.toastEventRemoved || 'Registro removido', {
+      duration: 4500,
+      undoLabel: t.toastUndo || 'Desfazer',
+      onUndo: () => {
+        ensureActiveProfileForWrite();
+        const targetRec = getOrCreateDayRecord(snapshotForUndo.dateKey);
+        if (snapshotForUndo.prevMeta && typeof snapshotForUndo.prevMeta === 'number') {
+          targetRec.meta = snapshotForUndo.prevMeta;
+        }
+        if (!Array.isArray(targetRec.events)) targetRec.events = [];
+        const insertAt = Math.min(snapshotForUndo.index, targetRec.events.length);
+        targetRec.events.splice(insertAt, 0, snapshotForUndo.event);
+        recomputeDayAggregates(targetRec);
+        refreshAllViews();
+        showToast(t.toastEventRestored || 'Registro restaurado', { duration: 2200 });
+      }
+    });
   };
 
   window.editHabbiEvent = function(dateKey, eventId) {
@@ -3727,11 +3806,71 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebarItems = document.querySelectorAll('.menu-item');
   const statusBar = document.getElementById('status-bar');
 
-  // Notificações popup desativadas para manter a interface limpa
-  function showToast(_message) {
+  // Toast discreto plano com suporte a ação "Desfazer" e anúncio em região live ARIA
+  let activeToastTimer = null;
+  let activeToastUndoHandler = null;
+
+  function hideToast() {
     const toast = document.getElementById('toast-notice');
+    const undoBtn = document.getElementById('toast-undo-btn');
     if (toast) toast.classList.remove('show');
+    if (undoBtn) undoBtn.style.display = 'none';
+    activeToastUndoHandler = null;
+    if (activeToastTimer) {
+      clearTimeout(activeToastTimer);
+      activeToastTimer = null;
+    }
   }
+
+  function showToast(message, options = {}) {
+    const text = String(message || '').trim();
+    if (!text) return;
+    const toast = document.getElementById('toast-notice');
+    const msgEl = toast ? toast.querySelector('.toast-message') : null;
+    const undoBtn = document.getElementById('toast-undo-btn');
+    const srStatus = document.getElementById('habbi-sr-status');
+
+    if (activeToastTimer) {
+      clearTimeout(activeToastTimer);
+      activeToastTimer = null;
+    }
+
+    if (srStatus) {
+      srStatus.textContent = '';
+      setTimeout(() => { srStatus.textContent = text; }, 20);
+    }
+
+    if (!toast || !msgEl) return;
+    msgEl.textContent = text;
+
+    const hasUndo = Boolean(options && typeof options.onUndo === 'function');
+    if (undoBtn) {
+      if (hasUndo) {
+        activeToastUndoHandler = options.onUndo;
+        undoBtn.textContent = options.undoLabel || 'Desfazer';
+        undoBtn.style.display = 'inline-flex';
+        undoBtn.onclick = () => {
+          const fn = activeToastUndoHandler;
+          hideToast();
+          if (typeof fn === 'function') fn();
+        };
+      } else {
+        activeToastUndoHandler = null;
+        undoBtn.style.display = 'none';
+        undoBtn.onclick = null;
+      }
+    }
+
+    toast.classList.add('show');
+    const duration = typeof options.duration === 'number'
+      ? options.duration
+      : (hasUndo ? 4500 : 2600);
+    activeToastTimer = setTimeout(() => {
+      hideToast();
+    }, duration);
+  }
+  window.showToast = showToast;
+  window.hideToast = hideToast;
 
   // Function to transition to a screen
   function showScreen(screenNum) {
@@ -4708,6 +4847,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   let currentCarouselSlide = 1; // 0 = Conquista (29), 1 = Início (10), 2 = Minijogos (15)
 
+  let pendingCarouselTargetAfterLeaveGame = null;
+
+  window.closeConfirmLeaveGameModal = function() {
+    pendingCarouselTargetAfterLeaveGame = null;
+    const modal = document.getElementById('habbi-confirm-leave-game-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  window.confirmPendingLeaveGame = function() {
+    const nextScreen = pendingCarouselTargetAfterLeaveGame;
+    window.closeConfirmLeaveGameModal();
+    if (typeof quitInlineGame === 'function') quitInlineGame();
+    if (typeof nextScreen === 'number') {
+      window.navigateHorizontalCarousel(nextScreen, true);
+    }
+  };
+
   window.goToCarouselSlide = function(slideIdx, smooth = true) {
     if (slideIdx < 0) slideIdx = 0;
     if (slideIdx > 2) slideIdx = 2;
@@ -4732,12 +4888,21 @@ document.addEventListener('DOMContentLoaded', () => {
       track.style.transform = 'translate3d(-' + (slideIdx * 33.333333) + '%, 0, 0)';
     }
 
-    // Sincroniza estado ativo de todos os grupos de pager dots (.wl-pager-dot)
+    // Sincroniza estado ativo de todos os grupos de abas do carrossel (.wl-pager-tab / .wl-pager-dot)
     document.querySelectorAll('.wl-pager-nav-dots').forEach(bar => {
-      const dots = bar.querySelectorAll('.wl-pager-dot');
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle('active', idx === slideIdx);
+      const tabs = bar.querySelectorAll('.wl-pager-tab, .wl-pager-dot');
+      tabs.forEach((tab, idx) => {
+        const isAct = idx === slideIdx;
+        tab.classList.toggle('active', isAct);
+        tab.setAttribute('aria-selected', isAct ? 'true' : 'false');
+        tab.setAttribute('tabindex', isAct ? '0' : '-1');
       });
+    });
+
+    // Destaca visualmente a pílula de economia quando o slide Conquista (0 / Screen 29) está ativo
+    document.querySelectorAll('.wl-home-savings-pill').forEach(pill => {
+      pill.classList.toggle('is-active', slideIdx === 0);
+      pill.setAttribute('aria-pressed', slideIdx === 0 ? 'true' : 'false');
     });
 
     // Sincroniza badges de dia no calendário e pílulas de economia em todos os cabeçalhos
@@ -4764,7 +4929,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.navigateHorizontalCarousel = function(targetScreen) {
+  window.navigateHorizontalCarousel = function(targetScreen, bypassGameGuard = false) {
+    // Proteção durante minijogo ativo no modo carrossel: pede confirmação antes de encerrar partida
+    if (!bypassGameGuard && userState.isGameActive && currentCarouselSlide === 2 && targetScreen !== 15) {
+      pendingCarouselTargetAfterLeaveGame = targetScreen;
+      const modal = document.getElementById('habbi-confirm-leave-game-modal');
+      if (modal) {
+        modal.style.display = 'flex';
+        return;
+      }
+    }
+
     if (typeof hideTutorialSwipeHint === 'function') {
       hideTutorialSwipeHint();
     } else {
@@ -5618,6 +5793,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             <span id="home-nosmoke-badge-text">N\u00e3o fumei hoje</span>
           </button>
+          <div class="wl-home-overmeta-banner" id="home-overmeta-banner" style="display:none;" role="status"></div>
         </div>
 
         <div class="wl-cig-demo-stage wl-home-cig-stage" id="home-cig-stage">
@@ -5645,7 +5821,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </filter>
             </defs>
           </svg>
-          <div class="wl-cig-meter-wrap" id="home-cig-meter" onclick="handleHomeAddCigarette()" title="Toque para adicionar">
+          <div class="wl-cig-meter-wrap" id="home-cig-meter">
             <div class="wl-cig-illustration-box">
               <img
                 src="${cigImgSrc}"
@@ -6845,6 +7021,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // Micro-mensagem empática acima da meta (Decisão 1A — tom acolhedor e não punitivo)
+    const overMetaBanner = document.getElementById('home-overmeta-banner');
+    if (overMetaBanner) {
+      if (overLimit > 0) {
+        const tpl = (curI18n && curI18n.overMetaEmpathy)
+          ? curI18n.overMetaEmpathy
+          : '+{0} acima da meta — tudo bem, recomece no próximo';
+        overMetaBanner.textContent = tpl.replace('{0}', String(overLimit));
+        overMetaBanner.style.display = 'block';
+      } else {
+        overMetaBanner.textContent = '';
+        overMetaBanner.style.display = 'none';
+      }
+    }
+
     if (homeCigFill) {
       homeCigFill.classList.remove('is-stage-green', 'is-stage-yellow', 'is-stage-orange', 'is-stage-red', 'is-stage-dark', 'is-over-limit');
       
@@ -6862,41 +7053,21 @@ document.addEventListener('DOMContentLoaded', () => {
           targetTopInset = 71.5 - adjustedRatio * (71.5 - 39.2);
         }
       } else if (overLimit === 1) {
-        // Amarelo: preenche em 1 vez (100%)
         newStage = 'yellow';
         targetTopInset = 39.20;
-      } else if (overLimit === 2) {
-        // Laranja: 1ª de 2 (50%)
-        newStage = 'orange';
-        targetTopInset = 55.35;
-      } else if (overLimit === 3) {
-        // Laranja: 2ª de 2 (100%)
+      } else if (overLimit === 2 || overLimit === 3) {
+        // Mantém 100% preenchido (39.20) para qualquer overLimit >= 1, sem recuar para 50%
         newStage = 'orange';
         targetTopInset = 39.20;
-      } else if (overLimit === 4) {
-        // Vermelho: 1ª de 2 (50%)
-        newStage = 'red';
-        targetTopInset = 55.35;
-      } else if (overLimit === 5) {
-        // Vermelho: 2ª de 2 (100%)
+      } else if (overLimit === 4 || overLimit === 5) {
         newStage = 'red';
         targetTopInset = 39.20;
       } else {
-        // Escuro: 1 vez (100%)
         newStage = 'dark';
         targetTopInset = 39.20;
       }
 
       homeCigFill.classList.add(`is-stage-${newStage}`);
-
-      const prevStage = homeCigFill.dataset.cigStage;
-      // Se trocou de cor/estágio (e já havia um estágio anterior renderizado), anima preenchendo da base
-      if (prevStage && prevStage !== newStage && overLimit > 0) {
-        homeCigFill.style.transition = 'none';
-        homeCigFill.style.clipPath = 'inset(71.5% 0 0 0)';
-        void homeCigFill.offsetWidth;
-        homeCigFill.style.transition = '';
-      }
       homeCigFill.dataset.cigStage = newStage;
       homeCigFill.style.clipPath = `inset(${targetTopInset.toFixed(2)}% 0 0 0)`;
     }
@@ -6938,18 +7109,28 @@ document.addEventListener('DOMContentLoaded', () => {
       detail: `Consumo anotado (${nextNum}/${meta}).`
     });
 
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const homeCigMeter = document.getElementById('home-cig-meter');
     if (homeCigMeter) {
       homeCigMeter.classList.remove('is-bumping');
+      if (!prefersReducedMotion) {
+        void homeCigMeter.offsetWidth;
+        homeCigMeter.classList.add('is-bumping');
+        setTimeout(() => homeCigMeter.classList.remove('is-bumping'), 350);
+      }
     }
 
     const homeAddBtn = document.getElementById('btn-home-add-cig');
-    if (homeAddBtn) {
+    if (homeAddBtn && !prefersReducedMotion) {
       homeAddBtn.classList.remove('is-pressed');
       void homeAddBtn.offsetWidth;
       homeAddBtn.classList.add('is-pressed');
       setTimeout(() => homeAddBtn.classList.remove('is-pressed'), 260);
     }
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const tAdd = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    showToast(`${tAdd.toastCigAdded || 'Cigarro registrado'} (${nextNum}/${meta})`);
   };
 
   window.handleHomeRemoveCigarette = function() {
@@ -8374,27 +8555,31 @@ document.addEventListener('DOMContentLoaded', () => {
           const actionsEl = document.createElement('div');
           actionsEl.className = 'wl-cal-event-actions';
 
-          const editLabel = t.calEventEdit || 'Editar';
-          const editBtn = document.createElement('button');
-          editBtn.type = 'button';
-          editBtn.className = 'wl-cal-ev-btn';
-          editBtn.title = editLabel;
-          editBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>';
-          const editSpan = document.createElement('span');
-          editSpan.textContent = editLabel;
-          editBtn.appendChild(editSpan);
-          editBtn.addEventListener('click', () => {
-            if (typeof window.editHabbiEvent === 'function') {
-              window.editHabbiEvent(selKey, ev.id);
-            }
-          });
+          // Decisão 5A: botão Editar exibido apenas para eventos de humor (mood)
+          if (ev.kind === 'mood') {
+            const editLabel = t.calEventEdit || 'Editar';
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.className = 'wl-cal-ev-btn';
+            editBtn.title = editLabel;
+            editBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>';
+            const editSpan = document.createElement('span');
+            editSpan.textContent = editLabel;
+            editBtn.appendChild(editSpan);
+            editBtn.addEventListener('click', () => {
+              if (typeof window.editHabbiEvent === 'function') {
+                window.editHabbiEvent(selKey, ev.id);
+              }
+            });
+            actionsEl.appendChild(editBtn);
+          }
 
           const removeLabel = t.calEventRemove || 'Remover';
           const removeBtn = document.createElement('button');
           removeBtn.type = 'button';
           removeBtn.className = 'wl-cal-ev-btn danger';
           removeBtn.title = removeLabel;
-          removeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+          removeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
           const removeSpan = document.createElement('span');
           removeSpan.textContent = removeLabel;
           removeBtn.appendChild(removeSpan);
@@ -8404,7 +8589,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
 
-          actionsEl.appendChild(editBtn);
           actionsEl.appendChild(removeBtn);
 
           item.appendChild(mainEl);
@@ -8864,12 +9048,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.handleMinijogosBack = function() {
+    // Decisão 4A: quando há partida ativa, volta primeiro à grade dos 4 jogos (inclusive em tools-mode)
     if (userState.isGameActive) {
-      const returnScreen = userState.minijogosReturnScreen || 10;
       quitInlineGame();
-      if (returnScreen === 14 || returnScreen === 12) {
-        showScreen(returnScreen);
-      }
       return;
     }
     window.handleBackFromScreen(15);
@@ -10054,6 +10235,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const mainCarousel = document.getElementById('main-carousel-container');
       if (!mainCarousel || !mainCarousel.classList.contains('active')) {
+        return;
+      }
+      // Bloqueia arrasto horizontal acidental durante uma partida de minijogo ativa
+      if (userState.isGameActive && currentCarouselSlide === 2) {
         return;
       }
 
