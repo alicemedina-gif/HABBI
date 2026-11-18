@@ -365,7 +365,7 @@
 
       // Sentimentos / Gatilhos (25)
       moodTitle: 'Como você está?',
-      moodSubtitle: 'Selecione seu humor hoje:',
+      moodSubtitle: 'Selecione seu humor hoje (opcional):',
       moodInfluenceTitle: 'O que está influenciando seu humor?',
       moodNotesLabel: 'O que aconteceu? (opcional)',
       moodNotesPlaceholder: 'Escreva um breve comentário sobre o seu dia...',
@@ -745,7 +745,7 @@
 
       // Mood / Triggers (25)
       moodTitle: 'How are you?',
-      moodSubtitle: 'Select your mood today:',
+      moodSubtitle: 'Select your mood today (optional):',
       moodInfluenceTitle: 'What is influencing your mood?',
       moodNotesLabel: 'What happened? (optional)',
       moodNotesPlaceholder: 'Write a brief note about your day...',
@@ -1125,7 +1125,7 @@
 
       // Mood / Triggers (25)
       moodTitle: '¿Cómo estás?',
-      moodSubtitle: 'Selecciona tu ánimo hoy:',
+      moodSubtitle: 'Selecciona tu ánimo hoy (opcional):',
       moodInfluenceTitle: '¿Qué influye en tu estado de ánimo?',
       moodNotesLabel: '¿Qué pasó? (opcional)',
       moodNotesPlaceholder: 'Escribe un breve comentario sobre tu día...',
@@ -1835,7 +1835,7 @@
       const h2 = s25.querySelector('.detail-header h2');
       if (h2) h2.innerText = t.moodTitle || 'Como você está?';
       const capMood = s25.querySelector('.caption');
-      if (capMood) capMood.innerText = t.moodSubtitle || 'Selecione seu humor hoje:';
+      if (capMood) capMood.innerText = t.moodSubtitle || 'Selecione seu humor hoje (opcional):';
       const moodSpans = s25.querySelectorAll('.mood-card span');
       if (moodSpans.length >= 5) {
         moodSpans[0].innerText = t.moodHappy || 'Feliz';
@@ -5255,16 +5255,26 @@
   };
 
   window.selectQuickMood = function(moodName) {
-    quickSelectedMood = moodName;
-    document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.mood === moodName);
-    });
-    const extraEl = document.getElementById('wl-qreg-mood-extra');
-    if (extraEl) extraEl.style.display = 'flex';
+    if (quickSelectedMood === moodName) {
+      quickSelectedMood = '';
+      document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const saveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
+      if (saveMoodBtn) saveMoodBtn.innerText = 'Salvar registro';
+    } else {
+      quickSelectedMood = moodName;
+      document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mood === moodName);
+      });
+      const saveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
+      if (saveMoodBtn) saveMoodBtn.innerText = 'Salvar humor';
+      const extraEl = document.getElementById('wl-qreg-mood-extra');
+      if (extraEl) extraEl.style.display = 'flex';
+    }
   };
 
   window.saveQuickMood = function() {
-    if (!quickSelectedMood) return;
     const targetKey = userState.activeRegisterDateKey || getDateKey(new Date());
     userState.calSelectedDate = targetKey;
 
@@ -5279,16 +5289,18 @@
     const descParts = [];
     if (infText) descParts.push(infText);
     if (note) descParts.push(note);
-    const fullDesc = descParts.join(' • ') || 'Sentimento registrado';
+    const fullDesc = descParts.join(' • ') || (quickSelectedMood ? 'Sentimento registrado' : 'Registro salvo');
 
     const rec = userState.dailyRecords[targetKey];
     const existingEv = (quickEditingEventId && rec && Array.isArray(rec.events))
       ? rec.events.find(e => String(e.id) === String(quickEditingEventId) && e.kind === 'mood')
       : null;
 
+    const eventTitle = quickSelectedMood ? `Humor: ${quickSelectedMood}` : 'Registro de Sentimentos';
+
     if (existingEv) {
-      existingEv.moodValue = quickSelectedMood;
-      existingEv.title = `Humor: ${quickSelectedMood}`;
+      existingEv.moodValue = quickSelectedMood || null;
+      existingEv.title = eventTitle;
       existingEv.influences = influences;
       existingEv.note = note;
       existingEv.desc = fullDesc;
@@ -5299,15 +5311,17 @@
       recordHabbiEvent({
         dateKey: targetKey,
         kind: 'mood',
-        moodValue: quickSelectedMood,
+        moodValue: quickSelectedMood || null,
         influences: influences,
         note: note,
-        title: `Humor: ${quickSelectedMood}`,
+        title: eventTitle,
         desc: fullDesc,
         detail: fullDesc
       });
     }
 
+    const t = HABBI_I18N[(userState.currentLang || 'PT').toUpperCase()] || HABBI_I18N.PT;
+    showToast(t.toastSaved || 'Registrado com sucesso');
     window.closeQuickRegisterModal();
   };
 
@@ -7734,9 +7748,14 @@
   
   moodCards.forEach(card => {
     card.addEventListener('click', () => {
-      moodCards.forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-      selectedMood = card.dataset.mood;
+      if (card.classList.contains('active')) {
+        card.classList.remove('active');
+        selectedMood = '';
+      } else {
+        moodCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        selectedMood = card.dataset.mood;
+      }
     });
   });
 
@@ -7750,11 +7769,6 @@
   const btnMoodSubmit = document.getElementById('btn-mood-submit');
   if (btnMoodSubmit) {
     btnMoodSubmit.addEventListener('click', () => {
-      if (!selectedMood) {
-        showToast('Por favor, selecione seu humor.');
-        return;
-      }
-
       const selectedInfluences = [];
       moodInfluenceChips.forEach(c => {
         if (c.classList.contains('selected')) {
@@ -7766,7 +7780,7 @@
       const targetKey = userState.activeRegisterDateKey || getDateKey(new Date());
 
       userState.mood = {
-        mood: selectedMood,
+        mood: selectedMood || null,
         influences: selectedInfluences,
         notes: notes,
         date: new Date().toLocaleDateString('pt-BR')
@@ -7775,14 +7789,22 @@
       const influencesText = selectedInfluences.length > 0 ? ` (Influências: ${selectedInfluences.join(', ')})` : '';
       const notesText = notes ? ` - "${notes}"` : '';
 
+      const t = HABBI_I18N[(userState.currentLang || 'PT').toUpperCase()] || HABBI_I18N.PT;
+      const eventTitle = selectedMood ? `Humor: ${selectedMood}` : 'Registro de Sentimentos';
+      const eventDesc = selectedMood ? `Sentimento registrado.${influencesText}` : (selectedInfluences.length > 0 ? `Influências registradas.${influencesText}` : (notes ? 'Nota registrada.' : 'Registro salvo.'));
+
       recordHabbiEvent({
         dateKey: targetKey,
         kind: 'mood',
-        moodValue: selectedMood,
-        title: `Humor: ${selectedMood}`,
-        desc: `Sentimento registrado.${influencesText}`,
-        detail: `Estado de humor: ${selectedMood}.${influencesText}${notesText}`
+        moodValue: selectedMood || null,
+        influences: selectedInfluences,
+        note: notes,
+        title: eventTitle,
+        desc: eventDesc,
+        detail: selectedMood ? `Estado de humor: ${selectedMood}.${influencesText}${notesText}` : `Sentimentos.${influencesText}${notesText}`
       });
+
+      showToast(t.toastSaved || 'Registrado com sucesso');
 
       moodCards.forEach(c => c.classList.remove('active'));
       selectedMood = '';
