@@ -2020,13 +2020,25 @@ document.addEventListener('DOMContentLoaded', () => {
       homeRemoveBtn.setAttribute('title', remLabel);
     }
 
-    // Carrossel Principal: abas rotuladas + aria-labels do cabeçalho
+    // Carrossel Principal: indicadores minimalistas (sem texto visível) + aria-labels traduzidos
     const tabConquista = document.getElementById('wl-tab-conquista');
-    if (tabConquista) tabConquista.innerText = t.tabConquista || 'Conquista';
+    if (tabConquista) {
+      const lbl = t.tabConquista || 'Conquista';
+      tabConquista.setAttribute('aria-label', lbl);
+      tabConquista.setAttribute('title', lbl);
+    }
     const tabInicio = document.getElementById('wl-tab-inicio');
-    if (tabInicio) tabInicio.innerText = t.tabHome || 'Início';
+    if (tabInicio) {
+      const lbl = t.tabHome || 'Início';
+      tabInicio.setAttribute('aria-label', lbl);
+      tabInicio.setAttribute('title', lbl);
+    }
     const tabMinijogos = document.getElementById('wl-tab-minijogos');
-    if (tabMinijogos) tabMinijogos.innerText = t.tabMinigames || 'Minijogos';
+    if (tabMinijogos) {
+      const lbl = t.tabMinigames || 'Minijogos';
+      tabMinijogos.setAttribute('aria-label', lbl);
+      tabMinijogos.setAttribute('title', lbl);
+    }
     const tabsBar = document.querySelector('.wl-carousel-tabs');
     if (tabsBar) tabsBar.setAttribute('aria-label', t.carouselTabsAria || 'Seções principais do Habbi');
     const navCalBtn = document.querySelector('#main-carousel-header .wl-top-nav-btn[onclick*="goToScreen(16)"]');
@@ -5694,10 +5706,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div class="wl-splash-bottom">
-          <div class="wl-splash-progress-track" id="wl-splash-progress-wrap">
-            <div class="wl-splash-progress-fill" id="wl-splash-progress-fill"></div>
-          </div>
-
           <div class="wl-splash-cta-bar" id="wl-splash-cta-wrap">
             <button type="button" class="wl-splash-lang-trigger" id="btn-splash-lang" title="Trocar idioma">
               <span class="wl-lang-flag-circle" id="wl-lang-flag-circle">${flagSVGs.PT}</span>
@@ -5721,8 +5729,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const shadowEl = document.getElementById('wl-splash-shadow');
         const confettiLayer = document.getElementById('wl-splash-confetti');
         const burstRing = document.getElementById('wl-splash-burst-ring');
-        const progressWrap = document.getElementById('wl-splash-progress-wrap');
-        const progressFill = document.getElementById('wl-splash-progress-fill');
         const ctaWrap = document.getElementById('wl-splash-cta-wrap');
         if (!frames.length) return;
 
@@ -5741,8 +5747,6 @@ document.addEventListener('DOMContentLoaded', () => {
           burstRing.classList.remove('is-active');
           void burstRing.offsetWidth;
         }
-        if (progressWrap) progressWrap.classList.remove('is-hidden');
-        if (progressFill) progressFill.style.width = '6%';
 
         const showFrame = (poseIdx, mode) => {
           frames.forEach((f, idx) => {
@@ -5775,16 +5779,12 @@ document.addEventListener('DOMContentLoaded', () => {
           { idx: 7, delay: 3760, final: true }
         ];
 
-        steps.forEach((step, i) => {
+        steps.forEach((step) => {
           const timer = setTimeout(() => {
-            const pct = Math.min(100, Math.round(((i + 1) / steps.length) * 100));
-            if (progressFill) progressFill.style.width = pct + '%';
-
             if (step.final) {
               showFrame(step.idx, 'celebrate');
               if (confettiLayer) confettiLayer.classList.add('is-active');
               if (burstRing) burstRing.classList.add('is-active');
-              if (progressWrap) progressWrap.classList.add('is-hidden');
               if (ctaWrap) ctaWrap.classList.add('is-ready');
             } else {
               showFrame(step.idx, 'step');
@@ -6368,9 +6368,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.openHubScreen = function(screenNum) {
-      userState.openedFromMenu = true;
       window.toggleHabbiHubMenu(false);
       if (screenNum === 11) {
+        userState.quickRegOpenedDirectlyFromHub = true;
         userState.activeRegisterDateKey = getDateKey(new Date());
         userState.returnScreenAfterRegister = 10;
         if (typeof window.openQuickRegisterModal === 'function') {
@@ -6378,6 +6378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return;
       }
+      userState.openedFromMenu = true;
       showScreen(screenNum);
     };
 
@@ -6626,7 +6627,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <strong class="wl-expenses-val" id="wl-expenses-month-val">R$ 0,00</strong>
               </div>
             </div>
-            <p class="wl-expenses-sub" id="wl-expenses-sub">Gasto estimado com base nos seus registros</p>
           </section>
 
           <!-- Ações secundárias -->
@@ -7067,15 +7067,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.closeQuickRegisterModal = function() {
+  window.closeQuickRegisterModal = function(opts) {
     quickEditingEventId = null;
     const modal = document.getElementById('wl-quick-register-modal');
     if (modal) {
       modal.classList.remove('is-open');
       closeAccessibleDialog(modal);
     }
-    if (userState.openedFromMenu) {
-      userState.openedFromMenu = false;
+    const wasDirectHub = Boolean(userState.quickRegOpenedDirectlyFromHub);
+    userState.quickRegOpenedDirectlyFromHub = false;
+    if (wasDirectHub && !(opts && opts.saved)) {
       setTimeout(() => window.toggleHabbiHubMenu(true), 40);
     }
   };
@@ -7213,7 +7214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Sem efeito colateral em todayKey quando targetKey !== todayKey
     refreshAllViews();
-    window.closeQuickRegisterModal();
+    window.closeQuickRegisterModal({ saved: true });
     showCelebrationModal('Mais um dia cuidando de você.', `${dayLabel}!`, 'assets/ilustracoes/pata pra cima.png');
   };
 
@@ -7237,7 +7238,7 @@ document.addEventListener('DOMContentLoaded', () => {
       desc: 'Impulso controlado',
       detail: 'Vontade superada e registrada.'
     });
-    window.closeQuickRegisterModal();
+    window.closeQuickRegisterModal({ saved: true });
   };
 
   window.syncQuickMoodExtraVisibility = function() {
@@ -7331,7 +7332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const t = HABBI_I18N[(userState.currentLang || 'PT').toUpperCase()] || HABBI_I18N.PT;
     showToast(t.toastSaved || 'Registrado com sucesso');
-    window.closeQuickRegisterModal();
+    window.closeQuickRegisterModal({ saved: true });
   };
 
   window.showCelebrationModal = function(tagText, titleText, imgSrc) {

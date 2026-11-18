@@ -7931,18 +7931,17 @@ textarea:focus-visible,
   to { transform: translateX(100%); }
 }
 
-/* Seletor compacto de abas do Carrossel (substitui os 3 pontinhos anônimos) */
+/* Indicadores minimalistas do Carrossel (pontos limpos sem rótulos, sem sobreposição e com contraste WCAG AA) */
 .wl-pager-nav-dots,
 .wl-carousel-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  width: 100%;
-  max-width: 344px;
-  padding: 3px;
-  background-color: var(--bg-color-alt);
-  border: 1px solid var(--border-color);
+  justify-content: center;
+  gap: 2px;
+  width: auto;
+  padding: 0;
+  background-color: transparent;
+  border: none;
   border-radius: 999px;
   user-select: none;
   box-sizing: border-box;
@@ -7951,27 +7950,20 @@ textarea:focus-visible,
 .wl-pager-dot,
 .wl-pager-tab {
   position: relative;
-  width: 100%;
-  min-height: 44px;
-  height: auto;
-  padding: 6px 8px;
+  width: 28px;
+  min-width: 28px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
   border-radius: 999px;
   background-color: transparent;
-  color: var(--text-secondary);
+  color: transparent;
   border: none;
-  font-family: var(--font-family);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.15;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: transform 0.2s ease;
   box-sizing: border-box;
 }
 
@@ -7981,36 +7973,53 @@ textarea:focus-visible,
   content: none;
 }
 
-.wl-pager-dot:hover,
-.wl-pager-tab:hover {
-  background-color: var(--card-bg);
-  color: var(--text-primary);
+.wl-pager-dot::after,
+.wl-pager-tab::after {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background-color: var(--text-secondary);
+  transition: width 0.22s ease, background-color 0.22s ease;
+}
+
+.wl-pager-dot:hover::after,
+.wl-pager-tab:hover::after {
+  background-color: var(--text-primary);
 }
 
 .wl-pager-dot.active,
 .wl-pager-tab.active {
-  width: 100%;
-  height: auto;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  background-color: transparent;
+  color: transparent;
+}
+
+.wl-pager-dot.active::after,
+.wl-pager-tab.active::after {
+  width: 20px;
+  height: 7px;
   background-color: var(--text-primary);
-  color: var(--card-bg);
-  border-radius: 999px;
 }
 
 .device-screen.dark-theme .wl-pager-nav-dots,
 .device-screen.dark-theme .wl-carousel-tabs {
-  background-color: var(--card-bg);
-  border-color: var(--border-color);
+  background-color: transparent;
+  border-color: transparent;
 }
 
-.device-screen.dark-theme .wl-pager-dot,
-.device-screen.dark-theme .wl-pager-tab {
-  color: var(--text-secondary);
+.device-screen.dark-theme .wl-pager-dot::after,
+.device-screen.dark-theme .wl-pager-tab::after {
+  background-color: var(--text-secondary);
 }
 
-.device-screen.dark-theme .wl-pager-dot.active,
-.device-screen.dark-theme .wl-pager-tab.active {
+.device-screen.dark-theme .wl-pager-dot.active::after,
+.device-screen.dark-theme .wl-pager-tab.active::after {
   background-color: var(--primary);
-  color: var(--text-on-accent);
 }
 
 .wl-home-savings-pill.is-active,
@@ -8063,13 +8072,6 @@ textarea:focus-visible,
   color: var(--text-primary);
 }
 
-@media (max-width: 340px) {
-  .wl-pager-dot,
-  .wl-pager-tab {
-    font-size: 11px;
-    padding: 6px 4px;
-  }
-}
 .wl-pager-nav-header {
   margin-left: auto;
 }
@@ -10548,7 +10550,7 @@ textarea:focus-visible,
     margin: 4px 0 8px !important;
   }
   .wl-home-cig-stage .wl-cig-illustration-box {
-    transform: scale(0.48) translate(3.45%, -5.38%);
+    transform: scale(0.56) translate(3.45%, -5.38%);
   }
   .wl-home-focused-actions {
     gap: 8px;
