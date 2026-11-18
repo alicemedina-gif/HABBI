@@ -16,6 +16,7 @@
 8. [Internacionalização (i18n): PT, EN e ES](#8-internacionalização-i18n-pt-en-e-es)
 9. [Segurança de Versão, Commits e Verificação](#9-segurança-de-versão-commits-e-verificação)
 10. [Guia de Resolução de Problemas Frequentes](#10-guia-de-resolução-de-problemas-frequentes)
+11. [Orquestração de Agentes Especializados & Fluxo de Trabalho](#11-orquestração-de-agentes-especializados--fluxo-de-trabalho)
 
 ---
 
@@ -187,6 +188,51 @@ Antes de qualquer refatoração ou intervenção complexa:
 | **Botão sem resposta ao clique** | `z-index` menor que o container ou evento não associado no `DOMContentLoaded` | Verificar camadas de sobreposição e vincular listener em `app.js`. |
 | **Layout estourando horizontalmente** | Elemento com largura fixa em `px` maior que `320px` sem `max-width: 100%` | Usar `width: 100%`, flexbox com `flex-wrap: wrap` ou `box-sizing: border-box`. |
 | **Idioma volta para o inglês ao trocar de tela** | Estado `userState.currentLang` não propagado ao renderizar nova tela | Chamar `applyLanguage(userState.currentLang)` dentro do ciclo de `goToScreen()`. |
+
+---
+
+## 11. Orquestração de Agentes Especializados & Fluxo de Trabalho
+
+O repositório do Habbi incorpora **7 agentes especializados** organizados de forma multiplataforma, preservando integralmente os prompts originais fornecidos pela disciplina (veja `docs/experimento-agentes/CATALOGO_AGENTES.md`):
+
+- **Originais preservados (referência):** `docs/experimento-agentes/originais-professora/*.md`
+- **Claude Code (nativo):** `.claude/agents/*.md`
+- **GitHub Copilot:** `.github/agents/*.agent.md` + `.github/copilot-instructions.md`
+- **Antigravity:** `.agents/skills/habbi-<nome>/SKILL.md` (+ subagentes isolados com `EnableWriteTools: false` para auditorias)
+
+### 11.1. Como Escolher o Agente Certo
+
+| Necessidade no Habbi | Agente Recomendado | Pode Editar Código? |
+| :--- | :--- | :--- |
+| Avaliar jornada, arquitetura de informação, carga cognitiva ou fluxo de telas | `especialista-ux` | Não (somente leitura) |
+| Inspecionar heurísticas de Nielsen, feedback, prevenção e recuperação de erros | `especialista-usabilidade` | Não (somente leitura) |
+| Auditar WCAG 2.2 AA, teclado, leitores de tela, contraste, foco e ARIA | `especialista-acessibilidade` | Não (somente leitura) |
+| Revisar criticamente propostas/relatórios, apontar contradições, riscos e ética | `critico` | Não (somente leitura) |
+| Definir métricas, funis, KPIs e análises exploratórias de uso | `analista-dados` | Sim (scripts/consultas) |
+| Modelar experimentos A/B, estatística ou modelos preditivos | `cientista-dados` | Sim (experimentos/modelos) |
+| Implementar mudanças aprovadas com segurança e testes | `dev-fullstack-senior` | Sim (somente após aprovação) |
+
+### 11.2. Fluxo Oficial de Avaliação e Evolução do Produto
+
+Qualquer mudança relevante de interface ou comportamento no Habbi deve seguir a sequência de 6 etapas abaixo:
+
+```text
+1. Análise de UX (especialista-ux)
+        ↓
+2. Análise de Usabilidade (especialista-usabilidade)
+        ↓
+3. Auditoria de Acessibilidade (especialista-acessibilidade)
+        ↓
+4. Revisão Crítica Independente (critico)
+        ↓
+   [Decisão Humana: aprovação do escopo a corrigir]
+        ↓
+5. Implementação Aprovada (dev-fullstack-senior)
+        ↓
+6. Testes (320/390/430 px × Claro/Escuro × PT/EN/ES × teclado/contraste)
+```
+
+> **Regra de separação de responsabilidades:** Agentes das etapas 1 a 4 operam em modo **somente leitura** e devem separar explicitamente **problemas comprovados no código**, **hipóteses que exigem teste real** e **recomendações**. Nenhuma correção é aplicada sem aprovação humana explícita.
 
 ---
 *Este manual de diretrizes deve ser consultado e seguido rigorosamente por qualquer inteligência artificial ou desenvolvedor encarregado de dar continuidade ao Habbi.*
