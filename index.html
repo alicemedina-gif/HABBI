@@ -403,19 +403,7 @@
         </div>
 
         <!-- SCREEN 11: REGISTRO RÁPIDO -->
-        <section class="screen" data-screen="11">
-          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:28px;">
-            <h2 style="margin-bottom:0;">Como está agora?</h2>
-            <div style="cursor:pointer;padding:4px;" onclick="handleBackFromScreen(11)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
-          </div>
-          <div class="quick-register-grid">
-            <button class="btn-quick-choice no-smoke" id="btn-quick-no-smoke"><img src="assets/icone_nao_fumei.png" alt="Não fumei hoje"><span>Não fumei hoje</span></button>
-            <button class="btn-quick-choice urge" id="btn-quick-urge"><img src="assets/icone_vontade.png" alt="Tive vontade"><span>Tive vontade</span></button>
-            <button class="btn-quick-choice smoke" id="btn-quick-smoke"><img src="assets/icone_cigarro.png" alt="Fumei"><span>Fumei</span></button>
-            <button class="btn-quick-choice mood" onclick="goToScreen(25)"><img src="assets/icone_sentimentos.png" alt="Como estou"><span>Como estou</span></button>
-          </div>
-          <div class="grow"></div>
-        </section>
+        <!-- Screen 11 unificada no Painel Rápido de Registro (código morto removido na Etapa 5) -->
 
         <!-- SCREEN 12: SOS HUB (SIMPLIFICADO E ACOLHEDOR) -->
         <!-- SCREEN 12: SOS HUB (SIMPLIFICADO & DIRETO) -->
@@ -545,30 +533,33 @@
 
         <!-- MODAL: PRECISO DE ALGUÉM -->
         <div class="wl-sos-modal-overlay" id="wl-sos-support-modal" onclick="if(event.target===this)closeSosSupportModal()">
-          <div class="wl-sos-modal-sheet" role="dialog" aria-modal="true">
-            <div class="wl-calc-sheet-handle"></div>
+          <div class="wl-sos-modal-sheet" role="dialog" aria-modal="true" aria-labelledby="wl-sos-support-title">
+            <div class="wl-calc-sheet-handle" aria-hidden="true"></div>
             <div class="wl-sos-modal-header" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;">
-              <h3 style="margin:0;font-size:18px;font-weight:800;color:#1E293B;">Preciso de alguém</h3>
-              <button type="button" class="wl-close-circle" onclick="closeSosSupportModal()">✕</button>
+              <h3 id="wl-sos-support-title" style="margin:0;font-size:18px;font-weight:800;color:var(--text-primary);">Preciso de alguém</h3>
+              <button type="button" class="wl-close-circle" onclick="closeSosSupportModal()" aria-label="Fechar">✕</button>
             </div>
             <p class="wl-sos-modal-desc" style="text-align:left; margin-bottom:14px;">Você não precisa enfrentar isso sozinho. Escolha uma das opções:</p>
             <div class="wl-sos-support-options">
               <button type="button" class="wl-sos-support-opt" onclick="handleCvvContact()">
-                <div class="wl-sos-opt-icon yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                <div class="wl-sos-opt-icon yellow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
                 <div class="wl-sos-opt-text">
                   <strong>Ligar 188 (CVV)</strong>
                   <span>Apoio emocional gratuito e sigiloso 24h</span>
                 </div>
               </button>
               <button type="button" class="wl-sos-support-opt" onclick="copySupportMessage()">
-                <div class="wl-sos-opt-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+                <div class="wl-sos-opt-icon green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true" focusable="false"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
                 <div class="wl-sos-opt-text">
                   <strong>Mensagem de apoio pronta</strong>
                   <span>Copiar texto acolhedor para WhatsApp</span>
                 </div>
               </button>
             </div>
-            <button type="button" class="wl-light-pill-btn" style="width:100%;margin-top:14px;" onclick="closeSosSupportModal()">Fechar</button>
+            <p class="habbi-ethical-note" id="wl-sos-ethical-note">
+              O Habbi é um protótipo acadêmico de apoio comportamental e não substitui acompanhamento médico ou psicológico.
+            </p>
+            <button type="button" class="wl-light-pill-btn" style="width:100%;margin-top:12px;" onclick="closeSosSupportModal()">Fechar</button>
           </div>
         </div>
 
@@ -1139,6 +1130,10 @@
               
               <p style="font-size: 13.5px; color: var(--primary-dark, #2E7D32); margin: 0; text-align: center; font-style: italic; font-weight: 600; line-height: 1.5;">
                 Um projeto feito com cuidado, criatividade e um pouquinho da Morgana. ♡
+              </p>
+
+              <p class="habbi-ethical-note" id="wl-about-ethical-note">
+                O Habbi é um protótipo acadêmico de apoio comportamental e não substitui acompanhamento médico ou psicológico.
               </p>
             </div>
             

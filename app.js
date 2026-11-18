@@ -495,6 +495,39 @@ document.addEventListener('DOMContentLoaded', () => {
       leaveGameDesc: 'Você tem um minijogo em andamento. Se trocar de aba agora, esta partida será encerrada.',
       leaveGameStay: 'Continuar jogando',
       leaveGameConfirm: 'Sair da partida',
+      homeTodayWord: 'hoje',
+      savingsPillAria: 'Economia estimada: {0}. Abrir Conquista',
+      navCalAria: 'Abrir calendário',
+      navMenuAria: 'Abrir menu',
+      carouselTabsAria: 'Seções principais do Habbi',
+      homeSosAria: 'SOS Ajuda rápida para momentos de vontade',
+      homeAddCigAria: 'Registrar cigarro',
+      homeRemoveCigAria: 'Desfazer último cigarro registrado',
+      calPrevMonthAria: 'Mês anterior',
+      calNextMonthAria: 'Próximo mês',
+      calCloseAria: 'Fechar calendário',
+      calStatusFuture: 'Data futura bloqueada',
+      calStatusMet: 'Meta atingida',
+      calStatusExceeded: 'Meta ultrapassada',
+      calStatusZero: 'Sem consumo',
+      calStatusInProgress: 'Em andamento',
+      calStatusNoLogs: 'Sem registros',
+      calTodayWord: 'Hoje',
+      calLegendInProgress: 'Em andamento',
+      evSmokeTitle: 'Cigarro registrado',
+      evSmokeDesc: '{0}/{1} no dia',
+      evUrgeTitle: 'Vontade superada',
+      evUrgeDesc: 'Impulso controlado',
+      evSosTitle: 'Intervenção SOS',
+      evNoSmokeTodayTitle: 'Não fumei hoje',
+      evNoSmokeDayTitle: 'Não fumei neste dia',
+      evNoSmokeDesc: '0 cigarros no dia',
+      evMoodPrefix: 'Humor',
+      evMoodFallbackTitle: 'Registro de Sentimentos',
+      evMoodFallbackDesc: 'Sentimento registrado',
+      ethicalNote: 'O Habbi é um protótipo acadêmico de apoio comportamental e não substitui acompanhamento médico ou psicológico.',
+      histEmptyTitle: 'Nenhum registro salvo ainda',
+      histEmptyDesc: 'Seus registros diários aparecerão aqui automaticamente.',
 
       // Login / Cadastro (23, 24)
       loginTitle: 'Entrar',
@@ -960,6 +993,39 @@ document.addEventListener('DOMContentLoaded', () => {
       leaveGameDesc: 'You have a minigame in progress. Switching tabs now will end this round.',
       leaveGameStay: 'Keep playing',
       leaveGameConfirm: 'Leave game',
+      homeTodayWord: 'today',
+      savingsPillAria: 'Estimated savings: {0}. Open Goal',
+      navCalAria: 'Open calendar',
+      navMenuAria: 'Open menu',
+      carouselTabsAria: 'Main Habbi sections',
+      homeSosAria: 'SOS quick help for cravings',
+      homeAddCigAria: 'Log cigarette',
+      homeRemoveCigAria: 'Undo last logged cigarette',
+      calPrevMonthAria: 'Previous month',
+      calNextMonthAria: 'Next month',
+      calCloseAria: 'Close calendar',
+      calStatusFuture: 'Future date locked',
+      calStatusMet: 'Goal met',
+      calStatusExceeded: 'Over goal',
+      calStatusZero: 'Smoke-free',
+      calStatusInProgress: 'In progress',
+      calStatusNoLogs: 'No logs',
+      calTodayWord: 'Today',
+      calLegendInProgress: 'In progress',
+      evSmokeTitle: 'Cigarette logged',
+      evSmokeDesc: '{0}/{1} today',
+      evUrgeTitle: 'Craving overcome',
+      evUrgeDesc: 'Urge managed',
+      evSosTitle: 'SOS intervention',
+      evNoSmokeTodayTitle: 'Smoke-free today',
+      evNoSmokeDayTitle: 'Smoke-free day',
+      evNoSmokeDesc: '0 cigarettes logged',
+      evMoodPrefix: 'Mood',
+      evMoodFallbackTitle: 'Mood log',
+      evMoodFallbackDesc: 'Feeling logged',
+      ethicalNote: 'Habbi is an academic behavioral support prototype and does not replace medical or psychological care.',
+      histEmptyTitle: 'No logs saved yet',
+      histEmptyDesc: 'Your daily logs will appear here automatically.',
 
       // Login / Signup (23, 24)
       loginTitle: 'Sign In',
@@ -1425,6 +1491,39 @@ document.addEventListener('DOMContentLoaded', () => {
       leaveGameDesc: 'Tienes un minijuego en curso. Si cambias de pestaña ahora, esta partida terminará.',
       leaveGameStay: 'Seguir jugando',
       leaveGameConfirm: 'Salir de la partida',
+      homeTodayWord: 'hoy',
+      savingsPillAria: 'Ahorro estimado: {0}. Abrir Logro',
+      navCalAria: 'Abrir calendario',
+      navMenuAria: 'Abrir menú',
+      carouselTabsAria: 'Secciones principales de Habbi',
+      homeSosAria: 'SOS ayuda rápida para momentos de antojo',
+      homeAddCigAria: 'Registrar cigarrillo',
+      homeRemoveCigAria: 'Deshacer último cigarrillo registrado',
+      calPrevMonthAria: 'Mes anterior',
+      calNextMonthAria: 'Mes siguiente',
+      calCloseAria: 'Cerrar calendario',
+      calStatusFuture: 'Fecha futura bloqueada',
+      calStatusMet: 'Meta cumplida',
+      calStatusExceeded: 'Sobre la meta',
+      calStatusZero: 'Sin consumo',
+      calStatusInProgress: 'En curso',
+      calStatusNoLogs: 'Sin registros',
+      calTodayWord: 'Hoy',
+      calLegendInProgress: 'En curso',
+      evSmokeTitle: 'Cigarrillo registrado',
+      evSmokeDesc: '{0}/{1} en el día',
+      evUrgeTitle: 'Antojo superado',
+      evUrgeDesc: 'Impulso controlado',
+      evSosTitle: 'Intervención SOS',
+      evNoSmokeTodayTitle: 'No fumé hoy',
+      evNoSmokeDayTitle: 'No fumé este día',
+      evNoSmokeDesc: '0 cigarrillos en el día',
+      evMoodPrefix: 'Ánimo',
+      evMoodFallbackTitle: 'Registro de emociones',
+      evMoodFallbackDesc: 'Emoción registrada',
+      ethicalNote: 'Habbi es un prototipo académico de apoyo conductual y no sustituye el acompañamiento médico ni psicológico.',
+      histEmptyTitle: 'Aún no hay registros guardados',
+      histEmptyDesc: 'Tus registros diarios aparecerán aquí automáticamente.',
 
       // Login / Signup (23, 24)
       loginTitle: 'Iniciar sesión',
@@ -1573,10 +1672,87 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   window.HABBI_I18N = HABBI_I18N;
 
+  // Renderização dinâmica de títulos/subtítulos padrão de eventos no idioma ativo,
+  // preservando sempre integralmente as notas livres digitadas pela pessoa.
+  function getLocalizedEventDisplay(ev, meta, t) {
+    const dict = t || HABBI_I18N[(userState.currentLang || 'PT').toUpperCase()] || HABBI_I18N.PT;
+    if (!ev || typeof ev !== 'object') return { title: '', subdesc: '' };
+    const safeMeta = Math.max(1, parseInt(meta || userState.todayMeta, 10) || 11);
+
+    if (ev.kind === 'smoke') {
+      const baseTitle = dict.evSmokeTitle || 'Cigarro registrado';
+      const title = (typeof ev.cigNumber === 'number' && ev.cigNumber > 0)
+        ? `${baseTitle} (${ev.cigNumber}/${safeMeta})`
+        : baseTitle;
+      const subdesc = (typeof ev.cigNumber === 'number' && ev.cigNumber > 0)
+        ? (dict.evSmokeDesc || '{0}/{1} no dia').replace('{0}', ev.cigNumber).replace('{1}', safeMeta)
+        : String(ev.desc || '');
+      return { title, subdesc };
+    }
+    if (ev.kind === 'urge') {
+      return {
+        title: dict.evUrgeTitle || 'Vontade superada',
+        subdesc: dict.evUrgeDesc || 'Impulso controlado'
+      };
+    }
+    if (ev.kind === 'sos') {
+      return {
+        title: dict.evSosTitle || 'Intervenção SOS',
+        subdesc: String(ev.desc || dict.evUrgeDesc || '')
+      };
+    }
+    if (ev.kind === 'no-smoke') {
+      const todayKey = (typeof getDateKey === 'function') ? getDateKey(new Date()) : '';
+      const isTodayEv = ev.dateKey && todayKey && ev.dateKey === todayKey;
+      return {
+        title: isTodayEv
+          ? (dict.evNoSmokeTodayTitle || dict.homeNoSmoke || 'Não fumei hoje')
+          : (dict.evNoSmokeDayTitle || dict.noSmokeOtherDay || 'Não fumei neste dia'),
+        subdesc: dict.evNoSmokeDesc || '0 cigarros no dia'
+      };
+    }
+    if (ev.kind === 'mood') {
+      let moodKey = ev.moodValue || '';
+      if (!moodKey && typeof ev.title === 'string') {
+        const stripped = ev.title.replace(/^(Humor|Mood|Ánimo)\s*:\s*/i, '').trim();
+        if (stripped && dict.qregMoods && dict.qregMoods[stripped]) {
+          moodKey = stripped;
+        }
+      }
+      const localizedMood = (moodKey && dict.qregMoods && dict.qregMoods[moodKey]) ? dict.qregMoods[moodKey] : moodKey;
+      const title = localizedMood
+        ? `${dict.evMoodPrefix || 'Humor'}: ${localizedMood}`
+        : (dict.evMoodFallbackTitle || 'Registro de Sentimentos');
+
+      const parts = [];
+      if (Array.isArray(ev.influences) && ev.influences.length > 0) {
+        const locInf = ev.influences.map(tag => (dict.qregInfluences && dict.qregInfluences[tag]) ? dict.qregInfluences[tag] : tag);
+        parts.push(locInf.join(', '));
+      }
+      if (typeof ev.note === 'string' && ev.note.trim()) {
+        // Preserva literalmente a nota livre digitada pelo usuário
+        parts.push(ev.note.trim());
+      }
+      let subdesc = parts.join(' • ');
+      if (!subdesc && ev.desc && ev.desc !== 'Sentimento registrado' && ev.desc !== 'Feeling logged' && ev.desc !== 'Emoción registrada') {
+        subdesc = String(ev.desc);
+      }
+      return { title, subdesc };
+    }
+    return {
+      title: String(ev.title || ''),
+      subdesc: String(ev.desc || '')
+    };
+  }
+  window.getLocalizedEventDisplay = getLocalizedEventDisplay;
+
   window.applyAppLanguage = function(langKey) {
     const code = (langKey || 'PT').toUpperCase();
     const lang = HABBI_I18N[code] ? code : 'PT';
     userState.currentLang = lang;
+    if (document.documentElement) {
+      document.documentElement.lang = (lang === 'EN' ? 'en' : lang === 'ES' ? 'es' : 'pt-BR');
+    }
     try {
       localStorage.setItem('habbi-app-lang', lang);
     } catch (_e) {}
@@ -1802,6 +1978,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Screen 10: Home Hero & Controls
+    const homeTodayWord = document.getElementById('home-today-word');
+    if (homeTodayWord) {
+      homeTodayWord.innerText = t.homeTodayWord || 'hoje';
+    }
+    const homeMetaOfToday = document.getElementById('home-meta-of-today-label');
+    if (homeMetaOfToday) {
+      homeMetaOfToday.innerText = t.homeMetaPctSuffix || 'da meta de hoje';
+    }
     const homeDaysLbl = document.getElementById('home-display-days-label');
     if (homeDaysLbl) {
       homeDaysLbl.innerText = userState.daysClean === 1 ? t.homeDaySingular : t.homeDaysPlural;
@@ -1813,8 +1997,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const isConfirmed = Boolean(todayRec && todayRec.smokeFree);
       homeNoSmokeText.innerText = isConfirmed ? (t.homeNoSmoke + ' ✓') : t.homeNoSmoke;
     }
+    const homeSosBtn = document.getElementById('btn-home-sos');
+    if (homeSosBtn) {
+      const sosAria = t.homeSosAria || 'SOS Ajuda rápida para momentos de vontade';
+      homeSosBtn.setAttribute('aria-label', sosAria);
+      homeSosBtn.setAttribute('title', sosAria);
+    }
     const homeSosBtnText = document.querySelector('.wl-home-sos-pill span');
     if (homeSosBtnText) homeSosBtnText.innerText = t.homeSosBtn || 'SOS';
+    const homeAddBtn = document.getElementById('btn-home-add-cig');
+    if (homeAddBtn) {
+      const addAria = t.homeAddCigAria || t.homeAddCig || 'Registrar cigarro';
+      homeAddBtn.setAttribute('aria-label', addAria);
+      homeAddBtn.setAttribute('title', addAria);
+    }
     const homeAddCigText = document.querySelector('.wl-home-add-btn span');
     if (homeAddCigText) homeAddCigText.innerText = t.homeAddCig || 'Registrar cigarro';
     const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
@@ -1823,6 +2019,26 @@ document.addEventListener('DOMContentLoaded', () => {
       homeRemoveBtn.setAttribute('aria-label', remLabel);
       homeRemoveBtn.setAttribute('title', remLabel);
     }
+
+    // Carrossel Principal: abas rotuladas + aria-labels do cabeçalho
+    const tabConquista = document.getElementById('wl-tab-conquista');
+    if (tabConquista) tabConquista.innerText = t.tabConquista || 'Conquista';
+    const tabInicio = document.getElementById('wl-tab-inicio');
+    if (tabInicio) tabInicio.innerText = t.tabHome || 'Início';
+    const tabMinijogos = document.getElementById('wl-tab-minijogos');
+    if (tabMinijogos) tabMinijogos.innerText = t.tabMinigames || 'Minijogos';
+    const tabsBar = document.querySelector('.wl-carousel-tabs');
+    if (tabsBar) tabsBar.setAttribute('aria-label', t.carouselTabsAria || 'Seções principais do Habbi');
+    const navCalBtn = document.querySelector('#main-carousel-header .wl-top-nav-btn[onclick*="goToScreen(16)"]');
+    if (navCalBtn) navCalBtn.setAttribute('aria-label', t.navCalAria || 'Abrir calendário');
+    const navMenuBtn = document.querySelector('#main-carousel-header .wl-top-nav-btn[onclick*="toggleHabbiHubMenu"]');
+    if (navMenuBtn) navMenuBtn.setAttribute('aria-label', t.navMenuAria || 'Abrir menu');
+    const heroSavingsText = document.getElementById('home-savings-top')?.innerText || 'R$ 0,00';
+    const savPillAriaTpl = t.savingsPillAria || 'Economia estimada: {0}. Abrir Conquista';
+    document.querySelectorAll('.wl-home-savings-pill').forEach(pill => {
+      pill.setAttribute('aria-label', savPillAriaTpl.replace('{0}', heroSavingsText));
+    });
+
     const swipeHint = document.getElementById('wl-home-swipe-hint') || document.querySelector('#wl-carousel-swipe-hint span');
     if (swipeHint) {
       swipeHint.innerText = t.homeSwipeHintText || t.homeSwipeHint || 'Arraste para explorar';
@@ -1849,18 +2065,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const setTxt = hubItems[3].querySelector('.wl-hub-txt');
       if (setTxt) setTxt.innerHTML = `<strong>${t.hubSettingsTitle}</strong><span>${t.hubSettingsDesc}</span>`;
     }
-
-    // Screen 11: Registro Rápido
-    const s11Title = document.querySelector('.screen[data-screen="11"] h2');
-    if (s11Title) s11Title.innerText = t.quickTitle;
-    const qNoSmoke = document.querySelector('#btn-quick-no-smoke span');
-    if (qNoSmoke) qNoSmoke.innerText = t.quickNoSmoke;
-    const qUrge = document.querySelector('#btn-quick-urge span');
-    if (qUrge) qUrge.innerText = t.quickUrge;
-    const qSmoke = document.querySelector('#btn-quick-smoke span');
-    if (qSmoke) qSmoke.innerText = t.quickSmoke;
-    const qMood = document.querySelector('.btn-quick-choice.mood span');
-    if (qMood) qMood.innerText = t.quickMood;
 
     // Screen 12: SOS Hub
     const sosTitle = document.querySelector('.wl-sos-title');
@@ -1960,10 +2164,31 @@ document.addEventListener('DOMContentLoaded', () => {
       calWk.innerHTML = t.calWeekdays.map(w => `<span>${w}</span>`).join('');
     }
     const calLegends = document.querySelectorAll('.wl-cal-legend-item');
-    if (calLegends.length >= 3) {
+    if (calLegends.length >= 4) {
+      calLegends[0].innerHTML = `<i class="dot green"></i>${t.calLegendGoal}`;
+      calLegends[1].innerHTML = `<i class="dot pink"></i>${t.calLegendOver}`;
+      calLegends[2].innerHTML = `<i class="dot in-progress"></i>${t.calLegendInProgress || 'Em andamento'}`;
+      calLegends[3].innerHTML = `<i class="dot neutral"></i>${t.calLegendEmpty}`;
+    } else if (calLegends.length >= 3) {
       calLegends[0].innerHTML = `<i class="dot green"></i>${t.calLegendGoal}`;
       calLegends[1].innerHTML = `<i class="dot pink"></i>${t.calLegendOver}`;
       calLegends[2].innerHTML = `<i class="dot neutral"></i>${t.calLegendEmpty}`;
+    }
+    const calPrevBtn = document.querySelector('.wl-cal-nav-arrow[onclick*="changeCalendarMonth(-1)"]');
+    if (calPrevBtn) {
+      const pLbl = t.calPrevMonthAria || 'Mês anterior';
+      calPrevBtn.setAttribute('aria-label', pLbl);
+      calPrevBtn.setAttribute('title', pLbl);
+    }
+    const calNextBtn = document.querySelector('.wl-cal-nav-arrow[onclick*="changeCalendarMonth(1)"]');
+    if (calNextBtn) {
+      const nLbl = t.calNextMonthAria || 'Próximo mês';
+      calNextBtn.setAttribute('aria-label', nLbl);
+      calNextBtn.setAttribute('title', nLbl);
+    }
+    const calCloseBtn = document.querySelector('.screen[data-screen="16"] .wl-close-circle');
+    if (calCloseBtn) {
+      calCloseBtn.setAttribute('aria-label', t.calCloseAria || 'Fechar calendário');
     }
     const calMetrics = document.querySelectorAll('.wl-cal-metric-box span');
     if (calMetrics.length >= 3) {
@@ -2444,13 +2669,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const qNoteInp = document.getElementById('wl-qreg-mood-note');
     if (qNoteInp) qNoteInp.placeholder = t.qregNotePlaceholder || 'Nota opcional...';
+    const qNoteLbl = document.getElementById('wl-qreg-mood-note-label');
+    if (qNoteLbl) qNoteLbl.innerText = (t.qregNotePlaceholder || 'Nota opcional').replace(/\.\.\.$/, '');
     const qSaveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
     if (qSaveMoodBtn) qSaveMoodBtn.innerText = t.qregSaveMoodBtn || 'Salvar humor';
 
-    // Atualiza detalhes do calendário se visível
-    if (currentScreen === 16 && typeof updateCalendarSummaryAndDetails === 'function' && typeof userState.calViewYear === 'number') {
-      const daysInMonth = new Date(userState.calViewYear, userState.calViewMonth + 1, 0).getDate();
-      updateCalendarSummaryAndDetails(userState.calViewYear, userState.calViewMonth, daysInMonth);
+    // Nota ética discreta (Sobre o Habbi + Modal de Apoio do SOS)
+    const ethicalText = t.ethicalNote || 'O Habbi é um protótipo acadêmico de apoio comportamental e não substitui acompanhamento médico ou psicológico.';
+    const aboutEthical = document.getElementById('wl-about-ethical-note');
+    if (aboutEthical) aboutEthical.innerText = ethicalText;
+    const sosEthical = document.getElementById('wl-sos-ethical-note');
+    if (sosEthical) sosEthical.innerText = ethicalText;
+
+    // Modais de exclusão, confirmação sem fumar, saída do minijogo e modo teste
+    const delTitle = document.getElementById('habbi-del-modal-title');
+    if (delTitle) delTitle.innerText = t.delModalTitle || 'Apagar registros deste perfil?';
+    const delDesc = document.getElementById('habbi-del-modal-desc');
+    if (delDesc) delDesc.innerText = t.delModalDesc || 'Esta ação remove permanentemente os registros salvos neste perfil local.';
+    const delBtnLbl = document.getElementById('btn-delete-profile-records-label');
+    if (delBtnLbl) delBtnLbl.innerText = t.settingsDeleteRecords || 'Apagar registros deste perfil';
+    const testBtn = document.getElementById('btn-local-restart-test');
+    if (testBtn) testBtn.innerText = t.localRestartTestBtn || 'Reiniciar experiência de teste';
+    const noSmokeModalTitle = document.getElementById('habbi-nosmoke-modal-title');
+    if (noSmokeModalTitle) noSmokeModalTitle.innerText = t.noSmokeModalTitle || 'Substituir registros desta data?';
+    const leaveGameTitle = document.getElementById('habbi-leave-game-title');
+    if (leaveGameTitle) leaveGameTitle.innerText = t.leaveGameTitle || 'Sair da partida atual?';
+    const leaveGameDesc = document.getElementById('habbi-leave-game-desc');
+    if (leaveGameDesc) leaveGameDesc.innerText = t.leaveGameDesc || 'Você tem um minijogo em andamento. Se trocar de aba agora, esta partida será encerrada.';
+    const leaveStayBtn = document.querySelector('#habbi-confirm-leave-game-modal .btn-primary');
+    if (leaveStayBtn) leaveStayBtn.innerText = t.leaveGameStay || 'Continuar jogando';
+    const leaveConfBtn = document.querySelector('#habbi-confirm-leave-game-modal .habbi-modal-btn-danger');
+    if (leaveConfBtn) leaveConfBtn.innerText = t.leaveGameConfirm || 'Sair da partida';
+
+    // Mantém o sufixo ' ✓' e estado confirmado no Painel Rápido ao trocar idioma
+    if (typeof window.syncQuickRegisterModalUI === 'function') {
+      window.syncQuickRegisterModalUI();
+    }
+
+    // Re-renderiza grade/eventos do Calendário e Histórico no novo idioma ativo
+    if (typeof generateCalendar === 'function' && typeof userState.calViewYear === 'number') {
+      generateCalendar(false);
+    }
+    if (typeof renderHistoryTimeline === 'function') {
+      renderHistoryTimeline();
     }
 
     // Atualiza o tutorial se estiver em execução
@@ -5960,13 +6221,13 @@ document.addEventListener('DOMContentLoaded', () => {
       s10.innerHTML = `
         <div class="wl-home-hero-metric">
           <div class="wl-home-big-stat">
-            <span id="home-meta-registered">0</span><small> / <span id="home-meta-cigs">11</span> hoje</small>
+            <span id="home-meta-registered">0</span><small> / <span id="home-meta-cigs">11</span> <span id="home-today-word">hoje</span></small>
           </div>
           <div class="wl-home-sub-stat">
-            <strong id="home-display-days">0</strong> <span id="home-display-days-label">dias sem fumar</span> \u2022 <span id="home-meta-pct">0%</span> da meta de hoje
+            <strong id="home-display-days">0</strong> <span id="home-display-days-label">dias sem fumar</span> \u2022 <span id="home-meta-pct">0%</span> <span id="home-meta-of-today-label">da meta de hoje</span>
           </div>
           <button type="button" class="wl-home-nosmoke-badge" id="home-nosmoke-badge" onclick="handleHomeNoSmokeToday()" style="display:none;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"></polyline></svg>
             <span id="home-nosmoke-badge-text">N\u00e3o fumei hoje</span>
           </button>
           <div class="wl-home-overmeta-banner" id="home-overmeta-banner" style="display:none;" role="status"></div>
@@ -6163,14 +6424,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <header class="wl-cal-header">
             <div class="wl-cal-nav-group">
               <button type="button" class="wl-cal-nav-arrow" onclick="changeCalendarMonth(-1)" aria-label="Mês anterior" title="Mês anterior">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="15 18 9 12 15 6"></polyline></svg>
               </button>
               <div class="wl-cal-title-box">
                 <h2 class="wl-cal-month-title" id="wl-cal-month-title">${initTitle}</h2>
                 <button type="button" class="wl-cal-today-chip" id="wl-cal-today-btn" onclick="resetCalendarToToday()" style="display:none;">Hoje</button>
               </div>
               <button type="button" class="wl-cal-nav-arrow" onclick="changeCalendarMonth(1)" aria-label="Próximo mês" title="Próximo mês">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </button>
             </div>
             <button type="button" class="wl-close-circle" onclick="handleBackFromScreen(16)" aria-label="Fechar calendário">✕</button>
@@ -6184,6 +6445,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="wl-cal-legend">
               <span class="wl-cal-legend-item"><i class="dot green"></i>Dentro da meta</span>
               <span class="wl-cal-legend-item"><i class="dot pink"></i>Acima da meta</span>
+              <span class="wl-cal-legend-item"><i class="dot in-progress"></i>Em andamento</span>
               <span class="wl-cal-legend-item"><i class="dot neutral"></i>Sem registro</span>
             </div>
           </div>
@@ -7096,11 +7358,6 @@ document.addEventListener('DOMContentLoaded', () => {
       pawStageEl.classList.add('is-highfiving');
     }
     openAccessibleDialog(modal, window.closeCelebrationModal, 'wl-cel-title');
-  };
-
-  window.triggerQuickNoSmoke = function() {
-    const btn = document.getElementById('btn-quick-no-smoke');
-    if (btn) btn.click();
   };
 
   window.selectMascotPose = function(poseKey) {
@@ -8612,7 +8869,10 @@ document.addEventListener('DOMContentLoaded', () => {
       dayEl.setAttribute('aria-label', `${day} ${getMonthNamePt(viewMonth)} ${viewYear}, ${statusDesc}${isToday ? ` (${todayWord})` : ''}`);
 
       const circle = document.createElement('span');
-      circle.className = `calendar-grid-circle state-${isFuture ? 'neutral' : status}`;
+      const circleState = isFuture
+        ? 'neutral'
+        : (status === 'neutral' && dayHasEvents ? 'in-progress' : status);
+      circle.className = `calendar-grid-circle state-${circleState}`;
       circle.innerText = day;
 
       dayEl.appendChild(circle);
@@ -8790,14 +9050,16 @@ document.addEventListener('DOMContentLoaded', () => {
           const titleColEl = document.createElement('div');
           titleColEl.className = 'wl-cal-event-title-col';
 
+          const localizedEv = getLocalizedEventDisplay(ev, meta, t);
+
           const strongEl = document.createElement('strong');
-          strongEl.textContent = String(ev.title || '');
+          strongEl.textContent = localizedEv.title;
           titleColEl.appendChild(strongEl);
 
-          if (ev.kind === 'mood' && ev.desc && ev.desc !== 'Sentimento registrado') {
+          if (ev.kind === 'mood' && localizedEv.subdesc) {
             const subDescEl = document.createElement('small');
             subDescEl.className = 'wl-cal-event-subdesc';
-            subDescEl.textContent = String(ev.desc);
+            subDescEl.textContent = localizedEv.subdesc;
             titleColEl.appendChild(subDescEl);
           }
 
@@ -9783,11 +10045,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Home Screen bindings
-  const btnHomeSos = document.getElementById('btn-home-sos');
-  if (btnHomeSos) {
-    btnHomeSos.addEventListener('click', () => showScreen(12));
-  }
+  // (#btn-home-sos já usa onclick="goToScreen(12)" no template da Home — listener duplicado removido)
 
   // SOS Wizard Chips and Selectors (legado / fallback seguro)
   const sosContextChips = document.querySelectorAll('#sos-context-chips .chip');
@@ -9833,34 +10091,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Express Mood Log/Quick Log (Screen 11 buttons)
-  const qNoSmoke = document.getElementById('btn-quick-no-smoke');
-  if (qNoSmoke) {
-    qNoSmoke.addEventListener('click', () => {
-      window.quickConfirmDay();
-      showToast('Confirmado: Dia sem fumar!');
-      window.handleBackFromScreen(11);
-    });
-  }
-
-  const qUrge = document.getElementById('btn-quick-urge');
-  if (qUrge) {
-    qUrge.addEventListener('click', () => {
-      window.quickAddUrge();
-      showToast('Vontade superada registrada!');
-      window.handleBackFromScreen(11);
-    });
-  }
-
-  const qSmoke = document.getElementById('btn-quick-smoke');
-  if (qSmoke) {
-    qSmoke.addEventListener('click', () => {
-      window.quickAdjustCigarette(1);
-      showToast('Cigarro registrado');
-      window.handleBackFromScreen(11);
-    });
-  }
-
   // Minigames Inline selectors
   const gmMem = document.getElementById('btn-game-memory');
   if (gmMem) gmMem.addEventListener('click', () => playInlineGame('memory'));
@@ -9878,6 +10108,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) return;
     container.innerHTML = '';
 
+    const activeLangHist = (userState.currentLang || 'PT').toUpperCase();
+    const tHist = (window.HABBI_I18N && window.HABBI_I18N[activeLangHist]) ? window.HABBI_I18N[activeLangHist] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
     const visibleEvents = Array.isArray(userState.historyEvents)
       ? userState.historyEvents.filter(evt => evt && evt.kind !== 'day-complete')
       : [];
@@ -9886,10 +10119,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const emptyBox = document.createElement('div');
       emptyBox.className = 'card';
       emptyBox.style.cssText = 'padding: 24px 18px; text-align: center; border-radius: 20px;';
-      emptyBox.innerHTML = `
-        <div style="font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 6px;">Nenhum registro salvo ainda</div>
-        <p class="caption" style="margin: 0;">Seus registros diários aparecerão aqui automaticamente.</p>
-      `;
+      const emptyTitle = document.createElement('div');
+      emptyTitle.style.cssText = 'font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 6px;';
+      emptyTitle.textContent = tHist.histEmptyTitle || 'Nenhum registro salvo ainda';
+      const emptyP = document.createElement('p');
+      emptyP.className = 'caption';
+      emptyP.style.margin = '0';
+      emptyP.textContent = tHist.histEmptyDesc || 'Seus registros diários aparecerão aqui automaticamente.';
+      emptyBox.appendChild(emptyTitle);
+      emptyBox.appendChild(emptyP);
       container.appendChild(emptyBox);
       return;
     }
@@ -9900,16 +10138,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const isMood = evt.kind === 'mood' || evt.type === 'humor';
       
       let markerClass = 'urge';
-      let markerSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+      let markerSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
       if (isMood) {
         markerClass = 'urge';
-        markerSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>';
+        markerSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>';
       } else if (isSuccess) {
         markerClass = 'success';
-        markerSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+        markerSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"/></svg>';
       } else if (isOverMeta) {
         markerClass = 'relapse';
-        markerSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+        markerSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" focusable="false"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
       }
 
       const itemEl = document.createElement('div');
@@ -9925,9 +10163,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const headerRow = document.createElement('div');
       headerRow.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px; gap: 8px;';
 
+      const recMeta = (evt.dateKey && userState.dailyRecords[evt.dateKey] && userState.dailyRecords[evt.dateKey].meta) || userState.todayMeta || 11;
+      const localized = getLocalizedEventDisplay(evt, recMeta, tHist);
+
       const titleSpan = document.createElement('span');
       titleSpan.style.cssText = 'font-weight:700; font-size:14px; color:var(--text-primary);';
-      titleSpan.textContent = String(evt.title || '');
+      titleSpan.textContent = localized.title;
 
       const timeSpan = document.createElement('span');
       timeSpan.className = 'caption';
@@ -9940,7 +10181,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const descP = document.createElement('p');
       descP.className = 'caption';
       descP.style.cssText = 'margin-bottom:0; font-size:12px;';
-      descP.textContent = String(evt.desc || evt.detail || '');
+      descP.textContent = localized.subdesc || String(evt.desc || evt.detail || '');
 
       contentEl.appendChild(headerRow);
       contentEl.appendChild(descP);
@@ -10191,7 +10432,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.habbiTutorialActive = false;
-    if (typeof removeCalTutorialDemoRow === 'function') removeCalTutorialDemoRow();
     if (typeof hideTutorialSwipeHint === 'function') hideTutorialSwipeHint();
     if (typeof window.toggleHabbiHubMenu === 'function') window.toggleHabbiHubMenu(false);
     const overlay = document.getElementById('habbi-tutorial-overlay');
@@ -10278,7 +10518,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Fecha overlays e limpa UI/inputs
     window.habbiTutorialActive = false;
-    if (typeof removeCalTutorialDemoRow === 'function') removeCalTutorialDemoRow();
     if (typeof hideTutorialSwipeHint === 'function') hideTutorialSwipeHint();
     if (typeof window.toggleHabbiHubMenu === 'function') window.toggleHabbiHubMenu(false);
     const overlay = document.getElementById('habbi-tutorial-overlay');
@@ -10319,7 +10558,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.onboardingCompleted = false;
     userState.tutorialCompleted = false;
     userState.hasConfiguredFirstGoal = false;
-    if (typeof removeCalTutorialDemoRow === 'function') removeCalTutorialDemoRow();
     if (typeof hideTutorialSwipeHint === 'function') hideTutorialSwipeHint();
     if (typeof window.toggleHabbiHubMenu === 'function') window.toggleHabbiHubMenu(false);
     const overlay = document.getElementById('habbi-tutorial-overlay');
@@ -10652,48 +10890,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTutorialStep = 0;
   window.habbiTutorialActive = false;
 
-  function ensureCalTutorialDemoRow() {
-    const eventsWrap = document.getElementById('wl-cal-day-events-wrap');
-    if (!eventsWrap) return;
-    const activeLang = (userState.currentLang || 'PT').toUpperCase();
-    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
-    if (!eventsWrap.querySelector('.wl-cal-event-row')) {
-      const demoRow = document.createElement('div');
-      demoRow.className = 'wl-cal-event-row wl-cal-tutorial-demo-row';
-      demoRow.id = 'wl-cal-tutorial-demo-row';
-      demoRow.innerHTML = `
-        <div class="wl-cal-event-main">
-          <i class="wl-cal-event-dot green"></i>
-          <div class="wl-cal-event-texts">
-            <div class="wl-cal-event-title-col">
-              <strong>${t.calDemoEventTitle || '1 cigarro'}</strong>
-              <small class="wl-cal-event-subdesc" style="color:var(--primary, #379A6A); font-weight:700;">${t.calDemoEventSubtitle || 'Exemplo para demonstração'}</small>
-            </div>
-            <span>14:30 • Intervalo</span>
-          </div>
-        </div>
-        <div class="wl-cal-event-actions" id="wl-cal-demo-actions">
-          <button type="button" class="wl-cal-ev-btn" onclick="showToast('${t.calDemoEditToast || 'No calendário real você edita horários e detalhes.'}')" title="${t.calBtnEdit || 'Editar'}">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
-            <span>${t.calBtnEdit || 'Editar'}</span>
-          </button>
-          <button type="button" class="wl-cal-ev-btn danger" onclick="showToast('${t.calDemoDelToast || 'Toque aqui para remover um cigarro registrado por engano.'}')" title="${t.calBtnRemove || 'Remover'}">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-            <span>${t.calBtnRemove || 'Remover'}</span>
-          </button>
-        </div>
-      `;
-      eventsWrap.appendChild(demoRow);
-    }
-  }
-
-  function removeCalTutorialDemoRow() {
-    const demoRow = document.getElementById('wl-cal-tutorial-demo-row');
-    if (demoRow && demoRow.parentNode) {
-      demoRow.parentNode.removeChild(demoRow);
-    }
-  }
-
   function hideTutorialSwipeHint() {
     const swipeHint = document.getElementById('wl-carousel-swipe-hint');
     if (swipeHint) {
@@ -10712,7 +10908,6 @@ document.addEventListener('DOMContentLoaded', () => {
       targetSelector: '#btn-home-add-cig',
       fallbackTarget: '.wl-home-add-btn',
       prepare: () => {
-        removeCalTutorialDemoRow();
         hideTutorialSwipeHint();
         if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
         if (currentScreen !== 10) showScreen(10);
@@ -10739,7 +10934,6 @@ document.addEventListener('DOMContentLoaded', () => {
       targetSelector: '.wl-home-pager-bar',
       fallbackTarget: '.wl-pager-nav-dots',
       prepare: () => {
-        removeCalTutorialDemoRow();
         hideTutorialSwipeHint();
         if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
         if (currentScreen !== 10) showScreen(10);
@@ -10753,7 +10947,6 @@ document.addEventListener('DOMContentLoaded', () => {
       targetSelector: '.wl-home-savings-pill',
       fallbackTarget: '.wl-home-topbar',
       prepare: () => {
-        removeCalTutorialDemoRow();
         hideTutorialSwipeHint();
         if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
         if (currentScreen !== 10) showScreen(10);
@@ -10767,7 +10960,6 @@ document.addEventListener('DOMContentLoaded', () => {
       targetSelector: '#btn-home-sos',
       fallbackTarget: '.wl-home-sos-pill',
       prepare: () => {
-        removeCalTutorialDemoRow();
         hideTutorialSwipeHint();
         if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
         if (currentScreen !== 10) showScreen(10);
@@ -10782,7 +10974,6 @@ document.addEventListener('DOMContentLoaded', () => {
       fallbackTarget: '.wl-home-topbar',
       isLast: true,
       prepare: () => {
-        removeCalTutorialDemoRow();
         hideTutorialSwipeHint();
         if (currentScreen !== 10) showScreen(10);
         if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
@@ -10931,7 +11122,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.tutorialCompleted = true;
     savePersistedState();
 
-    removeCalTutorialDemoRow();
     hideTutorialSwipeHint();
     if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
 
@@ -10970,8 +11160,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.completeInteractiveTutorial = completeInteractiveTutorial;
   window.checkAndTriggerFirstTimeTutorial = checkAndTriggerFirstTimeTutorial;
-  window.ensureCalTutorialDemoRow = ensureCalTutorialDemoRow;
-  window.removeCalTutorialDemoRow = removeCalTutorialDemoRow;
 
   // Overlays (menu Hub, objetivo, parâmetros) ficam fora das telas que deslizam:
   // um ancestral com transform quebraria o posicionamento/cliques deles.

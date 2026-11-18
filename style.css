@@ -86,6 +86,12 @@
   --cal-ev-danger-bg: #FFEAE6;
   --cal-ev-danger-text: #B91C1C;
   --cal-ev-danger-border: #FECACA;
+  --cal-state-green: #2E7D32;
+  --cal-state-exceeded: #C53030;
+  --cal-state-neutral: #E5E7EB;
+  --cal-state-inprogress-bg: #D8F0FF;
+  --cal-state-inprogress-border: #339AF0;
+  --cal-state-inprogress-text: #0F3D5E;
 
   /* Border radius */
   --border-radius-lg: 20px; /* Rounded corners for cards */
@@ -156,6 +162,12 @@
   --cal-ev-danger-bg: #451A1A;
   --cal-ev-danger-text: #FCA5A5;
   --cal-ev-danger-border: #7F1D1D;
+  --cal-state-green: #2E7D32;
+  --cal-state-exceeded: #C53030;
+  --cal-state-neutral: #2D2D34;
+  --cal-state-inprogress-bg: #1A365D;
+  --cal-state-inprogress-border: #74C0FC;
+  --cal-state-inprogress-text: #F3F4F6;
 }
 
 .device-screen.dark-theme .bottom-nav {
@@ -206,14 +218,6 @@
   color: #111827;
 }
 
-/* Quick choice buttons keep pure white text with great contrast on colorful badges */
-.device-screen.dark-theme .btn-quick-choice,
-.device-screen.dark-theme .btn-quick-choice.no-smoke,
-.device-screen.dark-theme .btn-quick-choice.smoke,
-.device-screen.dark-theme .btn-quick-choice.mood,
-.device-screen.dark-theme .btn-quick-choice.urge {
-  color: #FFFFFF !important;
-}
 
 /* Toast notice accessibility override */
 .device-screen.dark-theme .toast-notice {
@@ -1216,49 +1220,6 @@ textarea:focus-visible,
   background-color: var(--coral-light);
   border-color: var(--coral);
   color: var(--text-primary);
-}
-
-/* Screen 11: Registro RÃ¡pido Button Grid */
-.quick-register-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-}
-
-.btn-quick-choice {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  height: 72px; /* Taller quick choice cards */
-  padding: 0 24px;
-  border-radius: var(--border-radius-lg);
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.15s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.btn-quick-choice:active {
-  transform: scale(0.97);
-}
-
-.btn-quick-choice.no-smoke { background-color: #5FB149; }
-.btn-quick-choice.urge { background-color: #FBC016; color: #ffffff; }
-.btn-quick-choice.smoke { background-color: #E9463E; }
-.btn-quick-choice.mood { background-color: #3B70B6; }
-
-.btn-quick-choice svg, .btn-quick-choice img, .btn-quick-choice span.emoji {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  font-size: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Detail Headers */
@@ -8052,15 +8013,28 @@ textarea:focus-visible,
   color: var(--text-on-accent);
 }
 
-.wl-home-savings-pill.is-active {
+.wl-home-savings-pill.is-active,
+.wl-home-savings-pill.is-active span,
+.wl-home-savings-pill.is-active .top-savings-value-text {
   border-color: var(--primary-dark) !important;
   background-color: var(--primary-light) !important;
   color: var(--text-on-accent) !important;
 }
 
+.wl-home-savings-pill.is-active span,
+.wl-home-savings-pill.is-active .top-savings-value-text {
+  background-color: transparent !important;
+}
+
 .device-screen.dark-theme .wl-home-savings-pill.is-active {
   border-color: var(--primary) !important;
   background-color: var(--primary) !important;
+  color: var(--text-on-accent) !important;
+}
+
+.device-screen.dark-theme .wl-home-savings-pill.is-active span,
+.device-screen.dark-theme .wl-home-savings-pill.is-active .top-savings-value-text {
+  background-color: transparent !important;
   color: var(--text-on-accent) !important;
 }
 
@@ -10970,5 +10944,71 @@ button.wl-conquista-bag-stage {
     transition: none !important;
   }
 }
+
+/* ============================================================================
+   Etapa 5 — Commit 5: Harmonização Visual do Calendário & Nota Ética Discreta
+   (Cores da legenda idênticas às dos círculos via tokens CSS, estado
+    "Hoje em andamento" distinto de "Sem registro", aviso acadêmico plano)
+   ============================================================================ */
+.calendar-grid-circle.state-green,
+.device-screen.dark-theme .calendar-grid-circle.state-green {
+  background-color: var(--cal-state-green);
+}
+
+.calendar-grid-circle.state-exceeded,
+.device-screen.dark-theme .calendar-grid-circle.state-exceeded {
+  background-color: var(--cal-state-exceeded);
+}
+
+.calendar-grid-circle.state-neutral,
+.device-screen.dark-theme .calendar-grid-circle.state-neutral {
+  background-color: var(--cal-state-neutral);
+  color: var(--text-primary);
+}
+
+.calendar-grid-circle.state-in-progress,
+.device-screen.dark-theme .calendar-grid-circle.state-in-progress {
+  background-color: var(--cal-state-inprogress-bg);
+  border: 2px solid var(--cal-state-inprogress-border);
+  color: var(--cal-state-inprogress-text);
+  box-sizing: border-box;
+}
+
+.wl-cal-legend {
+  gap: 10px 14px;
+}
+
+.wl-cal-legend-item .dot.green {
+  background-color: var(--cal-state-green);
+}
+
+.wl-cal-legend-item .dot.pink {
+  background-color: var(--cal-state-exceeded);
+}
+
+.wl-cal-legend-item .dot.in-progress {
+  background-color: var(--cal-state-inprogress-bg);
+  border: 1.5px solid var(--cal-state-inprogress-border);
+  box-sizing: border-box;
+}
+
+.wl-cal-legend-item .dot.neutral {
+  background-color: var(--cal-state-neutral);
+}
+
+.habbi-ethical-note {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-md);
+  background-color: var(--bg-color-alt);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: left;
+  box-sizing: border-box;
+}
+
 
 
