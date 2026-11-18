@@ -330,6 +330,8 @@
       gameScoreSeq: 'Sequências: {0} • Rodada {1}',
       gameScoreLeaves: 'Folhas: {0}',
       gameScoreMath: 'Acertos: {0} • Rodada {1}',
+      recordWord: 'Recorde',
+      recordNewToast: '🎉 Novo recorde!',
 
       // Calendário (16)
       calTitle: 'Calendário',
@@ -710,6 +712,8 @@
       gameScoreSeq: 'Sequences: {0} • Round {1}',
       gameScoreLeaves: 'Leaves: {0}',
       gameScoreMath: 'Correct: {0} • Round {1}',
+      recordWord: 'Record',
+      recordNewToast: '🎉 New record!',
 
       // Calendar (16)
       calTitle: 'Calendar',
@@ -1090,6 +1094,8 @@
       gameScoreSeq: 'Secuencias: {0} • Ronda {1}',
       gameScoreLeaves: 'Hojas: {0}',
       gameScoreMath: 'Aciertos: {0} • Ronda {1}',
+      recordWord: 'Récord',
+      recordNewToast: '🎉 ¡Nuevo récord!',
 
       // Calendar (16)
       calTitle: 'Calendario',
@@ -1640,6 +1646,9 @@
     }
     const quitBtnTxt = document.querySelector('#btn-quit-game span');
     if (quitBtnTxt) quitBtnTxt.innerText = t.gameQuitBtn;
+    if (typeof updateMinigamesRecordUI === 'function') {
+      updateMinigamesRecordUI();
+    }
 
     // Screen 16: Calendário
     const calTodayBtn = document.getElementById('wl-cal-today-btn');
@@ -2818,17 +2827,46 @@
       userState.isGameActive = false;
     }
 
+    const prevScreenNum = currentScreen;
     currentScreen = screenNum;
     localStorage.setItem('habbi-current-screen', screenNum);
 
-    // Toggle active screen element
-    screenElements.forEach(screen => {
-      screen.classList.remove('active');
-      if (parseInt(screen.dataset.screen) === screenNum) {
-        screen.classList.add('active');
-        screen.scrollTop = 0;
-      }
-    });
+    // Animação de rolagem / deslizamento suave entre telas de onboarding (3, 4, 5)
+    const isOnbSlide = (prevScreenNum >= 3 && prevScreenNum <= 5) && (screenNum >= 3 && screenNum <= 5) && (prevScreenNum !== screenNum);
+    const prevScreenEl = document.querySelector(`.screen[data-screen="${prevScreenNum}"]`);
+    const nextScreenEl = document.querySelector(`.screen[data-screen="${screenNum}"]`);
+
+    if (isOnbSlide && prevScreenEl && nextScreenEl) {
+      const isForward = screenNum > prevScreenNum;
+      ['onb-sliding-in-right', 'onb-sliding-out-left', 'onb-sliding-in-left', 'onb-sliding-out-right'].forEach(c => {
+        prevScreenEl.classList.remove(c);
+        nextScreenEl.classList.remove(c);
+      });
+      screenElements.forEach(s => {
+        if (s !== prevScreenEl && s !== nextScreenEl) {
+          s.classList.remove('active', 'onb-sliding-in-right', 'onb-sliding-out-left', 'onb-sliding-in-left', 'onb-sliding-out-right');
+        }
+      });
+
+      prevScreenEl.classList.add(isForward ? 'onb-sliding-out-left' : 'onb-sliding-out-right');
+      nextScreenEl.classList.add('active');
+      nextScreenEl.classList.add(isForward ? 'onb-sliding-in-right' : 'onb-sliding-in-left');
+      nextScreenEl.scrollTop = 0;
+
+      setTimeout(() => {
+        prevScreenEl.classList.remove('active', 'onb-sliding-out-left', 'onb-sliding-out-right');
+        nextScreenEl.classList.remove('onb-sliding-in-right', 'onb-sliding-in-left');
+      }, 310);
+    } else {
+      // Toggle active screen element padrão
+      screenElements.forEach(screen => {
+        screen.classList.remove('active', 'onb-sliding-in-right', 'onb-sliding-out-left', 'onb-sliding-in-left', 'onb-sliding-out-right');
+        if (parseInt(screen.dataset.screen) === screenNum) {
+          screen.classList.add('active');
+          screen.scrollTop = 0;
+        }
+      });
+    }
 
     // Toggle active sidebar menu item
     sidebarItems.forEach(item => {
@@ -4984,14 +5022,14 @@
 
             <div class="wl-qreg-mood-extra" id="wl-qreg-mood-extra" style="display:none;">
               <div class="wl-qreg-tags-row" id="wl-qreg-influence-chips">
-                <button type="button" class="wl-qreg-tag" data-val="Sono" onclick="this.classList.toggle('selected')">Sono</button>
-                <button type="button" class="wl-qreg-tag" data-val="Exercício" onclick="this.classList.toggle('selected')">Exercício</button>
-                <button type="button" class="wl-qreg-tag" data-val="Trabalho" onclick="this.classList.toggle('selected')">Trabalho</button>
-                <button type="button" class="wl-qreg-tag" data-val="Relações" onclick="this.classList.toggle('selected')">Relações</button>
-                <button type="button" class="wl-qreg-tag" data-val="Alimentação" onclick="this.classList.toggle('selected')">Alimentação</button>
+                <button type="button" class="wl-qreg-tag" data-val="Sono" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Sono</button>
+                <button type="button" class="wl-qreg-tag" data-val="Exercício" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Exercício</button>
+                <button type="button" class="wl-qreg-tag" data-val="Trabalho" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Trabalho</button>
+                <button type="button" class="wl-qreg-tag" data-val="Relações" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Relações</button>
+                <button type="button" class="wl-qreg-tag" data-val="Alimentação" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Alimentação</button>
               </div>
               <div class="wl-qreg-note-row">
-                <input type="text" id="wl-qreg-mood-note" class="wl-qreg-note-input" placeholder="Nota opcional...">
+                <input type="text" id="wl-qreg-mood-note" class="wl-qreg-note-input" placeholder="Nota opcional..." oninput="if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">
                 <button type="button" class="wl-qreg-save-mood-btn" id="wl-qreg-save-mood-btn" onclick="saveQuickMood()">Salvar humor</button>
               </div>
             </div>
@@ -5130,7 +5168,7 @@
       if (saveMoodBtn) saveMoodBtn.innerText = 'Salvar humor';
       if (extraEl) extraEl.style.display = 'flex';
     } else {
-      if (extraEl) extraEl.style.display = focusSection === 'mood' ? 'flex' : 'none';
+      if (extraEl) extraEl.style.display = 'none';
     }
 
     window.syncQuickRegisterModalUI();
@@ -5254,24 +5292,36 @@
     window.closeQuickRegisterModal();
   };
 
+  window.syncQuickMoodExtraVisibility = function() {
+    const extraEl = document.getElementById('wl-qreg-mood-extra');
+    if (!extraEl) return;
+    const hasMood = Boolean(quickSelectedMood);
+    const hasTags = document.querySelectorAll('#wl-qreg-influence-chips .wl-qreg-tag.selected').length > 0;
+    const noteVal = (document.getElementById('wl-qreg-mood-note')?.value || '').trim();
+    const saveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
+    if (hasMood || hasTags || noteVal) {
+      extraEl.style.display = 'flex';
+      if (saveMoodBtn) {
+        saveMoodBtn.innerText = hasMood ? 'Salvar humor' : 'Salvar registro';
+      }
+    } else {
+      extraEl.style.display = 'none';
+    }
+  };
+
   window.selectQuickMood = function(moodName) {
     if (quickSelectedMood === moodName) {
       quickSelectedMood = '';
       document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
         btn.classList.remove('active');
       });
-      const saveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
-      if (saveMoodBtn) saveMoodBtn.innerText = 'Salvar registro';
     } else {
       quickSelectedMood = moodName;
       document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mood === moodName);
       });
-      const saveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
-      if (saveMoodBtn) saveMoodBtn.innerText = 'Salvar humor';
-      const extraEl = document.getElementById('wl-qreg-mood-extra');
-      if (extraEl) extraEl.style.display = 'flex';
     }
+    window.syncQuickMoodExtraVisibility();
   };
 
   window.saveQuickMood = function() {
@@ -6048,6 +6098,54 @@
     return template.replace('{0}', val1).replace('{1}', val2 !== undefined ? val2 : '');
   }
 
+  // -------------------------------------------------------------
+  // GAMIFICAÇÃO DE RECORDES DOS MINIJOGOS (HABBI FLAT GAMIFICATION)
+  // -------------------------------------------------------------
+  const GAME_RECORDS_KEY = 'habbi-game-records';
+  function getGameRecords() {
+    try {
+      const raw = localStorage.getItem(GAME_RECORDS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (_e) {}
+    return { memory: 0, sequence: 0, reflex: 0, math: 0 };
+  }
+  window.getGameRecords = getGameRecords;
+
+  function saveGameRecord(gameKey, score) {
+    if (!score || score <= 0) return false;
+    const records = getGameRecords();
+    if (score > (records[gameKey] || 0)) {
+      records[gameKey] = score;
+      try {
+        localStorage.setItem(GAME_RECORDS_KEY, JSON.stringify(records));
+      } catch (_e) {}
+      updateMinigamesRecordUI();
+      return true;
+    }
+    return false;
+  }
+  window.saveGameRecord = saveGameRecord;
+
+  function updateMinigamesRecordUI() {
+    const records = getGameRecords();
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
+    const recWord = t.recordWord || 'Recorde';
+    const map = {
+      memory: 'record-game-memory',
+      sequence: 'record-game-sequence',
+      math: 'record-game-math',
+      reflex: 'record-game-reflex'
+    };
+    Object.keys(map).forEach(k => {
+      const el = document.getElementById(map[k]);
+      if (el) {
+        el.innerText = `🏆 ${recWord}: ${records[k] || 0}`;
+      }
+    });
+  }
+  window.updateMinigamesRecordUI = updateMinigamesRecordUI;
+
   // Minigame 1: Memória Rápida Infinita com Ilustrações do Habbi
   let memoryGameState = {
     round: 1,
@@ -6084,12 +6182,13 @@
     // Ajusta classe do grid para layout harmônico
     container.className = pairCount === 4 ? 'memory-grid grid-4x2' : 'memory-grid';
 
-    // Badge de pontuação e rodada
+    // Badge de pontuação, rodada e recorde
     const scoreBadge = document.createElement('div');
     scoreBadge.className = 'game-score-badge';
     scoreBadge.style.gridColumn = pairCount === 4 ? 'span 2' : 'span 3';
     scoreBadge.style.textAlign = 'center';
-    scoreBadge.innerText = formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round);
+    const recMem = getGameRecords().memory;
+    scoreBadge.innerText = `${formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round)} • 🏆 ${recMem}`;
     container.appendChild(scoreBadge);
 
     let activeTiles = [];
@@ -6121,7 +6220,13 @@
             activeTiles = [];
             currentRoundMatches++;
             memoryGameState.totalMatches++;
-            scoreBadge.innerText = formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round);
+            const isNew = saveGameRecord('memory', memoryGameState.totalMatches);
+            const curRec = getGameRecords().memory;
+            scoreBadge.innerText = `${formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round)} • 🏆 ${curRec}`;
+            if (isNew && memoryGameState.totalMatches > 1) {
+              scoreBadge.classList.add('record-burst');
+              setTimeout(() => scoreBadge.classList.remove('record-burst'), 600);
+            }
 
             if (currentRoundMatches === pairCount) {
               // Concluiu rodada: transição rápida e natural para a próxima sem telas de vitória ou bloqueio
@@ -6167,7 +6272,8 @@
 
     const badgeEl = document.getElementById('game-sequence-badge');
     if (badgeEl) {
-      badgeEl.innerText = formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round);
+      const recSeq = getGameRecords().sequence;
+      badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • 🏆 ${recSeq}`;
     }
 
     boardWrapper.innerHTML = '';
@@ -6210,6 +6316,15 @@
             // Completou a sequência com sucesso
             sequenceGameState.completed++;
             sequenceGameState.round++;
+            const isNew = saveGameRecord('sequence', sequenceGameState.completed);
+            const curRec = getGameRecords().sequence;
+            if (badgeEl) {
+              badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • 🏆 ${curRec}`;
+              if (isNew && sequenceGameState.completed > 1) {
+                badgeEl.classList.add('record-burst');
+                setTimeout(() => badgeEl.classList.remove('record-burst'), 600);
+              }
+            }
             if (targetDisplay) targetDisplay.innerText = '✓';
             setTimeout(() => {
               if (userState.isGameActive) {
@@ -6273,7 +6388,8 @@
     scoreDisplay.style.top = '12px';
     scoreDisplay.style.right = '12px';
     scoreDisplay.style.zIndex = '10';
-    scoreDisplay.innerText = formatGameScore('gameScoreLeaves', reflexGameState.count);
+    const recRef = getGameRecords().reflex;
+    scoreDisplay.innerText = `${formatGameScore('gameScoreLeaves', reflexGameState.count)} • 🏆 ${recRef}`;
     board.appendChild(scoreDisplay);
 
     const spawnTarget = () => {
@@ -6313,7 +6429,13 @@
         if (clicked) return;
         clicked = true;
         reflexGameState.count++;
-        scoreDisplay.innerText = formatGameScore('gameScoreLeaves', reflexGameState.count);
+        const isNew = saveGameRecord('reflex', reflexGameState.count);
+        const curRec = getGameRecords().reflex;
+        scoreDisplay.innerText = `${formatGameScore('gameScoreLeaves', reflexGameState.count)} • 🏆 ${curRec}`;
+        if (isNew && reflexGameState.count > 1) {
+          scoreDisplay.classList.add('record-burst');
+          setTimeout(() => scoreDisplay.classList.remove('record-burst'), 600);
+        }
         target.style.transform = 'scale(0.85)';
         setTimeout(() => {
           spawnTarget();
@@ -6357,7 +6479,8 @@
 
     const scoreDisplay = document.createElement('div');
     scoreDisplay.className = 'game-score-badge';
-    scoreDisplay.innerText = formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round);
+    const recMath = getGameRecords().math;
+    scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • 🏆 ${recMath}`;
     layout.appendChild(scoreDisplay);
 
     const questionDisplay = document.createElement('div');
@@ -6432,7 +6555,13 @@
           if (opt === answer) {
             mathGameState.score++;
             mathGameState.round++;
-            scoreDisplay.innerText = formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round);
+            const isNew = saveGameRecord('math', mathGameState.score);
+            const curRec = getGameRecords().math;
+            scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • 🏆 ${curRec}`;
+            if (isNew && mathGameState.score > 1) {
+              scoreDisplay.classList.add('record-burst');
+              setTimeout(() => scoreDisplay.classList.remove('record-burst'), 600);
+            }
             btn.style.backgroundColor = '#ECFDF5';
             btn.style.borderColor = '#10B981';
             btn.style.color = '#065F46';
@@ -6449,7 +6578,8 @@
             correctionBanner.style.display = 'block';
 
             mathGameState.round++;
-            scoreDisplay.innerText = formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round);
+            const curRec = getGameRecords().math;
+            scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • 🏆 ${curRec}`;
 
             setTimeout(() => {
               generateQuestion();
@@ -6531,6 +6661,9 @@
     if (menuEl && panelEl) {
       menuEl.style.display = '';
       panelEl.style.display = 'none';
+    }
+    if (typeof updateMinigamesRecordUI === 'function') {
+      updateMinigamesRecordUI();
     }
     if (userState.minijogosReturnScreen === 12) {
       userState.minijogosReturnScreen = 10;
@@ -7745,7 +7878,20 @@
   // -------------------------------------------------------------
   const moodCards = document.querySelectorAll('.mood-card');
   let selectedMood = '';
-  
+  const btnMoodSubmit = document.getElementById('btn-mood-submit');
+  const moodNotesInput = document.getElementById('mood-notes');
+
+  function updateScreen25SubmitState() {
+    if (!btnMoodSubmit) return;
+    const hasMood = Boolean(selectedMood);
+    const hasChips = document.querySelectorAll('#mood-influence-chips .chip.selected').length > 0;
+    const notesVal = (moodNotesInput?.value || '').trim();
+    const hasAny = hasMood || hasChips || Boolean(notesVal);
+    btnMoodSubmit.disabled = !hasAny;
+    btnMoodSubmit.style.opacity = hasAny ? '1' : '0.4';
+    btnMoodSubmit.style.pointerEvents = hasAny ? 'auto' : 'none';
+  }
+
   moodCards.forEach(card => {
     card.addEventListener('click', () => {
       if (card.classList.contains('active')) {
@@ -7756,6 +7902,7 @@
         card.classList.add('active');
         selectedMood = card.dataset.mood;
       }
+      updateScreen25SubmitState();
     });
   });
 
@@ -7763,10 +7910,15 @@
   moodInfluenceChips.forEach(chip => {
     chip.addEventListener('click', () => {
       chip.classList.toggle('selected');
+      updateScreen25SubmitState();
     });
   });
 
-  const btnMoodSubmit = document.getElementById('btn-mood-submit');
+  if (moodNotesInput) {
+    moodNotesInput.addEventListener('input', updateScreen25SubmitState);
+  }
+  updateScreen25SubmitState();
+
   if (btnMoodSubmit) {
     btnMoodSubmit.addEventListener('click', () => {
       const selectedInfluences = [];
@@ -7776,7 +7928,11 @@
         }
       });
 
-      const notes = document.getElementById('mood-notes').value.trim();
+      const notes = (moodNotesInput ? moodNotesInput.value : '').trim();
+      if (!selectedMood && selectedInfluences.length === 0 && !notes) {
+        showToast('Nenhum dado informado.');
+        return;
+      }
       const targetKey = userState.activeRegisterDateKey || getDateKey(new Date());
 
       userState.mood = {
@@ -7809,7 +7965,8 @@
       moodCards.forEach(c => c.classList.remove('active'));
       selectedMood = '';
       moodInfluenceChips.forEach(c => c.classList.remove('selected'));
-      document.getElementById('mood-notes').value = '';
+      if (moodNotesInput) moodNotesInput.value = '';
+      updateScreen25SubmitState();
 
       const dest = userState.returnScreenAfterRegister || 10;
       userState.returnScreenAfterRegister = 10;
@@ -8034,7 +8191,7 @@
       if (userState.isGameActive && currentScreen === 15) {
         return;
       }
-      if (currentScreen !== 10 && currentScreen !== 29 && currentScreen !== 15) {
+      if (currentScreen !== 10 && currentScreen !== 29 && currentScreen !== 15 && currentScreen !== 3 && currentScreen !== 4 && currentScreen !== 5) {
         return;
       }
       startX = x;
@@ -8050,8 +8207,26 @@
       const diffY = endY - startY;
 
       // Gesto horizontal predominante
-      if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
-        if (currentScreen === 10) {
+      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+        if (currentScreen === 3) {
+          if (diffX < -40) {
+            // Arrastou para a esquerda -> Avança para Tela 4 com slide
+            showScreen(4);
+          }
+        } else if (currentScreen === 4) {
+          if (diffX > 40) {
+            // Arrastou para a direita -> Retorna para Tela 3 com slide
+            showScreen(3);
+          } else if (diffX < -40) {
+            // Arrastou para a esquerda -> Avança para Tela 5 com slide
+            showScreen(5);
+          }
+        } else if (currentScreen === 5) {
+          if (diffX > 40) {
+            // Arrastou para a direita -> Retorna para Tela 4 com slide
+            showScreen(4);
+          }
+        } else if (currentScreen === 10) {
           if (diffX > 0) {
             // Arrastou para a direita -> Abre Conquista (à esquerda)
             navigateHorizontalCarousel(29);
@@ -8206,14 +8381,9 @@
       fallbackTarget: '.wl-pager-nav-dots',
       prepare: () => {
         removeCalTutorialDemoRow();
+        hideTutorialSwipeHint();
         if (window.toggleHabbiHubMenu) window.toggleHabbiHubMenu(false);
         if (currentScreen !== 10) showScreen(10);
-        const swipeHint = document.getElementById('wl-carousel-swipe-hint');
-        if (swipeHint) {
-          swipeHint.classList.remove('fade-out');
-          swipeHint.classList.add('is-tutorial-visible');
-          swipeHint.style.display = 'inline-flex';
-        }
       }
     },
     {
@@ -8450,6 +8620,9 @@
   // Initial runs
   if (typeof window.applyAppLanguage === 'function') {
     window.applyAppLanguage(userState.currentLang || 'PT');
+  }
+  if (typeof updateMinigamesRecordUI === 'function') {
+    updateMinigamesRecordUI();
   }
   refreshAllViews();
 
