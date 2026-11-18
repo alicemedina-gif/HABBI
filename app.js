@@ -149,8 +149,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cigarettesAvoided: 0,
     savingsHistory: [],
     savingsGoal: { title: 'Minha conquista', target: 250 },
+    gameRecords: { memory: 0, sequence: 0, reflex: 0, math: 0 },
+    theme: 'light',
+    onboardingCompleted: false,
     tutorialCompleted: false,
-    hasConfiguredFirstGoal: false
+    hasConfiguredFirstGoal: false,
+    sacola100Celebrated: false,
+    currentScreenSaved: 1
   };
   window.userState = userState;
 
@@ -458,8 +463,26 @@ document.addEventListener('DOMContentLoaded', () => {
       settingsHelp: 'Ajuda e suporte',
       settingsAbout: 'Sobre o Habbi',
       settingsOnboarding: 'Refazer tour inicial (Onboarding)',
+      settingsDeleteProfileData: 'Apagar registros deste perfil',
+      settingsRestartTest: 'Reiniciar experiência de teste',
+      settingsLogout: 'Sair',
       themeLight: 'Claro',
       themeDark: 'Escuro',
+      splashLoginLink: 'Já tenho conta · Entrar',
+      delModalTitle: 'Apagar registros deste perfil?',
+      delModalDesc: 'Esta ação remove permanentemente os registros diários, humor, economia e recordes salvos neste perfil local. Outras contas salvas neste dispositivo não serão afetadas.',
+      delModalBackup: 'Baixar backup JSON antes',
+      delModalConfirm: 'Apagar registros',
+      delModalCancel: 'Cancelar',
+      delModalDone: 'Registros deste perfil apagados.',
+      noSmokeOtherDay: 'Não fumei neste dia',
+      noSmokeModalTitle: 'Substituir registros desta data?',
+      noSmokeModalDesc: 'Esta data já possui {0} cigarro(s) registrado(s). Deseja zerar esses cigarros e confirmar como dia sem fumar?',
+      noSmokeModalConfirm: 'Confirmar dia sem fumar',
+      futureDateBlocked: 'Não é possível registrar em datas futuras.',
+      loginEmailInvalid: 'Informe um e-mail válido para entrar.',
+      registerFieldsInvalid: 'Informe seu nome e um e-mail válido para criar a conta.',
+      savingsDayInProgress: 'Dia em andamento • Consolida ao encerrar o dia ou confirmar sem fumar',
 
       // Login / Cadastro (23, 24)
       loginTitle: 'Entrar',
@@ -893,8 +916,26 @@ document.addEventListener('DOMContentLoaded', () => {
       settingsHelp: 'Help & support',
       settingsAbout: 'About Habbi',
       settingsOnboarding: 'Replay onboarding tour',
+      settingsDeleteProfileData: 'Delete this profile\'s records',
+      settingsRestartTest: 'Restart test experience',
+      settingsLogout: 'Log out',
       themeLight: 'Light',
       themeDark: 'Dark',
+      splashLoginLink: 'I already have an account · Sign in',
+      delModalTitle: 'Delete this profile\'s records?',
+      delModalDesc: 'This permanently removes daily logs, mood, savings and records saved in this local profile. Other accounts saved on this device will not be affected.',
+      delModalBackup: 'Download JSON backup first',
+      delModalConfirm: 'Delete records',
+      delModalCancel: 'Cancel',
+      delModalDone: 'Profile records deleted.',
+      noSmokeOtherDay: 'Smoke-free this day',
+      noSmokeModalTitle: 'Replace logs for this date?',
+      noSmokeModalDesc: 'This date already has {0} cigarette(s) logged. Clear them and confirm as a smoke-free day?',
+      noSmokeModalConfirm: 'Confirm smoke-free day',
+      futureDateBlocked: 'Future dates cannot be logged.',
+      loginEmailInvalid: 'Please enter a valid email to sign in.',
+      registerFieldsInvalid: 'Please enter your name and a valid email to create an account.',
+      savingsDayInProgress: 'Day in progress • Consolidates at day end or smoke-free confirmation',
 
       // Login / Signup (23, 24)
       loginTitle: 'Sign In',
@@ -1328,8 +1369,26 @@ document.addEventListener('DOMContentLoaded', () => {
       settingsHelp: 'Ayuda y soporte',
       settingsAbout: 'Sobre Habbi',
       settingsOnboarding: 'Rehacer tour inicial (Onboarding)',
+      settingsDeleteProfileData: 'Borrar registros de este perfil',
+      settingsRestartTest: 'Reiniciar experiencia de prueba',
+      settingsLogout: 'Salir',
       themeLight: 'Claro',
       themeDark: 'Oscuro',
+      splashLoginLink: 'Ya tengo cuenta · Entrar',
+      delModalTitle: '¿Borrar registros de este perfil?',
+      delModalDesc: 'Esta acción elimina permanentemente los registros diarios, ánimo, ahorro y récords guardados en este perfil local. Otras cuentas guardadas en este dispositivo no se verán afectadas.',
+      delModalBackup: 'Descargar respaldo JSON antes',
+      delModalConfirm: 'Borrar registros',
+      delModalCancel: 'Cancelar',
+      delModalDone: 'Registros de este perfil borrados.',
+      noSmokeOtherDay: 'No fumé este día',
+      noSmokeModalTitle: '¿Reemplazar registros de esta fecha?',
+      noSmokeModalDesc: 'Esta fecha ya tiene {0} cigarrillo(s) registrado(s). ¿Deseas borrarlos y confirmar el día sin fumar?',
+      noSmokeModalConfirm: 'Confirmar día sin fumar',
+      futureDateBlocked: 'No es posible registrar en fechas futuras.',
+      loginEmailInvalid: 'Ingresa un correo válido para iniciar sesión.',
+      registerFieldsInvalid: 'Ingresa tu nombre y un correo válido para crear tu cuenta.',
+      savingsDayInProgress: 'Día en curso • Se consolida al finalizar el día o confirmar sin fumar',
 
       // Login / Signup (23, 24)
       loginTitle: 'Iniciar sesión',
@@ -2023,7 +2082,38 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       });
+      const delLbl = document.getElementById('settings-delete-profile-label');
+      if (delLbl) delLbl.innerText = t.settingsDeleteProfileData || 'Apagar registros deste perfil';
+      const outLbl = document.getElementById('settings-logout-label');
+      if (outLbl) outLbl.innerText = t.settingsLogout || 'Sair';
     }
+
+    const splashLoginBtn = document.getElementById('btn-splash-login');
+    if (splashLoginBtn) splashLoginBtn.innerText = t.splashLoginLink || 'Já tenho conta · Entrar';
+
+    const restartTestLabel = t.settingsRestartTest || 'Reiniciar experiência de teste';
+    const sRestartBtn = document.getElementById('settings-restart-test-btn');
+    if (sRestartBtn) sRestartBtn.innerText = restartTestLabel;
+    const pRestartBtn = document.getElementById('profile-restart-test-btn');
+    if (pRestartBtn) pRestartBtn.innerText = restartTestLabel;
+
+    const delModalTitle = document.getElementById('habbi-del-modal-title');
+    if (delModalTitle) delModalTitle.innerText = t.delModalTitle || 'Apagar registros deste perfil?';
+    const delModalDesc = document.getElementById('habbi-del-modal-desc');
+    if (delModalDesc) delModalDesc.innerText = t.delModalDesc || '';
+    const delModalBackup = document.getElementById('habbi-del-modal-backup');
+    if (delModalBackup) delModalBackup.innerText = t.delModalBackup || 'Baixar backup JSON antes';
+    const delModalConfirm = document.getElementById('habbi-del-modal-confirm');
+    if (delModalConfirm) delModalConfirm.innerText = t.delModalConfirm || 'Apagar registros';
+    const delModalCancel = document.getElementById('habbi-del-modal-cancel');
+    if (delModalCancel) delModalCancel.innerText = t.delModalCancel || 'Cancelar';
+
+    const nsModalTitle = document.getElementById('habbi-nosmoke-modal-title');
+    if (nsModalTitle) nsModalTitle.innerText = t.noSmokeModalTitle || 'Substituir registros desta data?';
+    const nsModalConfirm = document.getElementById('habbi-nosmoke-modal-confirm');
+    if (nsModalConfirm) nsModalConfirm.innerText = t.noSmokeModalConfirm || 'Confirmar dia sem fumar';
+    const nsModalCancel = document.getElementById('habbi-nosmoke-modal-cancel');
+    if (nsModalCancel) nsModalCancel.innerText = t.delModalCancel || 'Cancelar';
 
     // Screen 23: Login
     const s23 = document.querySelector('.screen[data-screen="23"]');
@@ -2032,7 +2122,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (h2) h2.innerText = t.loginTitle;
       const sub = s23.querySelector('.detail-header .caption');
       if (sub) sub.innerText = t.loginSubtitle;
-      const guestBtn = s23.querySelector('button[onclick*="10"]');
+      const guestBtn = document.getElementById('btn-login-guest') || s23.querySelector('button[onclick*="continueAsGuest"]');
       if (guestBtn) guestBtn.innerText = t.loginGuest;
     }
 
@@ -2331,90 +2421,510 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const RECORDS_STORAGE_KEY = 'habbi-real-records-v2';
+  // ==========================================================================
+  // ARMAZENAMENTO ISOLADO POR PERFIL (PRONTO PARA user.id DO SUPABASE)
+  // ==========================================================================
+  const RECORDS_STORAGE_KEY = 'habbi-real-records-v2'; // Chave legada (somente leitura na migração)
+  const PROFILES_INDEX_KEY = 'habbi-profiles-index-v1';
+  const ACTIVE_SESSION_KEY = 'habbi-active-session-v1';
+  const PROFILE_DATA_PREFIX = 'habbi-profile-data:';
+  const LEGACY_MIGRATION_BACKUP_KEY = 'habbi-legacy-migration-backup-v1';
+  const STORAGE_MIGRATION_DONE_KEY = 'habbi-storage-migration-v1-done';
+  const GUEST_PROFILE_ID = 'prof_guest_local';
+  const LEGACY_KEYS_TO_BACKUP = [
+    'habbi-real-records-v2',
+    'habbi-game-records',
+    'habbi-onboarding-completed',
+    'habbi-tutorial-completed',
+    'habbi-first-goal-set',
+    'habbi-sacola-100-celebrated',
+    'habbi-theme',
+    'habbi-app-lang',
+    'habbi-current-screen'
+  ];
+
+  function normalizeEmail(email) {
+    return String(email || '').trim().toLowerCase();
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
+  }
+
+  function getProfileStorageKey(profileId) {
+    return `${PROFILE_DATA_PREFIX}${profileId}`;
+  }
+
+  function createEmptyProfilesIndex() {
+    return {
+      version: 1,
+      profiles: {},
+      emailToProfileId: {},
+      supabaseIdToProfileId: {},
+      testCounter: 0
+    };
+  }
+
+  function loadProfilesIndex() {
+    try {
+      const raw = localStorage.getItem(PROFILES_INDEX_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            version: 1,
+            profiles: (parsed.profiles && typeof parsed.profiles === 'object') ? parsed.profiles : {},
+            emailToProfileId: (parsed.emailToProfileId && typeof parsed.emailToProfileId === 'object') ? parsed.emailToProfileId : {},
+            supabaseIdToProfileId: (parsed.supabaseIdToProfileId && typeof parsed.supabaseIdToProfileId === 'object') ? parsed.supabaseIdToProfileId : {},
+            testCounter: typeof parsed.testCounter === 'number' && parsed.testCounter >= 0 ? parsed.testCounter : 0
+          };
+        }
+      }
+    } catch (_e) {}
+    return createEmptyProfilesIndex();
+  }
+
+  function saveProfilesIndex(idx) {
+    try {
+      localStorage.setItem(PROFILES_INDEX_KEY, JSON.stringify(idx));
+    } catch (_e) {}
+  }
+
+  function loadActiveSession() {
+    try {
+      const raw = localStorage.getItem(ACTIVE_SESSION_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          const mode = ['guest', 'account', 'test', 'signed-out'].includes(parsed.mode) ? parsed.mode : 'guest';
+          const activeProfileId = typeof parsed.activeProfileId === 'string' && parsed.activeProfileId.trim()
+            ? parsed.activeProfileId.trim()
+            : null;
+          return { mode, activeProfileId };
+        }
+      }
+    } catch (_e) {}
+    return null;
+  }
+
+  function saveActiveSession(session) {
+    try {
+      localStorage.setItem(ACTIVE_SESSION_KEY, JSON.stringify({
+        mode: session.mode,
+        activeProfileId: session.activeProfileId || null
+      }));
+    } catch (_e) {}
+  }
+
+  function createFreshProfileSnapshot(overrides = {}) {
+    const lang = (overrides.currentLang || 'PT').toUpperCase();
+    return {
+      name: overrides.name || '',
+      email: overrides.email || '',
+      avatar: overrides.avatar || 'verde',
+      currentLang: lang,
+      theme: overrides.theme === 'dark' ? 'dark' : 'light',
+      dailyRecords: (overrides.dailyRecords && typeof overrides.dailyRecords === 'object') ? overrides.dailyRecords : {},
+      todayMeta: (typeof overrides.todayMeta === 'number' && overrides.todayMeta >= 1) ? overrides.todayMeta : 11,
+      habitualCigs: (typeof overrides.habitualCigs === 'number' && overrides.habitualCigs >= 1) ? overrides.habitualCigs : 12,
+      habitualCigsCustomized: Boolean(overrides.habitualCigsCustomized),
+      packPrice: (typeof overrides.packPrice === 'number' && overrides.packPrice > 0) ? overrides.packPrice : 15.00,
+      cigsPerPack: (typeof overrides.cigsPerPack === 'number' && overrides.cigsPerPack >= 1) ? overrides.cigsPerPack : 20,
+      packFreqDays: (typeof overrides.packFreqDays === 'number' && overrides.packFreqDays >= 1) ? overrides.packFreqDays : 2,
+      packEvents: Array.isArray(overrides.packEvents) ? overrides.packEvents : [],
+      cigarettesAvoided: (typeof overrides.cigarettesAvoided === 'number' && overrides.cigarettesAvoided >= 0) ? overrides.cigarettesAvoided : 0,
+      savingsHistory: Array.isArray(overrides.savingsHistory) ? overrides.savingsHistory : [],
+      savingsGoal: (overrides.savingsGoal && typeof overrides.savingsGoal.title === 'string')
+        ? overrides.savingsGoal
+        : { title: getDefaultGoalTitle(lang), target: 250 },
+      gameRecords: (overrides.gameRecords && typeof overrides.gameRecords === 'object')
+        ? {
+            memory: Number(overrides.gameRecords.memory) || 0,
+            sequence: Number(overrides.gameRecords.sequence) || 0,
+            reflex: Number(overrides.gameRecords.reflex) || 0,
+            math: Number(overrides.gameRecords.math) || 0
+          }
+        : { memory: 0, sequence: 0, reflex: 0, math: 0 },
+      onboardingCompleted: Boolean(overrides.onboardingCompleted),
+      tutorialCompleted: Boolean(overrides.tutorialCompleted),
+      hasConfiguredFirstGoal: Boolean(overrides.hasConfiguredFirstGoal),
+      sacola100Celebrated: Boolean(overrides.sacola100Celebrated),
+      currentScreen: (typeof overrides.currentScreen === 'number' && overrides.currentScreen >= 1) ? overrides.currentScreen : 1
+    };
+  }
+
+  function loadProfileSnapshot(profileId) {
+    if (!profileId) return null;
+    try {
+      const raw = localStorage.getItem(getProfileStorageKey(profileId));
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        return createFreshProfileSnapshot(parsed);
+      }
+    } catch (_e) {}
+    return null;
+  }
+
+  function saveProfileSnapshot(profileId, snapshot) {
+    if (!profileId || !snapshot) return;
+    try {
+      localStorage.setItem(getProfileStorageKey(profileId), JSON.stringify(snapshot));
+      const idx = loadProfilesIndex();
+      if (idx.profiles[profileId]) {
+        idx.profiles[profileId].updatedAt = new Date().toISOString();
+        saveProfilesIndex(idx);
+      }
+    } catch (_e) {}
+  }
+
+  function ensureGuestProfile() {
+    const idx = loadProfilesIndex();
+    const nowIso = new Date().toISOString();
+    if (!idx.profiles[GUEST_PROFILE_ID]) {
+      idx.profiles[GUEST_PROFILE_ID] = {
+        id: GUEST_PROFILE_ID,
+        kind: 'guest',
+        supabaseUserId: null,
+        email: null,
+        label: 'Visitante',
+        createdAt: nowIso,
+        updatedAt: nowIso
+      };
+      saveProfilesIndex(idx);
+    }
+    return GUEST_PROFILE_ID;
+  }
+
+  function resolveAccountProfileId({ supabaseUserId = null, email = null, label = null } = {}) {
+    const idx = loadProfilesIndex();
+    const normEmail = normalizeEmail(email);
+    const supaId = (typeof supabaseUserId === 'string' && supabaseUserId.trim()) ? supabaseUserId.trim() : null;
+    const nowIso = new Date().toISOString();
+
+    let foundId = null;
+    if (supaId && idx.supabaseIdToProfileId[supaId] && idx.profiles[idx.supabaseIdToProfileId[supaId]]) {
+      foundId = idx.supabaseIdToProfileId[supaId];
+    } else if (normEmail && idx.emailToProfileId[normEmail] && idx.profiles[idx.emailToProfileId[normEmail]]) {
+      foundId = idx.emailToProfileId[normEmail];
+    }
+
+    if (foundId) {
+      const meta = idx.profiles[foundId];
+      if (supaId && !meta.supabaseUserId) {
+        meta.supabaseUserId = supaId;
+        idx.supabaseIdToProfileId[supaId] = foundId;
+      }
+      if (normEmail && !meta.email) {
+        meta.email = normEmail;
+        idx.emailToProfileId[normEmail] = foundId;
+      }
+      if (label && !meta.label) {
+        meta.label = label;
+      }
+      meta.updatedAt = nowIso;
+      saveProfilesIndex(idx);
+      return foundId;
+    }
+
+    const rand = Math.random().toString(36).slice(2, 8);
+    const newId = `prof_acct_${Date.now().toString(36)}_${rand}`;
+    idx.profiles[newId] = {
+      id: newId,
+      kind: 'account',
+      supabaseUserId: supaId,
+      email: normEmail || null,
+      label: label || (normEmail ? normEmail.split('@')[0] : null),
+      createdAt: nowIso,
+      updatedAt: nowIso
+    };
+    if (normEmail) idx.emailToProfileId[normEmail] = newId;
+    if (supaId) idx.supabaseIdToProfileId[supaId] = newId;
+    saveProfilesIndex(idx);
+    return newId;
+  }
+
+  function createTestProfile() {
+    const idx = loadProfilesIndex();
+    const nowTs = Date.now();
+    const nowIso = new Date(nowTs).toISOString();
+    idx.testCounter = (typeof idx.testCounter === 'number' ? idx.testCounter : 0) + 1;
+    const testId = `prof_test_${idx.testCounter}_${nowTs}`;
+    idx.profiles[testId] = {
+      id: testId,
+      kind: 'test',
+      supabaseUserId: null,
+      email: null,
+      label: `Teste #${idx.testCounter}`,
+      createdAt: nowIso,
+      updatedAt: nowIso
+    };
+    saveProfilesIndex(idx);
+    saveProfileSnapshot(testId, createFreshProfileSnapshot({ currentLang: 'PT', theme: 'light', currentScreen: 1 }));
+    return testId;
+  }
+
+  function clearAuthFormInputs() {
+    ['login-email', 'login-password', 'register-name', 'register-email', 'register-password', 'edit-account-name', 'edit-account-email', 'edit-account-password'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    ['login-error-msg', 'register-error-msg'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = '';
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  function resetInMemoryUserState(langOverride) {
+    const nowReset = new Date();
+    const lang = (langOverride || userState.currentLang || 'PT').toUpperCase();
+    userState.name = '';
+    userState.email = '';
+    userState.avatar = 'verde';
+    userState.isAuthenticated = false;
+    userState.currentLang = lang;
+    userState.theme = 'light';
+    userState.motivations = [];
+    userState.patterns = [];
+    userState.mood = null;
+    userState.sosUrge = 7;
+    userState.sosContext = 'Casa';
+    userState.sosTime = '3 min';
+    userState.selectedIntervention = 'Respiração 4-6';
+    userState.groundingCheckedCount = 0;
+    userState.daysClean = 0;
+    userState.daysGoalMet = 0;
+    userState.totalUrgesOvercome = 0;
+    userState.todayMeta = 11;
+    userState.todayLogged = 0;
+    userState.metaExceededModalShown = false;
+    userState.isGameActive = false;
+    userState.calViewYear = nowReset.getFullYear();
+    userState.calViewMonth = nowReset.getMonth();
+    userState.calSelectedDate = getDateKey(nowReset);
+    userState.calEventsExpandedDate = null;
+    userState.activeRegisterDateKey = getDateKey(nowReset);
+    userState.dailyRecords = {};
+    userState.successDaysList = [];
+    userState.relapseDaysList = [];
+    userState.warningDaysList = [];
+    userState.historyEvents = [];
+    userState.habitualCigs = 12;
+    userState.habitualCigsCustomized = false;
+    userState.packPrice = 15.00;
+    userState.cigsPerPack = 20;
+    userState.packFreqDays = 2;
+    userState.packEvents = [];
+    userState.totalSavings = 0.00;
+    userState.cigarettesAvoided = 0;
+    userState.savingsHistory = [];
+    userState.savingsGoal = { title: getDefaultGoalTitle(lang), target: 250 };
+    userState.gameRecords = { memory: 0, sequence: 0, reflex: 0, math: 0 };
+    userState.onboardingCompleted = false;
+    userState.tutorialCompleted = false;
+    userState.hasConfiguredFirstGoal = false;
+    userState.sacola100Celebrated = false;
+    userState.currentScreenSaved = 1;
+  }
+
+  function extractCurrentStateSnapshot() {
+    return {
+      name: userState.name || '',
+      email: userState.email || '',
+      avatar: userState.avatar || 'verde',
+      currentLang: userState.currentLang || 'PT',
+      theme: userState.theme === 'dark' ? 'dark' : 'light',
+      dailyRecords: userState.dailyRecords || {},
+      todayMeta: userState.todayMeta || 11,
+      habitualCigs: userState.habitualCigs || 12,
+      habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
+      packPrice: userState.packPrice || 15.00,
+      cigsPerPack: userState.cigsPerPack || 20,
+      packFreqDays: userState.packFreqDays || 2,
+      packEvents: Array.isArray(userState.packEvents) ? userState.packEvents : [],
+      cigarettesAvoided: userState.cigarettesAvoided || 0,
+      savingsHistory: Array.isArray(userState.savingsHistory) ? userState.savingsHistory : [],
+      savingsGoal: userState.savingsGoal || { title: getDefaultGoalTitle(userState.currentLang), target: 250 },
+      gameRecords: (userState.gameRecords && typeof userState.gameRecords === 'object')
+        ? {
+            memory: Number(userState.gameRecords.memory) || 0,
+            sequence: Number(userState.gameRecords.sequence) || 0,
+            reflex: Number(userState.gameRecords.reflex) || 0,
+            math: Number(userState.gameRecords.math) || 0
+          }
+        : { memory: 0, sequence: 0, reflex: 0, math: 0 },
+      onboardingCompleted: Boolean(userState.onboardingCompleted),
+      tutorialCompleted: Boolean(userState.tutorialCompleted),
+      hasConfiguredFirstGoal: Boolean(userState.hasConfiguredFirstGoal),
+      sacola100Celebrated: Boolean(userState.sacola100Celebrated),
+      currentScreen: typeof currentScreen === 'number' ? currentScreen : (userState.currentScreenSaved || 1)
+    };
+  }
+
+  function applySnapshotToUserState(snapshot, isAccountProfile) {
+    const clean = createFreshProfileSnapshot(snapshot || {});
+    resetInMemoryUserState(clean.currentLang);
+    userState.name = clean.name;
+    userState.email = clean.email;
+    userState.avatar = clean.avatar;
+    userState.currentLang = clean.currentLang;
+    userState.theme = clean.theme;
+    userState.isAuthenticated = Boolean(isAccountProfile);
+    userState.dailyRecords = clean.dailyRecords;
+    userState.todayMeta = clean.todayMeta;
+    userState.habitualCigs = clean.habitualCigs;
+    userState.habitualCigsCustomized = clean.habitualCigsCustomized;
+    userState.packPrice = clean.packPrice;
+    userState.cigsPerPack = clean.cigsPerPack;
+    userState.packFreqDays = clean.packFreqDays;
+    userState.packEvents = clean.packEvents;
+    userState.cigarettesAvoided = clean.cigarettesAvoided;
+    userState.savingsHistory = clean.savingsHistory;
+    if (clean.savingsGoal && typeof clean.savingsGoal.title === 'string') {
+      const lower = clean.savingsGoal.title.toLowerCase();
+      if (lower.includes('bola') || lower === 'jantar especial' || !clean.savingsGoal.title.trim()) {
+        userState.savingsGoal = { title: getDefaultGoalTitle(clean.currentLang), target: clean.savingsGoal.target || 250 };
+      } else {
+        userState.savingsGoal = clean.savingsGoal;
+      }
+    }
+    userState.gameRecords = clean.gameRecords;
+    userState.onboardingCompleted = clean.onboardingCompleted;
+    userState.tutorialCompleted = clean.tutorialCompleted;
+    userState.hasConfiguredFirstGoal = clean.hasConfiguredFirstGoal;
+    userState.sacola100Celebrated = clean.sacola100Celebrated;
+    userState.currentScreenSaved = clean.currentScreen;
+  }
+
+  function runLegacyStorageMigrationIfNeeded() {
+    try {
+      if (localStorage.getItem(STORAGE_MIGRATION_DONE_KEY) === '1') {
+        return;
+      }
+
+      const legacyBackupMap = {};
+      let hasAnyLegacyData = false;
+      LEGACY_KEYS_TO_BACKUP.forEach(k => {
+        const val = localStorage.getItem(k);
+        if (val !== null) {
+          legacyBackupMap[k] = val;
+          hasAnyLegacyData = true;
+        }
+      });
+
+      if (hasAnyLegacyData) {
+        // 1. Grava backup pré-migração intacto (somente se ainda não existir)
+        if (!localStorage.getItem(LEGACY_MIGRATION_BACKUP_KEY)) {
+          localStorage.setItem(LEGACY_MIGRATION_BACKUP_KEY, JSON.stringify({
+            version: 1,
+            backedUpAt: new Date().toISOString(),
+            keys: legacyBackupMap
+          }));
+        }
+
+        // 2. Parseia dados legados com segurança
+        let legacyParsed = {};
+        if (legacyBackupMap[RECORDS_STORAGE_KEY]) {
+          try {
+            const p = JSON.parse(legacyBackupMap[RECORDS_STORAGE_KEY]);
+            if (p && typeof p === 'object') legacyParsed = p;
+          } catch (_e) {}
+        }
+
+        let legacyGames = { memory: 0, sequence: 0, reflex: 0, math: 0 };
+        if (legacyBackupMap['habbi-game-records']) {
+          try {
+            const g = JSON.parse(legacyBackupMap['habbi-game-records']);
+            if (g && typeof g === 'object') legacyGames = g;
+          } catch (_e) {}
+        }
+
+        const isLegacyAccount = Boolean(legacyParsed.isAuthenticated && typeof legacyParsed.email === 'string' && legacyParsed.email.trim());
+        const targetProfileId = isLegacyAccount
+          ? resolveAccountProfileId({ email: legacyParsed.email, label: legacyParsed.name || null })
+          : ensureGuestProfile();
+        const targetMode = isLegacyAccount ? 'account' : 'guest';
+
+        // 3. Migra sem duplicar caso o cofre de destino ainda não exista
+        if (!localStorage.getItem(getProfileStorageKey(targetProfileId))) {
+          const migratedSnapshot = createFreshProfileSnapshot({
+            name: typeof legacyParsed.name === 'string' ? legacyParsed.name : '',
+            email: typeof legacyParsed.email === 'string' ? legacyParsed.email : '',
+            avatar: typeof legacyParsed.avatar === 'string' ? legacyParsed.avatar : 'verde',
+            currentLang: typeof legacyParsed.currentLang === 'string'
+              ? legacyParsed.currentLang
+              : (legacyBackupMap['habbi-app-lang'] || 'PT'),
+            theme: legacyBackupMap['habbi-theme'] === 'dark' ? 'dark' : 'light',
+            dailyRecords: (legacyParsed.dailyRecords && typeof legacyParsed.dailyRecords === 'object') ? legacyParsed.dailyRecords : {},
+            todayMeta: legacyParsed.todayMeta,
+            habitualCigs: legacyParsed.habitualCigs || legacyParsed.todayMeta,
+            habitualCigsCustomized: legacyParsed.habitualCigsCustomized,
+            packPrice: legacyParsed.packPrice,
+            cigsPerPack: legacyParsed.cigsPerPack,
+            packFreqDays: legacyParsed.packFreqDays,
+            packEvents: legacyParsed.packEvents,
+            cigarettesAvoided: legacyParsed.cigarettesAvoided,
+            savingsHistory: legacyParsed.savingsHistory,
+            savingsGoal: legacyParsed.savingsGoal,
+            gameRecords: legacyGames,
+            onboardingCompleted: legacyBackupMap['habbi-onboarding-completed'] === '1',
+            tutorialCompleted: Boolean(legacyParsed.tutorialCompleted) || legacyBackupMap['habbi-tutorial-completed'] === '1',
+            hasConfiguredFirstGoal: Boolean(legacyParsed.hasConfiguredFirstGoal) || legacyBackupMap['habbi-first-goal-set'] === '1',
+            sacola100Celebrated: legacyBackupMap['habbi-sacola-100-celebrated'] === 'true' || legacyBackupMap['habbi-sacola-100-celebrated'] === '1',
+            currentScreen: parseInt(legacyBackupMap['habbi-current-screen'], 10) || 1
+          });
+          saveProfileSnapshot(targetProfileId, migratedSnapshot);
+        }
+
+        if (!loadActiveSession()) {
+          saveActiveSession({ mode: targetMode, activeProfileId: targetProfileId });
+        }
+      }
+
+      localStorage.setItem(STORAGE_MIGRATION_DONE_KEY, '1');
+    } catch (_e) {
+      // Nunca impede inicialização do app
+    }
+  }
+
+  function ensureActiveProfileForWrite() {
+    let session = loadActiveSession();
+    if (!session || session.mode === 'signed-out' || !session.activeProfileId) {
+      const guestId = ensureGuestProfile();
+      session = { mode: 'guest', activeProfileId: guestId };
+      saveActiveSession(session);
+    }
+    return session;
+  }
 
   function loadPersistedState() {
     try {
-      const raw = localStorage.getItem(RECORDS_STORAGE_KEY);
-      if (!raw) {
-        userState.currentLang = localStorage.getItem('habbi-app-lang') || 'PT';
+      runLegacyStorageMigrationIfNeeded();
+      let session = loadActiveSession();
+
+      if (!session) {
+        const guestId = ensureGuestProfile();
+        session = { mode: 'guest', activeProfileId: guestId };
+        saveActiveSession(session);
+      }
+
+      if (session.mode === 'signed-out' || !session.activeProfileId) {
+        resetInMemoryUserState(localStorage.getItem('habbi-app-lang') || 'PT');
         return;
       }
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object') {
-        if (typeof parsed.currentLang === 'string') {
-          userState.currentLang = parsed.currentLang;
-        } else {
-          userState.currentLang = localStorage.getItem('habbi-app-lang') || 'PT';
-        }
-        if (typeof parsed.name === 'string') {
-          userState.name = parsed.name;
-        }
-        if (typeof parsed.email === 'string') {
-          userState.email = parsed.email;
-        }
-        if (typeof parsed.avatar === 'string') {
-          userState.avatar = parsed.avatar;
-        }
-        if (typeof parsed.isAuthenticated === 'boolean') {
-          userState.isAuthenticated = parsed.isAuthenticated;
-        } else {
-          userState.isAuthenticated = false;
-        }
-        if (parsed.dailyRecords && typeof parsed.dailyRecords === 'object') {
-          userState.dailyRecords = parsed.dailyRecords;
-        }
-        if (typeof parsed.todayMeta === 'number' && parsed.todayMeta >= 1) {
-          userState.todayMeta = parsed.todayMeta;
-        }
-        if (typeof parsed.habitualCigs === 'number' && parsed.habitualCigs >= 1) {
-          userState.habitualCigs = parsed.habitualCigs;
-        } else if (typeof parsed.todayMeta === 'number' && parsed.todayMeta >= 1) {
-          userState.habitualCigs = parsed.todayMeta;
-        }
-        if (typeof parsed.habitualCigsCustomized === 'boolean') {
-          userState.habitualCigsCustomized = parsed.habitualCigsCustomized;
-        }
-        if (typeof parsed.packPrice === 'number' && parsed.packPrice > 0) {
-          userState.packPrice = parsed.packPrice;
-        }
-        if (typeof parsed.cigsPerPack === 'number' && parsed.cigsPerPack >= 1) {
-          userState.cigsPerPack = parsed.cigsPerPack;
-        }
-        if (typeof parsed.packFreqDays === 'number' && parsed.packFreqDays >= 1) {
-          userState.packFreqDays = parsed.packFreqDays;
-        }
-        if (Array.isArray(parsed.packEvents)) {
-          userState.packEvents = parsed.packEvents;
-        }
-        if (typeof parsed.cigarettesAvoided === 'number' && parsed.cigarettesAvoided >= 0) {
-          userState.cigarettesAvoided = parsed.cigarettesAvoided;
-        }
-        if (Array.isArray(parsed.savingsHistory)) {
-          userState.savingsHistory = parsed.savingsHistory;
-        }
-        if (parsed.savingsGoal && typeof parsed.savingsGoal.title === 'string') {
-          const lower = parsed.savingsGoal.title.toLowerCase();
-          if (lower.includes('bola') || lower === 'jantar especial' || !parsed.savingsGoal.title.trim()) {
-            userState.savingsGoal = { title: (typeof getDefaultGoalTitle === 'function' ? getDefaultGoalTitle(userState.currentLang) : 'Minha conquista'), target: parsed.savingsGoal.target || 250 };
-          } else {
-            userState.savingsGoal = parsed.savingsGoal;
-          }
-        }
-        if (typeof parsed.tutorialCompleted === 'boolean') {
-          userState.tutorialCompleted = parsed.tutorialCompleted;
-        } else if (localStorage.getItem('habbi-tutorial-completed') === '1') {
-          userState.tutorialCompleted = true;
-        } else {
-          userState.tutorialCompleted = false;
-        }
-        if (typeof parsed.hasConfiguredFirstGoal === 'boolean') {
-          userState.hasConfiguredFirstGoal = parsed.hasConfiguredFirstGoal;
-        } else if (localStorage.getItem('habbi-first-goal-set') === '1') {
-          userState.hasConfiguredFirstGoal = true;
-        } else {
-          userState.hasConfiguredFirstGoal = false;
-        }
+
+      const snap = loadProfileSnapshot(session.activeProfileId);
+      const isAccount = session.mode === 'account';
+      if (snap) {
+        applySnapshotToUserState(snap, isAccount);
+      } else {
+        const fallbackLang = localStorage.getItem('habbi-app-lang') || 'PT';
+        resetInMemoryUserState(fallbackLang);
+        userState.isAuthenticated = isAccount;
+        saveProfileSnapshot(session.activeProfileId, extractCurrentStateSnapshot());
       }
     } catch (_e) {
       // Ignora erro de leitura no localStorage
@@ -2423,33 +2933,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function savePersistedState() {
     try {
-      const payload = {
-        name: userState.name || '',
-        email: userState.email || '',
-        avatar: userState.avatar || 'verde',
-        currentLang: userState.currentLang || 'PT',
-        isAuthenticated: Boolean(userState.isAuthenticated),
-        dailyRecords: userState.dailyRecords,
-        todayMeta: userState.todayMeta,
-        habitualCigs: userState.habitualCigs,
-        habitualCigsCustomized: userState.habitualCigsCustomized,
-        packPrice: userState.packPrice,
-        cigsPerPack: userState.cigsPerPack,
-        packFreqDays: userState.packFreqDays,
-        packEvents: userState.packEvents,
-        cigarettesAvoided: userState.cigarettesAvoided,
-        savingsHistory: userState.savingsHistory,
-        savingsGoal: userState.savingsGoal,
-        tutorialCompleted: Boolean(userState.tutorialCompleted),
-        hasConfiguredFirstGoal: Boolean(userState.hasConfiguredFirstGoal)
-      };
-      localStorage.setItem(RECORDS_STORAGE_KEY, JSON.stringify(payload));
+      const session = loadActiveSession();
+      if (!session || session.mode === 'signed-out' || !session.activeProfileId) {
+        // Sessão encerrada: não sobrescreve nem recria cofre de nenhum perfil
+        return;
+      }
+      const payload = extractCurrentStateSnapshot();
+      saveProfileSnapshot(session.activeProfileId, payload);
       localStorage.setItem('habbi-app-lang', userState.currentLang || 'PT');
+      localStorage.setItem('habbi-theme', userState.theme === 'dark' ? 'dark' : 'light');
     } catch (_e) {
       // Ignora erro de gravação no localStorage
     }
   }
   window.savePersistedState = savePersistedState;
+  window.getActiveHabbiSession = loadActiveSession;
+  window.getHabbiProfilesIndex = loadProfilesIndex;
 
   /**
    * NOTA DE ARQUITETURA E SEGURANÇA SOBRE AUTENTICAÇÃO:
@@ -2468,8 +2967,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function habbiExportData() {
     try {
       savePersistedState();
-      const rawRecords = localStorage.getItem(RECORDS_STORAGE_KEY);
-      const parsedRecords = rawRecords ? JSON.parse(rawRecords) : {};
+      const session = loadActiveSession();
+      const activeSnap = (session && session.activeProfileId)
+        ? (loadProfileSnapshot(session.activeProfileId) || extractCurrentStateSnapshot())
+        : extractCurrentStateSnapshot();
 
       const allHabbiKeys = {};
       for (let i = 0; i < localStorage.length; i++) {
@@ -2481,27 +2982,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const snapshot = {
         app: 'Habbi',
-        schemaVersion: '2.0.0',
+        schemaVersion: '3.0.0',
         exportedAt: new Date().toISOString(),
+        activeProfileId: (session && session.activeProfileId) || null,
         userState: {
           name: userState.name || '',
           email: userState.email || '',
           avatar: userState.avatar || 'verde',
           currentLang: userState.currentLang || 'PT',
+          theme: userState.theme === 'dark' ? 'dark' : 'light',
           isAuthenticated: Boolean(userState.isAuthenticated),
           todayMeta: userState.todayMeta || 11,
-          habitualCigs: userState.habitualCigs || 11,
+          habitualCigs: userState.habitualCigs || 12,
           habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
-          packPrice: userState.packPrice || 12,
+          packPrice: userState.packPrice || 15,
           cigsPerPack: userState.cigsPerPack || 20,
-          packFreqDays: userState.packFreqDays || 1,
+          packFreqDays: userState.packFreqDays || 2,
           packEvents: Array.isArray(userState.packEvents) ? userState.packEvents : [],
           cigarettesAvoided: userState.cigarettesAvoided || 0,
           savingsHistory: Array.isArray(userState.savingsHistory) ? userState.savingsHistory : [],
           savingsGoal: userState.savingsGoal || null,
+          gameRecords: userState.gameRecords || { memory: 0, sequence: 0, reflex: 0, math: 0 },
           dailyRecords: userState.dailyRecords || {}
         },
-        persistedPayload: parsedRecords,
+        persistedPayload: activeSnap,
         allHabbiLocalStorage: allHabbiKeys
       };
 
@@ -2770,6 +3274,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isPlainObject(parsed.allHabbiLocalStorage)) {
         Object.keys(parsed.allHabbiLocalStorage).forEach(key => {
           if (!key.startsWith('habbi-') || typeof parsed.allHabbiLocalStorage[key] !== 'string') return;
+          if (key === LEGACY_MIGRATION_BACKUP_KEY && localStorage.getItem(LEGACY_MIGRATION_BACKUP_KEY)) return;
           try {
             localStorage.setItem(key, parsed.allHabbiLocalStorage[key]);
           } catch (_e) {}
@@ -2777,14 +3282,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (isPlainObject(incomingState)) {
-        localStorage.setItem(RECORDS_STORAGE_KEY, JSON.stringify(incomingState));
+        const activeSess = ensureActiveProfileForWrite();
+        const restoredSnap = createFreshProfileSnapshot(incomingState);
+        saveProfileSnapshot(activeSess.activeProfileId, restoredSnap);
       }
 
       loadPersistedState();
-
-      if (typeof syncUserProfileUI === 'function') syncUserProfileUI();
-      if (typeof renderCalendarDays === 'function') renderCalendarDays();
-      if (typeof renderHistoryTimeline === 'function') renderHistoryTimeline();
+      refreshAllViews();
 
       return {
         success: true,
@@ -2815,7 +3319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const blob = new Blob([jsonStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const dateStr = new Date().toISOString().slice(0, 10);
+    const dateStr = getDateKey(new Date());
     a.href = url;
     a.download = `habbi-backup-dados-${dateStr}.json`;
     document.body.appendChild(a);
@@ -2943,7 +3447,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   }
 
-  function recalculateAllStats() {
+  function recalculateAllStats(skipSave = false) {
     const todayKey = getDateKey(new Date());
     const todayRec = userState.dailyRecords[todayKey];
     userState.todayLogged = todayRec ? todayRec.cigs : 0;
@@ -2987,7 +3491,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const statsUrgesEl = document.getElementById('stats-urges-overcome');
     if (statsUrgesEl) statsUrgesEl.innerText = userState.totalUrgesOvercome;
 
-    savePersistedState();
+    if (!skipSave) {
+      savePersistedState();
+    }
   }
 
   function getAvatarSrc(key) {
@@ -3106,24 +3612,36 @@ document.addEventListener('DOMContentLoaded', () => {
   window.syncUserProfileUI = syncUserProfileUI;
   window.getCurrentScreen = () => currentScreen;
 
-  function refreshAllViews() {
-    recalculateAllStats();
+  function refreshAllViews(skipSave = false) {
+    recalculateAllStats(skipSave);
     syncUserProfileUI();
     if (typeof updateHomeScreen === 'function') updateHomeScreen();
     if (typeof generateCalendar === 'function') generateCalendar();
     if (typeof renderHistoryTimeline === 'function') renderHistoryTimeline();
     if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
     if (typeof syncQuickRegisterModalUI === 'function') syncQuickRegisterModalUI();
+    if (typeof updateMinigamesRecordUI === 'function') updateMinigamesRecordUI();
   }
 
   function recordHabbiEvent({ dateKey, kind, title, desc, detail, moodValue, influences, note }) {
-    const targetKey = dateKey || getDateKey(new Date());
-    const rec = getOrCreateDayRecord(targetKey);
-    rec.meta = userState.todayMeta || 11;
-
     const now = new Date();
-    const timeClock = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     const todayKey = getDateKey(now);
+    const targetKey = dateKey || todayKey;
+    if (targetKey > todayKey) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return null;
+    }
+
+    ensureActiveProfileForWrite();
+    const rec = getOrCreateDayRecord(targetKey);
+    // Preserva rec.meta histórico caso o dia já possua meta definida
+    if (!rec.meta || typeof rec.meta !== 'number' || rec.meta < 1) {
+      rec.meta = userState.todayMeta || 11;
+    }
+
+    const timeClock = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     const { day, month } = parseDateKey(targetKey);
     const monthShort = getMonthNamePt(month).slice(0, 3);
     const timeLabel = targetKey === todayKey ? `Hoje, ${timeClock}` : `${String(day).padStart(2, '0')} ${monthShort}, ${timeClock}`;
@@ -3570,14 +4088,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const dayAvoided = Math.max(0, habitual - dayCigs);
       const daySaved = dayAvoided * costPerCig;
-      const isFinalized = key < todayKey || Boolean(rec.smokeFree || rec.dayCompleted);
+      // Regra 3A: economia consolida apenas em dias passados concluídos (key < todayKey)
+      // ou hoje SOMENTE quando explicitamente confirmado como "Não fumei hoje" (smokeFree && 0 cigarros).
+      const isTodayConfirmedSmokeFree = Boolean(
+        key === todayKey &&
+        dayCigs === 0 &&
+        (rec.smokeFree || evs.some(e => e && e.kind === 'no-smoke'))
+      );
+      const isFinalized = key < todayKey || isTodayConfirmedSmokeFree;
 
       if (key === todayKey) {
         hasTodayRecord = true;
         todayCigs = dayCigs;
-        todayAvoided = dayAvoided;
-        todaySavings = daySaved;
-        todayIsFinalized = isFinalized;
+        todayAvoided = isTodayConfirmedSmokeFree ? dayAvoided : 0;
+        todaySavings = isTodayConfirmedSmokeFree ? daySaved : 0;
+        todayIsFinalized = isTodayConfirmedSmokeFree;
       }
 
       if (isFinalized) {
@@ -3652,9 +4177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.totalSavings = m.confirmedSavings;
     userState.cigarettesAvoided = m.confirmedAvoidedCigs;
 
-    // Valor protagonista: mostra o consolidado se houver dias finalizados, ou o parcial de hoje caso hoje tenha registros em aberto
-    const showPartialAsHero = m.confirmedDaysCount === 0 && m.hasTodayRecord && !m.todayIsFinalized;
-    const heroSavingsVal = showPartialAsHero ? m.todaySavings : m.confirmedSavings;
+    // Regra 3A: nunca promover economia parcial de um dia em andamento.
+    // Somente dias concluídos (key < todayKey) + hoje confirmado explicitamente como "Não fumei hoje".
+    const heroSavingsVal = m.confirmedSavings;
     const heroFormatted = formatBrl(heroSavingsVal);
 
     const navValEl = document.getElementById('nav-savings-label');
@@ -3665,7 +4190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navValEl) navValEl.innerText = heroFormatted;
     if (totalValEl) totalValEl.innerText = heroFormatted;
     if (statsSavedEl) statsSavedEl.innerText = `R$ ${Math.round(heroSavingsVal)}`;
-    if (statsCigsEl) statsCigsEl.innerText = showPartialAsHero ? m.todayAvoided : m.confirmedAvoidedCigs;
+    if (statsCigsEl) statsCigsEl.innerText = m.confirmedAvoidedCigs;
 
     const topSavingsTexts = document.querySelectorAll('.top-savings-value-text');
     topSavingsTexts.forEach(el => {
@@ -3676,42 +4201,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusBadgeEl = document.getElementById('wl-sav-status-badge');
     const cigsSummaryEl = document.getElementById('wl-sav-cigs-summary');
     const dayStatusTextEl = document.getElementById('wl-sav-day-status-text');
+    const activeLangSav = (userState.currentLang || 'PT').toUpperCase();
+    const tSav = (window.HABBI_I18N && window.HABBI_I18N[activeLangSav]) ? window.HABBI_I18N[activeLangSav] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
     if (statusBadgeEl && cigsSummaryEl && dayStatusTextEl) {
       statusBadgeEl.className = 'wl-sav-status-badge';
-      if (showPartialAsHero) {
-        statusBadgeEl.classList.add('is-partial');
-        statusBadgeEl.innerText = 'Parcial de hoje • Dia em aberto';
-        cigsSummaryEl.innerText = `${m.todayAvoided} ${m.todayAvoided === 1 ? 'cigarro evitado' : 'cigarros evitados'} hoje`;
-        dayStatusTextEl.innerText = `Sem fumar hoje: ${formatBrl(m.fullDaySavings)} • Definitivo: R$ 0,00`;
-      } else if (m.confirmedDaysCount > 0) {
+      if (m.confirmedDaysCount > 0) {
         statusBadgeEl.classList.add('is-confirmed');
         statusBadgeEl.innerText = 'Economia estimada confirmada';
         cigsSummaryEl.innerText = `${m.confirmedAvoidedCigs} ${m.confirmedAvoidedCigs === 1 ? 'cigarro evitado' : 'cigarros evitados'} no total`;
-        if (m.hasTodayRecord && !m.todayIsFinalized) {
-          dayStatusTextEl.innerText = `Hoje (parcial): +${formatBrl(m.todaySavings)} (${m.todayAvoided} cig)`;
-        } else if (m.todayIsFinalized) {
+        if (m.todayIsFinalized) {
           dayStatusTextEl.innerText = `Hoje finalizado: +${formatBrl(m.todaySavings)} (${m.todayAvoided} cig)`;
+        } else if (m.hasTodayRecord) {
+          dayStatusTextEl.innerText = tSav.savingsDayInProgress || 'Dia em andamento • Consolida ao encerrar o dia ou confirmar sem fumar';
         } else {
           dayStatusTextEl.innerText = `Hoje sem registro • Sem fumar hoje: +${formatBrl(m.fullDaySavings)}`;
         }
       } else {
         statusBadgeEl.classList.add('is-neutral');
         statusBadgeEl.innerText = 'Economia estimada';
-        cigsSummaryEl.innerText = '0 cigarros evitados • Nenhum registro hoje';
-        dayStatusTextEl.innerText = `Sem fumar hoje: ${formatBrl(m.fullDaySavings)} (${m.habitual} cigarros)`;
+        cigsSummaryEl.innerText = m.hasTodayRecord
+          ? '0 cigarros evitados consolidados • Dia em andamento'
+          : '0 cigarros evitados • Nenhum registro hoje';
+        dayStatusTextEl.innerText = m.hasTodayRecord
+          ? (tSav.savingsDayInProgress || 'Dia em andamento • Consolida ao encerrar o dia ou confirmar sem fumar')
+          : `Sem fumar hoje: ${formatBrl(m.fullDaySavings)} (${m.habitual} cigarros)`;
       }
     }
 
     // Tela 29 simplificada: rótulo curto e bloco "Hoje"
     const heroLblEl = document.getElementById('wl-sav-hero-lbl');
-    if (heroLblEl) heroLblEl.innerText = showPartialAsHero ? 'Parcial de hoje' : 'Economia estimada';
+    if (heroLblEl) heroLblEl.innerText = 'Economia estimada';
     const todayHabEl = document.getElementById('wl-sav-today-habitual');
     const todaySmokedEl = document.getElementById('wl-sav-today-smoked');
     const todaySavedEl = document.getElementById('wl-sav-today-saved');
     if (todayHabEl) todayHabEl.innerText = m.habitual;
     if (todaySmokedEl) todaySmokedEl.innerText = m.hasTodayRecord ? m.todayCigs : '—';
-    if (todaySavedEl) todaySavedEl.innerText = formatBrl(m.hasTodayRecord ? m.todaySavings : 0);
+    if (todaySavedEl) todaySavedEl.innerText = formatBrl(m.todayIsFinalized ? m.todaySavings : 0);
 
     // Indicador visual comparando Consumo Habitual vs. Consumo Atual (Hoje)
     const diffPillEl = document.getElementById('wl-sav-diff-pill');
@@ -4031,9 +4557,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.selectGoalPreset = function(title, target) {
+    ensureActiveProfileForWrite();
     userState.savingsGoal = { title, target: Math.max(10, parseFloat(target) || 250) };
     userState.hasConfiguredFirstGoal = true;
-    try { localStorage.setItem('habbi-first-goal-set', '1'); } catch (_e) {}
     savePersistedState();
     window.closeChangeGoalModal();
     window.updateConquistaBagUI();
@@ -4045,9 +4571,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = (nameInput && nameInput.value.trim()) || 'Minha conquista';
     const target = (amountInput && parseFloat(amountInput.value)) || 250;
     if (target < 5) return;
+    ensureActiveProfileForWrite();
     userState.savingsGoal = { title, target };
     userState.hasConfiguredFirstGoal = true;
-    try { localStorage.setItem('habbi-first-goal-set', '1'); } catch (_e) {}
     savePersistedState();
     window.closeChangeGoalModal();
     window.updateConquistaBagUI();
@@ -4055,7 +4581,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.updateConquistaBagUI = function() {
     const m = computeSavingsMetrics();
-    const heroSavingsVal = (m.confirmedDaysCount === 0 && m.hasTodayRecord && !m.todayIsFinalized) ? m.todaySavings : m.confirmedSavings;
+    const heroSavingsVal = m.confirmedSavings;
 
     if (!userState.savingsGoal) {
       userState.savingsGoal = { title: (typeof getDefaultGoalTitle === 'function' ? getDefaultGoalTitle(userState.currentLang) : 'Minha conquista'), target: 250 };
@@ -4113,11 +4639,11 @@ document.addEventListener('DOMContentLoaded', () => {
       expPerCigEl.innerText = perCigTpl.replace('{0}', formatBrl(m.costPerCig || 0));
     }
 
-    // Confetes na primeira vez que atinge 100%
+    // Confetes na primeira vez que atinge 100% (escopado por perfil)
     if (pct >= 100) {
-      const celKey = 'habbi-sacola-100-celebrated';
-      if (!localStorage.getItem(celKey)) {
-        localStorage.setItem(celKey, 'true');
+      if (!userState.sacola100Celebrated) {
+        userState.sacola100Celebrated = true;
+        savePersistedState();
         if (typeof window.triggerConquistaConfetti === 'function') {
           setTimeout(() => window.triggerConquistaConfetti(), 350);
         }
@@ -4567,6 +5093,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
             <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start">INICIAR</button>
           </div>
+          <button type="button" class="wl-splash-login-link" id="btn-splash-login" onclick="if(window.clearSplashRoulette)window.clearSplashRoulette(); goToScreen(23);">Já tenho conta · Entrar</button>
         </div>
       `;
 
@@ -5804,13 +6331,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const minusBtn = document.getElementById('wl-qreg-btn-minus');
     if (minusBtn) minusBtn.disabled = cigs <= 0;
 
-    // Botão "Não fumei hoje" sempre visível e destacado na aba de registro
+    // Botão "Não fumei hoje" / "Não fumei neste dia" sempre visível e destacado na aba de registro
     const confirmBtn = document.getElementById('wl-qreg-btn-confirm-day');
     const confirmLbl = document.getElementById('wl-qreg-confirm-lbl');
     if (confirmBtn && confirmLbl) {
       confirmBtn.style.display = 'inline-flex';
+      const todayKey = getDateKey(new Date());
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      const baseLabel = (targetKey === todayKey)
+        ? (t.homeNoSmoke || 'Não fumei hoje')
+        : (t.noSmokeOtherDay || 'Não fumei neste dia');
       const isConfirmed = Boolean(rec && (rec.smokeFree || (Array.isArray(rec.events) && rec.events.some(e => e.kind === 'no-smoke'))));
-      confirmLbl.innerText = isConfirmed ? 'Não fumei hoje ✓' : 'Não fumei hoje';
+      confirmLbl.innerText = isConfirmed ? `${baseLabel} ✓` : baseLabel;
       if (isConfirmed) {
         confirmBtn.classList.add('is-confirmed');
       } else {
@@ -5820,7 +6353,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.openQuickRegisterModal = function(dateKey, focusSection, editEventId) {
-    const targetKey = dateKey || (currentScreen === 16 ? userState.calSelectedDate : null) || getDateKey(new Date());
+    const todayKey = getDateKey(new Date());
+    const targetKey = dateKey || (currentScreen === 16 ? userState.calSelectedDate : null) || todayKey;
+    if (targetKey > todayKey) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
     userState.activeRegisterDateKey = targetKey;
     userState.calSelectedDate = targetKey;
     quickEditingEventId = editEventId || null;
@@ -5908,9 +6448,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.quickAdjustCigarette = function(delta) {
     if (!requireAuthToRegister(userState.returnScreenAfterRegister || 10)) return;
-    const targetKey = userState.activeRegisterDateKey || getDateKey(new Date());
+    const todayKey = getDateKey(new Date());
+    const targetKey = userState.activeRegisterDateKey || todayKey;
+    if (targetKey > todayKey) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
+    ensureActiveProfileForWrite();
     userState.calSelectedDate = targetKey;
-    const meta = userState.todayMeta || 11;
+    const existingRec = userState.dailyRecords[targetKey];
+    const meta = (existingRec && existingRec.meta) || userState.todayMeta || 11;
 
     if (delta > 0) {
       const rec = getOrCreateDayRecord(targetKey);
@@ -5940,18 +6489,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.quickConfirmDay = function() {
+  let pendingNoSmokeTargetKey = null;
+
+  window.closeConfirmNoSmokeModal = function() {
+    pendingNoSmokeTargetKey = null;
+    const modal = document.getElementById('habbi-confirm-nosmoke-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  window.confirmPendingNoSmokeDay = function() {
+    const targetKey = pendingNoSmokeTargetKey;
+    window.closeConfirmNoSmokeModal();
+    if (targetKey) {
+      userState.activeRegisterDateKey = targetKey;
+      window.quickConfirmDay(true);
+    }
+  };
+
+  window.quickConfirmDay = function(forceClearCigs = false) {
     if (!requireAuthToRegister(userState.returnScreenAfterRegister || 10)) return;
     const todayKey = getDateKey(new Date());
     const targetKey = userState.activeRegisterDateKey || todayKey;
-    userState.calSelectedDate = targetKey;
-    const rec = getOrCreateDayRecord(targetKey);
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
-    // Se havia cigarros registrados por engano, zera para confirmar o dia sem fumar
+    if (targetKey > todayKey) {
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
+
+    ensureActiveProfileForWrite();
+    userState.calSelectedDate = targetKey;
+    const existingRec = userState.dailyRecords[targetKey];
+
+    // Se já houver cigarros registrados nesta data, exige confirmação explícita antes de zerar
+    if (!forceClearCigs && existingRec && existingRec.cigs > 0) {
+      pendingNoSmokeTargetKey = targetKey;
+      const modal = document.getElementById('habbi-confirm-nosmoke-modal');
+      const descEl = document.getElementById('habbi-nosmoke-modal-desc');
+      if (descEl) {
+        const tpl = t.noSmokeModalDesc || 'Esta data já possui {0} cigarro(s) registrado(s). Deseja zerar esses cigarros e confirmar como dia sem fumar?';
+        descEl.textContent = tpl.replace('{0}', String(existingRec.cigs));
+      }
+      if (modal) {
+        modal.style.display = 'flex';
+        return;
+      }
+    }
+
+    const rec = getOrCreateDayRecord(targetKey);
     if (rec.cigs > 0 && Array.isArray(rec.events)) {
       rec.events = rec.events.filter(e => e.kind !== 'smoke');
       rec.cigs = 0;
     }
+
+    const isToday = targetKey === todayKey;
+    const dayLabel = isToday
+      ? (t.homeNoSmoke || 'Não fumei hoje')
+      : (t.noSmokeOtherDay || 'Não fumei neste dia');
 
     const alreadyMarked = Array.isArray(rec.events) && rec.events.some(e => e.kind === 'no-smoke');
     if (!alreadyMarked) {
@@ -5960,33 +6555,28 @@ document.addEventListener('DOMContentLoaded', () => {
       recordHabbiEvent({
         dateKey: targetKey,
         kind: 'no-smoke',
-        title: 'Não fumei hoje',
+        title: dayLabel,
         desc: '0 cigarros no dia',
         detail: 'Dia confirmado sem fumar.'
       });
     }
-    // Se hoje também está com 0 cigarros e o usuário acionou "Não fumei hoje", garante sincronia na tela inicial
-    const todayRec = userState.dailyRecords[todayKey];
-    if ((!todayRec || todayRec.cigs === 0) && targetKey !== todayKey) {
-      const tRec = getOrCreateDayRecord(todayKey);
-      if (!tRec.events.some(e => e.kind === 'no-smoke')) {
-        recordHabbiEvent({
-          dateKey: todayKey,
-          kind: 'no-smoke',
-          title: 'Não fumei hoje',
-          desc: '0 cigarros no dia',
-          detail: 'Dia confirmado sem fumar.'
-        });
-      }
-    }
+    // Sem efeito colateral em todayKey quando targetKey !== todayKey
     refreshAllViews();
     window.closeQuickRegisterModal();
-    showCelebrationModal('Mais um dia cuidando de você.', 'Não fumei hoje!', 'assets/ilustracoes/pata pra cima.png');
+    showCelebrationModal('Mais um dia cuidando de você.', `${dayLabel}!`, 'assets/ilustracoes/pata pra cima.png');
   };
 
   window.quickAddUrge = function() {
     if (!requireAuthToRegister(userState.returnScreenAfterRegister || 10)) return;
-    const targetKey = userState.activeRegisterDateKey || getDateKey(new Date());
+    const todayKey = getDateKey(new Date());
+    const targetKey = userState.activeRegisterDateKey || todayKey;
+    if (targetKey > todayKey) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
+    ensureActiveProfileForWrite();
     userState.calSelectedDate = targetKey;
     userState.lastMascotState = 'focus';
     recordHabbiEvent({
@@ -6032,7 +6622,15 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.saveQuickMood = function() {
-    const targetKey = userState.activeRegisterDateKey || getDateKey(new Date());
+    const todayKey = getDateKey(new Date());
+    const targetKey = userState.activeRegisterDateKey || todayKey;
+    if (targetKey > todayKey) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
+    ensureActiveProfileForWrite();
     userState.calSelectedDate = targetKey;
 
     const influences = [];
@@ -6834,32 +7432,48 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // -------------------------------------------------------------
-  // GAMIFICAÇÃO DE RECORDES DOS MINIJOGOS (HABBI FLAT GAMIFICATION)
+  // GAMIFICAÇÃO DE RECORDES DOS MINIJOGOS (ESCOPADO POR PERFIL)
   // -------------------------------------------------------------
-  const GAME_RECORDS_KEY = 'habbi-game-records';
   function getGameRecords() {
-    try {
-      const raw = localStorage.getItem(GAME_RECORDS_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (_e) {}
-    return { memory: 0, sequence: 0, reflex: 0, math: 0 };
+    if (!userState.gameRecords || typeof userState.gameRecords !== 'object') {
+      userState.gameRecords = { memory: 0, sequence: 0, reflex: 0, math: 0 };
+    }
+    return {
+      memory: Number(userState.gameRecords.memory) || 0,
+      sequence: Number(userState.gameRecords.sequence) || 0,
+      reflex: Number(userState.gameRecords.reflex) || 0,
+      math: Number(userState.gameRecords.math) || 0
+    };
   }
   window.getGameRecords = getGameRecords;
+  window.loadGameRecords = getGameRecords;
 
   function saveGameRecord(gameKey, score) {
     if (!score || score <= 0) return false;
+    ensureActiveProfileForWrite();
     const records = getGameRecords();
     if (score > (records[gameKey] || 0)) {
       records[gameKey] = score;
-      try {
-        localStorage.setItem(GAME_RECORDS_KEY, JSON.stringify(records));
-      } catch (_e) {}
+      userState.gameRecords = records;
+      savePersistedState();
       updateMinigamesRecordUI();
       return true;
     }
     return false;
   }
   window.saveGameRecord = saveGameRecord;
+  window.saveGameRecords = function(recordsObj) {
+    if (!recordsObj || typeof recordsObj !== 'object') return;
+    ensureActiveProfileForWrite();
+    userState.gameRecords = {
+      memory: Number(recordsObj.memory) || 0,
+      sequence: Number(recordsObj.sequence) || 0,
+      reflex: Number(recordsObj.reflex) || 0,
+      math: Number(recordsObj.math) || 0
+    };
+    savePersistedState();
+    updateMinigamesRecordUI();
+  };
 
   function getGameRecordWord() {
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
@@ -7426,14 +8040,24 @@ document.addEventListener('DOMContentLoaded', () => {
       m -= 12;
       y += 1;
     }
+    const now = new Date();
+    const todayKey = getDateKey(now);
+    // Bloqueia avançar para meses totalmente futuros
+    if (y > now.getFullYear() || (y === now.getFullYear() && m > now.getMonth())) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
+
     userState.calViewMonth = m;
     userState.calViewYear = y;
 
-    const now = new Date();
     if (y === now.getFullYear() && m === now.getMonth()) {
-      userState.calSelectedDate = getDateKey(now);
+      userState.calSelectedDate = todayKey;
     } else {
-      userState.calSelectedDate = `${y}-${String(m + 1).padStart(2, '0')}-01`;
+      const candidateKey = `${y}-${String(m + 1).padStart(2, '0')}-01`;
+      userState.calSelectedDate = candidateKey > todayKey ? todayKey : candidateKey;
     }
     userState.calEventsExpandedDate = null;
     generateCalendar(true);
@@ -7450,6 +8074,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.selectCalendarDate = function(dateKey, animatePaw) {
     if (!dateKey) return;
+    const todayKey = getDateKey(new Date());
+    if (dateKey > todayKey) {
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
+      return;
+    }
     const { year, month } = parseDateKey(dateKey);
     userState.calViewYear = year;
     userState.calViewMonth = month;
@@ -7470,7 +8101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       userState.calViewYear = now.getFullYear();
       userState.calViewMonth = now.getMonth();
     }
-    if (!userState.calSelectedDate) {
+    if (!userState.calSelectedDate || userState.calSelectedDate > todayKey) {
       userState.calSelectedDate = todayKey;
     }
 
@@ -7505,12 +8136,18 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = firstDayOfWeek - 1; i >= 0; i--) {
       const prevDay = daysInPrevMonth - i;
       const prevKey = `${prevMonthYear}-${String(prevMonthIdx + 1).padStart(2, '0')}-${String(prevDay).padStart(2, '0')}`;
+      const isFuture = prevKey > todayKey;
       const dayEl = document.createElement('button');
       dayEl.type = 'button';
-      dayEl.className = 'calendar-grid-day is-outside';
+      dayEl.className = `calendar-grid-day is-outside${isFuture ? ' is-future' : ''}`;
       dayEl.setAttribute('aria-label', `${prevDay} de ${getMonthNamePt(prevMonthIdx)} de ${prevMonthYear}`);
       dayEl.innerHTML = `<span class="calendar-grid-circle state-outside">${prevDay}</span>`;
-      dayEl.addEventListener('click', () => window.selectCalendarDate(prevKey, true));
+      if (isFuture) {
+        dayEl.disabled = true;
+        dayEl.setAttribute('aria-disabled', 'true');
+      } else {
+        dayEl.addEventListener('click', () => window.selectCalendarDate(prevKey, true));
+      }
       grid.appendChild(dayEl);
     }
 
@@ -7519,19 +8156,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const dKey = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const status = getDayStatus(dKey);
       const isToday = dKey === todayKey;
-      const isSelected = dKey === userState.calSelectedDate;
+      const isFuture = dKey > todayKey;
+      const isSelected = !isFuture && dKey === userState.calSelectedDate;
 
       const dayEl = document.createElement('button');
       dayEl.type = 'button';
       dayEl.className = 'calendar-grid-day';
+      dayEl.dataset.dateKey = dKey;
       if (isToday) dayEl.classList.add('is-today');
       if (isSelected) dayEl.classList.add('is-selected');
+      if (isFuture) {
+        dayEl.classList.add('is-future');
+        dayEl.disabled = true;
+        dayEl.setAttribute('aria-disabled', 'true');
+      }
 
-      const statusDesc = status === 'green' ? 'Meta atingida' : status === 'exceeded' ? 'Meta ultrapassada' : status === 'zero' ? 'Sem consumo' : 'Sem registros';
+      const statusDesc = isFuture ? 'Data futura bloqueada' : (status === 'green' ? 'Meta atingida' : status === 'exceeded' ? 'Meta ultrapassada' : status === 'zero' ? 'Sem consumo' : 'Sem registros');
       dayEl.setAttribute('aria-label', `${day} de ${getMonthNamePt(viewMonth)} de ${viewYear}, ${statusDesc}${isToday ? ' (Hoje)' : ''}`);
 
       const circle = document.createElement('span');
-      circle.className = `calendar-grid-circle state-${status}`;
+      circle.className = `calendar-grid-circle state-${isFuture ? 'neutral' : status}`;
       circle.innerText = day;
 
       dayEl.appendChild(circle);
@@ -7542,7 +8186,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dayEl.appendChild(todayDot);
       }
 
-      dayEl.addEventListener('click', () => window.selectCalendarDate(dKey, true));
+      if (!isFuture) {
+        dayEl.addEventListener('click', () => window.selectCalendarDate(dKey, true));
+      }
       grid.appendChild(dayEl);
     }
 
@@ -7554,12 +8200,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (let nextDay = 1; nextDay <= trailingCells; nextDay++) {
       const nextKey = `${nextMonthYear}-${String(nextMonthIdx + 1).padStart(2, '0')}-${String(nextDay).padStart(2, '0')}`;
+      const isFuture = nextKey > todayKey;
       const dayEl = document.createElement('button');
       dayEl.type = 'button';
-      dayEl.className = 'calendar-grid-day is-outside';
+      dayEl.className = `calendar-grid-day is-outside${isFuture ? ' is-future' : ''}`;
       dayEl.setAttribute('aria-label', `${nextDay} de ${getMonthNamePt(nextMonthIdx)} de ${nextMonthYear}`);
       dayEl.innerHTML = `<span class="calendar-grid-circle state-outside">${nextDay}</span>`;
-      dayEl.addEventListener('click', () => window.selectCalendarDate(nextKey, true));
+      if (isFuture) {
+        dayEl.disabled = true;
+        dayEl.setAttribute('aria-disabled', 'true');
+      } else {
+        dayEl.addEventListener('click', () => window.selectCalendarDate(nextKey, true));
+      }
       grid.appendChild(dayEl);
     }
 
@@ -8224,8 +8876,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.handleJourneyBack = function() {
-    const completed = parseInt(localStorage.getItem('habbi-onboarding-completed')) || 0;
-    if (completed === 1) {
+    if (userState.onboardingCompleted) {
       showScreen(21);
     } else {
       showScreen(5);
@@ -8244,6 +8895,88 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Troca segura para uma conta (sem mesclagem automática de visitante → conta)
+  function switchToAccountProfile({ email, name = '', supabaseUserId = null }) {
+    const normEmail = normalizeEmail(email);
+    const currentLangKeep = (userState.currentLang || 'PT').toUpperCase();
+
+    // 1. Salva o perfil atual no próprio cofre (preserva visitante ou conta anterior intactos)
+    const prevSess = loadActiveSession();
+    if (prevSess && prevSess.mode !== 'signed-out' && prevSess.activeProfileId) {
+      savePersistedState();
+    }
+
+    // 2. Resolve ID estável da conta alvo (por supabaseUserId ou e-mail normalizado)
+    const cleanName = String(name || '').trim();
+    const derivedName = cleanName || (normEmail ? (normEmail.split('@')[0].charAt(0).toUpperCase() + normEmail.split('@')[0].slice(1)) : 'Usuário Habbi');
+    const targetProfileId = resolveAccountProfileId({
+      supabaseUserId: supabaseUserId || null,
+      email: normEmail,
+      label: derivedName
+    });
+
+    // 3. Limpa memória completamente antes de carregar o cofre da conta alvo (zero vazamento/mesclagem)
+    const existingSnap = loadProfileSnapshot(targetProfileId);
+    resetInMemoryUserState(currentLangKeep);
+
+    if (existingSnap) {
+      applySnapshotToUserState(existingSnap, true);
+      if (cleanName && (!userState.name || userState.name.toLowerCase() === 'visitante')) {
+        userState.name = cleanName;
+      }
+      if (normEmail) {
+        userState.email = normEmail;
+      }
+      userState.isAuthenticated = true;
+    } else {
+      userState.name = derivedName;
+      userState.email = normEmail;
+      userState.isAuthenticated = true;
+      userState.currentLang = currentLangKeep;
+      userState.onboardingCompleted = true;
+    }
+
+    // 4. Ativa sessão da conta e persiste exclusivamente no cofre da conta alvo
+    saveActiveSession({ mode: 'account', activeProfileId: targetProfileId });
+    savePersistedState();
+    clearAuthFormInputs();
+
+    if (typeof window.setTheme === 'function') {
+      window.setTheme(userState.theme || 'light', true);
+    }
+    if (typeof window.applyAppLanguage === 'function') {
+      window.applyAppLanguage(userState.currentLang || 'PT');
+    }
+    refreshAllViews(true);
+    return targetProfileId;
+  }
+  window.switchToAccountProfile = switchToAccountProfile;
+
+  window.continueAsGuest = function() {
+    const prevSess = loadActiveSession();
+    if (prevSess && prevSess.mode !== 'signed-out' && prevSess.activeProfileId) {
+      savePersistedState();
+    }
+    const guestId = ensureGuestProfile();
+    saveActiveSession({ mode: 'guest', activeProfileId: guestId });
+    const guestSnap = loadProfileSnapshot(guestId);
+    if (guestSnap) {
+      applySnapshotToUserState(guestSnap, false);
+    } else {
+      resetInMemoryUserState(userState.currentLang || 'PT');
+      savePersistedState();
+    }
+    clearAuthFormInputs();
+    if (typeof window.setTheme === 'function') {
+      window.setTheme(userState.theme || 'light', true);
+    }
+    if (typeof window.applyAppLanguage === 'function') {
+      window.applyAppLanguage(userState.currentLang || 'PT');
+    }
+    refreshAllViews(true);
+    showScreen(10);
+  };
+
   // Onboarding Routing
   const btnWelcomeSignup = document.getElementById('btn-welcome-signup');
   if (btnWelcomeSignup) btnWelcomeSignup.addEventListener('click', () => showScreen(24));
@@ -8254,20 +8987,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnOnb3 = document.getElementById('btn-onboarding-3-next');
   if (btnOnb3) btnOnb3.addEventListener('click', () => showScreen(7));
 
-  // Login / Register Screen submit bindings
+  // Login / Register Screen submit bindings (com validação e isolamento por perfil)
   const loginSubmit = document.getElementById('btn-login-submit');
   if (loginSubmit) {
     loginSubmit.addEventListener('click', () => {
-      const emailVal = document.getElementById('login-email').value.trim();
-      if (emailVal) {
-        const parts = emailVal.split('@')[0];
-        const rawName = parts.charAt(0).toUpperCase() + parts.slice(1);
-        userState.name = rawName;
-        userState.email = emailVal;
+      const emailInput = document.getElementById('login-email');
+      const errEl = document.getElementById('login-error-msg');
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+      if (!isValidEmail(emailVal)) {
+        const msg = t.loginEmailInvalid || 'Informe um e-mail válido para entrar.';
+        if (errEl) {
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+        if (emailInput) emailInput.focus();
+        showToast(msg);
+        return;
       }
-      userState.isAuthenticated = true;
-      savePersistedState();
-      refreshAllViews();
+      if (errEl) {
+        errEl.textContent = '';
+        errEl.style.display = 'none';
+      }
+
+      switchToAccountProfile({ email: emailVal, name: '' });
       showToast('Sessão iniciada com sucesso!');
       const targetScr = userState.authReturnScreen || 10;
       userState.authReturnScreen = 10;
@@ -8278,17 +9023,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const registerSubmit = document.getElementById('btn-register-submit');
   if (registerSubmit) {
     registerSubmit.addEventListener('click', () => {
-      const nameVal = document.getElementById('register-name').value.trim();
-      const emailVal = document.getElementById('register-email').value.trim();
-      if (nameVal) {
-        userState.name = nameVal;
+      const nameInput = document.getElementById('register-name');
+      const emailInput = document.getElementById('register-email');
+      const errEl = document.getElementById('register-error-msg');
+      const nameVal = nameInput ? nameInput.value.trim() : '';
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+      if (!nameVal || !isValidEmail(emailVal)) {
+        const msg = t.registerFieldsInvalid || 'Informe seu nome e um e-mail válido para criar a conta.';
+        if (errEl) {
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+        if (!nameVal && nameInput) nameInput.focus();
+        else if (emailInput) emailInput.focus();
+        showToast(msg);
+        return;
       }
-      if (emailVal) {
-        userState.email = emailVal;
+      if (errEl) {
+        errEl.textContent = '';
+        errEl.style.display = 'none';
       }
-      userState.isAuthenticated = true;
-      savePersistedState();
-      refreshAllViews();
+
+      switchToAccountProfile({ email: emailVal, name: nameVal });
       showToast('Conta criada com sucesso!');
       const targetScr = userState.authReturnScreen || 10;
       userState.authReturnScreen = 10;
@@ -8302,6 +9061,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnConfig1Submit = document.getElementById('btn-config-1-submit');
   if (btnConfig1Submit) {
     btnConfig1Submit.addEventListener('click', () => {
+      ensureActiveProfileForWrite();
       const packPriceInput = document.getElementById('cigarettes-pack-price');
       if (packPriceInput) {
         const price = parseFloat(packPriceInput.value);
@@ -8310,7 +9070,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       userState.metaExceededModalShown = false;
-      localStorage.setItem('habbi-onboarding-completed', '1');
+      userState.onboardingCompleted = true;
       savePersistedState();
       refreshAllViews();
       // Leva direto para a Home (Screen 10) para o usuário conhecer e explorar o app primeiro
@@ -8324,7 +9084,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnTriggersSubmit = document.getElementById('btn-triggers-submit');
   if (btnTriggersSubmit) {
     btnTriggersSubmit.addEventListener('click', () => {
-    localStorage.setItem('habbi-onboarding-completed', '1');
+    ensureActiveProfileForWrite();
+    userState.onboardingCompleted = true;
+    savePersistedState();
     const loadOv = document.getElementById('wl-loading-overlay');
     if (loadOv) {
       loadOv.style.display = 'flex';
@@ -8376,11 +9138,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      const prevNormEmail = normalizeEmail(userState.email);
+      const nextNormEmail = normalizeEmail(emailVal);
       userState.name = nameVal;
       userState.email = emailVal;
       userState.todayMeta = metaVal;
       userState.packPrice = packPriceVal;
       userState.isAuthenticated = true;
+
+      const curSess = loadActiveSession();
+      if (curSess && curSess.mode === 'account' && curSess.activeProfileId) {
+        const idx = loadProfilesIndex();
+        const metaObj = idx.profiles[curSess.activeProfileId];
+        if (metaObj) {
+          if (prevNormEmail && prevNormEmail !== nextNormEmail && idx.emailToProfileId[prevNormEmail] === curSess.activeProfileId) {
+            delete idx.emailToProfileId[prevNormEmail];
+          }
+          if (nextNormEmail) {
+            idx.emailToProfileId[nextNormEmail] = curSess.activeProfileId;
+          }
+          metaObj.email = nextNormEmail || metaObj.email;
+          metaObj.label = nameVal;
+          metaObj.updatedAt = new Date().toISOString();
+          saveProfilesIndex(idx);
+        }
+      }
       
       const homeNameEl = document.querySelector('.home-header h2');
       if (homeNameEl) homeNameEl.innerText = nameVal + '!';
@@ -8867,26 +9649,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Theme Switching Logic
+  // Theme Switching Logic (escopado por perfil ativo)
   const themeToggleBtn = document.getElementById('settings-theme');
   const themeStatusLabel = document.getElementById('theme-status-label');
   const deviceScreen = document.querySelector('.device-screen');
 
-  function setTheme(theme) {
-    if (theme === 'dark') {
+  function setTheme(theme, skipSave = false) {
+    const normalized = theme === 'dark' ? 'dark' : 'light';
+    userState.theme = normalized;
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    if (normalized === 'dark') {
       if (deviceScreen) deviceScreen.classList.add('dark-theme');
-      if (themeStatusLabel) themeStatusLabel.innerText = 'Escuro';
-      localStorage.setItem('habbi-theme', 'dark');
+      if (themeStatusLabel) themeStatusLabel.innerText = t.themeDark || 'Escuro';
     } else {
       if (deviceScreen) deviceScreen.classList.remove('dark-theme');
-      if (themeStatusLabel) themeStatusLabel.innerText = 'Claro';
-      localStorage.setItem('habbi-theme', 'light');
+      if (themeStatusLabel) themeStatusLabel.innerText = t.themeLight || 'Claro';
+    }
+    try {
+      localStorage.setItem('habbi-theme', normalized);
+    } catch (_e) {}
+    if (!skipSave) {
+      savePersistedState();
     }
   }
   window.setTheme = setTheme;
 
-  const savedTheme = localStorage.getItem('habbi-theme') || 'light';
-  setTheme(savedTheme);
+  setTheme(userState.theme || 'light', true);
 
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
@@ -8897,90 +9686,188 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Logout Logic
-  window.handleProfileLogout = function() {
-    localStorage.removeItem('habbi-current-screen');
-    localStorage.removeItem('habbi-theme');
-    localStorage.removeItem(RECORDS_STORAGE_KEY);
-    localStorage.removeItem('habbi-onboarding-completed');
-    localStorage.removeItem('habbi-tutorial-completed');
-    localStorage.removeItem('habbi-first-goal-set');
-    
-    window.habbiTutorialActive = false;
-    userState.tutorialCompleted = false;
-    userState.hasConfiguredFirstGoal = false;
-    userState.savingsGoal = {
-      title: typeof getDefaultGoalTitle === 'function' ? getDefaultGoalTitle(userState.currentLang) : 'Minha conquista',
-      target: 250
-    };
+  // Detecção estrita de ambiente local/teste (NUNCA ativa via query string em domínios públicos)
+  window.isHabbiLocalOrTestEnv = function(locOverride) {
+    if (window.__HABBI_TEST_ENV__ === true) return true;
+    const loc = locOverride || window.location;
+    if (!loc) return false;
+    const protocol = String(loc.protocol || '').toLowerCase();
+    if (protocol === 'file:') return true;
+    const host = String(loc.hostname || '').toLowerCase().trim();
+    if (!host) return false;
+    if (host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]') return true;
+    if (host.endsWith('.local')) return true;
+    if (/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host)) return true;
+    if (/^192\.168\.\d{1,3}\.\d{1,3}$/.test(host)) return true;
+    if (/^172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}$/.test(host)) return true;
+    return false;
+  };
 
+  function syncLocalTestEnvControls(locOverride) {
+    const isLocal = window.isHabbiLocalOrTestEnv(locOverride);
+    const settingsSlot = document.getElementById('settings-local-test-slot');
+    const profileSlot = document.getElementById('profile-local-test-slot');
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    const btnLabel = t.settingsRestartTest || 'Reiniciar experiência de teste';
+
+    if (!isLocal) {
+      if (settingsSlot) settingsSlot.innerHTML = '';
+      if (profileSlot) profileSlot.innerHTML = '';
+      return;
+    }
+
+    if (settingsSlot && !document.getElementById('settings-restart-test-btn')) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = 'settings-restart-test-btn';
+      btn.className = 'habbi-local-test-btn';
+      btn.textContent = btnLabel;
+      btn.addEventListener('click', () => window.restartTestExperience());
+      settingsSlot.appendChild(btn);
+    }
+    if (profileSlot && !document.getElementById('profile-restart-test-btn')) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = 'profile-restart-test-btn';
+      btn.className = 'habbi-local-test-btn';
+      btn.textContent = btnLabel;
+      btn.addEventListener('click', () => window.restartTestExperience());
+      profileSlot.appendChild(btn);
+    }
+  }
+  window.syncLocalTestEnvControls = syncLocalTestEnvControls;
+
+  // Logout NÃO DESTRUTIVO: preserva o cofre do perfil ativo, limpa apenas memória/UI/inputs
+  window.handleProfileLogout = function() {
+    const prevSess = loadActiveSession();
+    if (prevSess && prevSess.mode !== 'signed-out' && prevSess.activeProfileId) {
+      savePersistedState();
+    }
+
+    window.habbiTutorialActive = false;
     if (typeof removeCalTutorialDemoRow === 'function') removeCalTutorialDemoRow();
     if (typeof hideTutorialSwipeHint === 'function') hideTutorialSwipeHint();
     if (typeof window.toggleHabbiHubMenu === 'function') window.toggleHabbiHubMenu(false);
     const overlay = document.getElementById('habbi-tutorial-overlay');
-    if (overlay) {
-      overlay.style.display = 'none';
-    }
+    if (overlay) overlay.style.display = 'none';
 
-    userState.isAuthenticated = false;
-    userState.name = '';
-    userState.email = '';
-    
-    const nowReset = new Date();
-    userState.motivations = [];
-    userState.patterns = [];
-    userState.mood = null;
-    userState.sosUrge = 7;
-    userState.sosContext = 'Casa';
-    userState.sosTime = '3 min';
-    userState.selectedIntervention = 'Respiração 4-6';
-    userState.groundingCheckedCount = 0;
-    userState.daysClean = 0;
-    userState.totalUrgesOvercome = 0;
-    userState.todayMeta = 11;
-    userState.todayLogged = 0;
-    userState.metaExceededModalShown = false;
-    userState.isGameActive = false;
-    userState.habitualCigs = 12;
-    userState.habitualCigsCustomized = false;
-    userState.packPrice = 15.00;
-    userState.cigsPerPack = 20;
-    userState.packFreqDays = 2;
-    userState.packEvents = [];
-    userState.cigarettesAvoided = 0;
-    userState.savingsHistory = [];
-    userState.dailyRecords = {};
-    userState.historyEvents = [];
-    userState.calViewYear = nowReset.getFullYear();
-    userState.calViewMonth = nowReset.getMonth();
-    userState.calSelectedDate = getDateKey(nowReset);
-    userState.avatar = 'verde';
-    
-    savePersistedState();
-    setTheme('light');
-    syncUserProfileUI();
-    refreshAllViews();
+    const langKeep = userState.currentLang || 'PT';
+    resetInMemoryUserState(langKeep);
+    clearAuthFormInputs();
+
+    // Encerra sessão ativa sem destruir nenhum cofre de perfil salvo
+    saveActiveSession({ mode: 'signed-out', activeProfileId: null });
+
+    setTheme('light', true);
+    refreshAllViews(true);
     try {
       if (window.history && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname);
       }
     } catch (_e) {}
     showToast('Você saiu da sua conta.');
+    showScreen(2);
+  };
+
+  // Ação SEPARADA em Configurações: apagar registros apenas do perfil ativo
+  window.openDeleteProfileDataModal = function() {
+    const modal = document.getElementById('habbi-delete-profile-modal');
+    if (modal) modal.style.display = 'flex';
+  };
+
+  window.closeDeleteProfileDataModal = function() {
+    const modal = document.getElementById('habbi-delete-profile-modal');
+    if (modal) modal.style.display = 'none';
+  };
+
+  window.confirmDeleteActiveProfileRecords = function() {
+    const sess = loadActiveSession();
+    const keepAuth = Boolean(sess && sess.mode === 'account' && userState.isAuthenticated);
+    const keepName = keepAuth ? userState.name : '';
+    const keepEmail = keepAuth ? userState.email : '';
+    const keepLang = userState.currentLang || 'PT';
+
+    if (sess && sess.activeProfileId) {
+      try {
+        localStorage.removeItem(getProfileStorageKey(sess.activeProfileId));
+      } catch (_e) {}
+    }
+
+    resetInMemoryUserState(keepLang);
+    if (keepAuth) {
+      userState.isAuthenticated = true;
+      userState.name = keepName;
+      userState.email = keepEmail;
+      userState.onboardingCompleted = true;
+    }
+    if (sess && sess.activeProfileId && sess.mode !== 'signed-out') {
+      savePersistedState();
+    }
+
+    window.closeDeleteProfileDataModal();
+    refreshAllViews(true);
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    showToast(t.delModalDone || 'Registros deste perfil apagados.');
+  };
+
+  // Reiniciar experiência de teste (exclusivo para ambiente local/testes)
+  window.restartTestExperience = function(locOverride) {
+    if (!window.isHabbiLocalOrTestEnv(locOverride)) {
+      return null;
+    }
+
+    // 1. Preserva o perfil anterior no próprio cofre (nunca apaga contas nem históricos anteriores)
+    const prevSess = loadActiveSession();
+    if (prevSess && prevSess.mode !== 'signed-out' && prevSess.activeProfileId) {
+      savePersistedState();
+    }
+
+    // 2. Fecha overlays e limpa UI/inputs
+    window.habbiTutorialActive = false;
+    if (typeof removeCalTutorialDemoRow === 'function') removeCalTutorialDemoRow();
+    if (typeof hideTutorialSwipeHint === 'function') hideTutorialSwipeHint();
+    if (typeof window.toggleHabbiHubMenu === 'function') window.toggleHabbiHubMenu(false);
+    const overlay = document.getElementById('habbi-tutorial-overlay');
+    if (overlay) overlay.style.display = 'none';
+    clearAuthFormInputs();
+
+    // 3. Cria novo perfil de teste isolado completamente limpo
+    const newTestProfileId = createTestProfile();
+    resetInMemoryUserState('PT');
+    userState.onboardingCompleted = false;
+    userState.tutorialCompleted = false;
+    userState.hasConfiguredFirstGoal = false;
+    userState.sacola100Celebrated = false;
+
+    saveActiveSession({ mode: 'test', activeProfileId: newTestProfileId });
+    savePersistedState();
+
+    setTheme('light', true);
+    if (typeof window.applyAppLanguage === 'function') {
+      window.applyAppLanguage('PT');
+    }
+    refreshAllViews(true);
+
+    try {
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    } catch (_e) {}
+    if (typeof window.resetOnb1Demo === 'function') {
+      window.resetOnb1Demo();
+    }
     showScreen(1);
+    return { profileId: newTestProfileId, mode: 'test' };
   };
 
   window.restartOnboarding = function() {
-    localStorage.removeItem('habbi-onboarding-completed');
-    localStorage.removeItem('habbi-current-screen');
-    localStorage.removeItem('habbi-tutorial-completed');
-    localStorage.removeItem('habbi-first-goal-set');
     window.habbiTutorialActive = false;
+    userState.onboardingCompleted = false;
     userState.tutorialCompleted = false;
     userState.hasConfiguredFirstGoal = false;
-    userState.savingsGoal = {
-      title: typeof getDefaultGoalTitle === 'function' ? getDefaultGoalTitle(userState.currentLang) : 'Minha conquista',
-      target: 250
-    };
     if (typeof removeCalTutorialDemoRow === 'function') removeCalTutorialDemoRow();
     if (typeof hideTutorialSwipeHint === 'function') hideTutorialSwipeHint();
     if (typeof window.toggleHabbiHubMenu === 'function') window.toggleHabbiHubMenu(false);
@@ -9004,14 +9891,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.simulateSocialLogin = function(provider) {
-    userState.isAuthenticated = true;
-    if (!userState.name || userState.name === 'Visitante') {
-      userState.name = provider === 'Apple' ? 'Usuário Apple' : 'Usuário Google';
-    }
-    userState.email = provider === 'Apple' ? 'usuario@icloud.com' : 'usuario@gmail.com';
-    localStorage.setItem('habbi-onboarding-completed', '1');
-    savePersistedState();
-    refreshAllViews();
+    const email = provider === 'Apple' ? 'usuario@icloud.com' : 'usuario@gmail.com';
+    const name = provider === 'Apple' ? 'Usuário Apple' : 'Usuário Google';
+    switchToAccountProfile({ email, name });
     showToast(`Conectado com ${provider}!`);
     const target = userState.authReturnScreen || 10;
     userState.authReturnScreen = 10;
@@ -9592,9 +10474,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function completeInteractiveTutorial(skipped = false) {
     window.habbiTutorialActive = false;
     userState.tutorialCompleted = true;
-    try {
-      localStorage.setItem('habbi-tutorial-completed', '1');
-    } catch (_e) {}
     savePersistedState();
 
     removeCalTutorialDemoRow();
@@ -9622,11 +10501,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function checkAndTriggerFirstTimeTutorial() {
-    const completedOnb = localStorage.getItem('habbi-onboarding-completed') === '1';
-    const tutorialDone = Boolean(userState.tutorialCompleted) || localStorage.getItem('habbi-tutorial-completed') === '1';
+    const completedOnb = Boolean(userState.onboardingCompleted);
+    const tutorialDone = Boolean(userState.tutorialCompleted);
     if (!tutorialDone && !window.habbiTutorialActive && (completedOnb || currentScreen === 10)) {
       setTimeout(() => {
-        const stillNotDone = !Boolean(userState.tutorialCompleted) && localStorage.getItem('habbi-tutorial-completed') !== '1';
+        const stillNotDone = !Boolean(userState.tutorialCompleted);
         if (!window.habbiTutorialActive && stillNotDone && currentScreen === 10) {
           startInteractiveTutorial();
         }
@@ -9648,13 +10527,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Initial runs
+  syncLocalTestEnvControls();
   if (typeof window.applyAppLanguage === 'function') {
     window.applyAppLanguage(userState.currentLang || 'PT');
   }
   if (typeof updateMinigamesRecordUI === 'function') {
     updateMinigamesRecordUI();
   }
-  refreshAllViews();
+  refreshAllViews(true);
 
   const hashRaw = (window.location.hash || '').replace('#', '').trim().toLowerCase();
   let hashScreen = parseInt(hashRaw);
