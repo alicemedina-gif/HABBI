@@ -399,6 +399,7 @@ body {
 .app-screen-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -6330,6 +6331,15 @@ textarea:focus-visible,
   gap: 10px;
   width: 100%;
   flex-shrink: 0;
+}
+
+.wl-sav-header .wl-sav-back,
+.wl-conquista-header .wl-sav-back {
+  display: none !important;
+}
+
+.wl-savings-screen.tools-mode .wl-sav-back {
+  display: inline-flex !important;
 }
 
 .wl-sav-header-left {

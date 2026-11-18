@@ -173,19 +173,40 @@
 
       // Onboarding (3, 4, 5)
       onb1Step: '1 de 3',
-      onb1Title: 'Entenda seus<br>hábitos',
-      onb1Desc: 'Conheça seus padrões.',
-      onb1Next: 'Próximo',
+      onb1Title: 'Acompanhe seu limite<br>com 1 toque',
+      onb1Desc: 'Registre ao longo do dia para ficar dentro da sua meta diária.',
+      onb1Next: 'ADICIONAR',
+      onbSkip: 'IGNORAR',
       onb2Step: '2 de 3',
       onb2Title: 'Identifique gatilhos',
-      onb2Desc: 'Descubra o que te leva aos vícios.',
-      onb2Next: 'Próximo',
+      onb2Desc: 'Pequenos incentivos para seguir no seu ritmo.',
+      onb2Next: 'Ativar lembretes',
       onbRemindersEnable: 'Ativar lembretes',
       onbRemindersSkip: 'Agora não',
+      onbNotifTitle: 'Que tal distrair a mente?',
+      onbNotifSub: 'Lembretes e ferramentas para te acompanhar.',
       onb3Step: '3 de 3',
-      onb3Title: 'Transforme<br>comportamentos',
+      onb3Title: 'Uma nova forma de<br>cuidar de você.',
       onb3Desc: 'Pequenas escolhas diárias geram grandes mudanças.',
-      onb3Next: 'Começar',
+      onb3Next: 'Vamos começar!',
+      onbCompareBadTitle: 'No piloto<br>automático',
+      onbCompareGoodTitle: 'Com o<br>Habbi',
+      onbCompareBadList: [
+        'Hábitos sem perceber',
+        'Momentos de ansiedade',
+        'Falta de distrações',
+        'Pouco controle da rotina',
+        'Gastos acumulados',
+        'Progresso despercebido'
+      ],
+      onbCompareGoodList: [
+        'Registro rápido e fácil',
+        'Apoio nos momentos difíceis',
+        'Minijogos para distrair',
+        'Calendário de hábitos',
+        'Controle de gastos',
+        'Progresso visual diário'
+      ],
 
       // Jornada (6)
       journeyTitle: 'Escolha sua jornada',
@@ -317,6 +338,8 @@
 
       // Minijogos (15)
       minijogosTitle: 'Minijogos',
+      minijogosCarouselSub: 'Exercícios rápidos para quebrar a fissura',
+      minijogosToolsSub: 'Exercícios e distração',
       gameMemTitle: 'Memória',
       gameMemSub: 'Encontre os pares',
       gameSeqTitle: 'Sequência',
@@ -343,6 +366,11 @@
       calStatClean: 'Sem fumar',
       calStatGoal: 'Na meta',
       calStatUrges: 'Vontades',
+      calGoalNoLogs: 'Sem registros • Meta {0}/dia',
+      calGoalExceeded: '{0} / {1} cigarros • +{2} acima da meta',
+      calGoalInProgress: '{0} / {1} cigarros • Em andamento',
+      calGoalSmokeFree: '0 / {0} cigarros • Sem fumar',
+      calGoalWithin: '{0} / {1} cigarros • Dentro da meta',
       calEventEdit: 'Editar',
       calEventRemove: 'Remover',
       calEventAdd: 'Adicionar registro',
@@ -350,6 +378,24 @@
       calDemoTitle: '1 cigarro',
       calDemoSub: 'Exemplo para demonstração',
       calMoreLogs: 'Ver mais {0} registros',
+      calSeeMoreLogs: 'Ver outros {0} {1}',
+      calSeeMoreSingular: 'registro',
+      calSeeMorePlural: 'registros',
+      calShowLess: 'Mostrar menos',
+
+      // Painel Rápido de Registro
+      qregAddTitle: 'Adicionar registro',
+      qregEditTitle: 'Editar registro',
+      qregNoSmokeBtn: 'Não fumei hoje',
+      qregUrgeBtn: 'Vontade superada',
+      qregDateCigsLbl: 'Consumo na data',
+      qregCigsUnit: 'cigarros',
+      qregAddCigBtn: '+1 cigarro',
+      qregMoodQuestion: 'Como está se sentindo?',
+      qregMoods: { Feliz: 'Feliz', Calmo: 'Calmo', Ansioso: 'Ansioso', Triste: 'Triste', Irritado: 'Irritado' },
+      qregInfluences: { Sono: 'Sono', Exercício: 'Exercício', Trabalho: 'Trabalho', Relações: 'Relações', Alimentação: 'Alimentação' },
+      qregNotePlaceholder: 'Nota opcional...',
+      qregSaveMoodBtn: 'Salvar humor',
 
       // Progresso (17)
       progressTitle: 'Meu progresso',
@@ -555,19 +601,40 @@
 
       // Onboarding (3, 4, 5)
       onb1Step: '1 of 3',
-      onb1Title: 'Understand your<br>habits',
-      onb1Desc: 'Know your patterns.',
-      onb1Next: 'Next',
+      onb1Title: 'Track your limit<br>with 1 tap',
+      onb1Desc: 'Log throughout the day to stay within your daily goal.',
+      onb1Next: 'ADD',
+      onbSkip: 'SKIP',
       onb2Step: '2 of 3',
       onb2Title: 'Identify triggers',
-      onb2Desc: 'Discover what leads to cravings.',
-      onb2Next: 'Next',
+      onb2Desc: 'Gentle nudges to keep going at your own pace.',
+      onb2Next: 'Enable reminders',
       onbRemindersEnable: 'Enable reminders',
       onbRemindersSkip: 'Not now',
+      onbNotifTitle: 'Time for a quick distraction?',
+      onbNotifSub: 'Reminders and tools to support you.',
       onb3Step: '3 of 3',
-      onb3Title: 'Transform<br>behaviors',
+      onb3Title: 'A new way to<br>take care of yourself.',
       onb3Desc: 'Small daily choices create big changes.',
-      onb3Next: 'Get Started',
+      onb3Next: "Let's start!",
+      onbCompareBadTitle: 'On autopilot',
+      onbCompareGoodTitle: 'With Habbi',
+      onbCompareBadList: [
+        'Habits without noticing',
+        'Moments of anxiety',
+        'Lack of distractions',
+        'Little routine control',
+        'Accumulated expenses',
+        'Unnoticed progress'
+      ],
+      onbCompareGoodList: [
+        'Quick & easy logging',
+        'Support in tough moments',
+        'Minigames to distract',
+        'Habit calendar',
+        'Expense tracking',
+        'Daily visual progress'
+      ],
 
       // Journey (6)
       journeyTitle: 'Choose your journey',
@@ -698,7 +765,9 @@
       toolsMoodTag: 'PATTERNS & EMOTIONS',
 
       // Mini-games (15)
-      minijogosTitle: 'Mini-games',
+      minijogosTitle: 'Minigames',
+      minijogosCarouselSub: 'Quick exercises to break the urge',
+      minijogosToolsSub: 'Exercises and distraction',
       gameMemTitle: 'Memory',
       gameMemSub: 'Find pairs',
       gameSeqTitle: 'Sequence',
@@ -725,13 +794,36 @@
       calStatClean: 'Smoke-free',
       calStatGoal: 'On target',
       calStatUrges: 'Cravings',
+      calGoalNoLogs: 'No logs • Goal {0}/day',
+      calGoalExceeded: '{0} / {1} cigarettes • +{2} over goal',
+      calGoalInProgress: '{0} / {1} cigarettes • In progress',
+      calGoalSmokeFree: '0 / {0} cigarettes • Smoke-free',
+      calGoalWithin: '{0} / {1} cigarettes • Within goal',
       calEventEdit: 'Edit',
       calEventRemove: 'Remove',
-      calEventAdd: 'Add entry',
+      calEventAdd: 'Add record',
       calNoLogsDay: 'No records for this day',
       calDemoTitle: '1 cigarette',
       calDemoSub: 'Example for demonstration',
       calMoreLogs: 'View {0} more logs',
+      calSeeMoreLogs: 'See other {0} {1}',
+      calSeeMoreSingular: 'log',
+      calSeeMorePlural: 'logs',
+      calShowLess: 'Show less',
+
+      // Quick Register Sheet
+      qregAddTitle: 'Add record',
+      qregEditTitle: 'Edit record',
+      qregNoSmokeBtn: 'Smoke-free today',
+      qregUrgeBtn: 'Urge overcome',
+      qregDateCigsLbl: 'Consumption on date',
+      qregCigsUnit: 'cigarettes',
+      qregAddCigBtn: '+1 cigarette',
+      qregMoodQuestion: 'How are you feeling?',
+      qregMoods: { Feliz: 'Happy', Calmo: 'Calm', Ansioso: 'Anxious', Triste: 'Sad', Irritado: 'Irritated' },
+      qregInfluences: { Sono: 'Sleep', Exercício: 'Exercise', Trabalho: 'Work', Relações: 'Relationships', Alimentação: 'Food' },
+      qregNotePlaceholder: 'Optional note...',
+      qregSaveMoodBtn: 'Save mood',
 
       // Progress (17)
       progressTitle: 'My progress',
@@ -937,19 +1029,40 @@
 
       // Onboarding (3, 4, 5)
       onb1Step: '1 de 3',
-      onb1Title: 'Entiende tus<br>hábitos',
-      onb1Desc: 'Conoce tus patrones.',
-      onb1Next: 'Siguiente',
+      onb1Title: 'Sigue tu límite<br>con 1 toque',
+      onb1Desc: 'Registra a lo largo del día para mantenerte en tu meta diaria.',
+      onb1Next: 'AGREGAR',
+      onbSkip: 'OMITIR',
       onb2Step: '2 de 3',
       onb2Title: 'Identifica disparadores',
-      onb2Desc: 'Descubre qué activa tus deseos.',
-      onb2Next: 'Siguiente',
+      onb2Desc: 'Pequeños incentivos para seguir a tu propio ritmo.',
+      onb2Next: 'Activar recordatorios',
       onbRemindersEnable: 'Activar recordatorios',
       onbRemindersSkip: 'Ahora no',
+      onbNotifTitle: '¿Qué tal distraer la mente?',
+      onbNotifSub: 'Recordatorios y herramientas para acompañarte.',
       onb3Step: '3 de 3',
-      onb3Title: 'Transforma<br>conductas',
+      onb3Title: 'Una nueva forma de<br>cuidar de ti.',
       onb3Desc: 'Pequeñas decisiones diarias generan grandes cambios.',
-      onb3Next: 'Comenzar',
+      onb3Next: '¡Vamos a empezar!',
+      onbCompareBadTitle: 'En piloto<br>automático',
+      onbCompareGoodTitle: 'Con Habbi',
+      onbCompareBadList: [
+        'Hábitos sin darte cuenta',
+        'Momentos de ansiedad',
+        'Falta de distracciones',
+        'Poco control de la rutina',
+        'Gastos acumulados',
+        'Progreso desapercibido'
+      ],
+      onbCompareGoodList: [
+        'Registro rápido y fácil',
+        'Apoyo en momentos difíciles',
+        'Minijuegos para distraer',
+        'Calendario de hábitos',
+        'Control de gastos',
+        'Progreso visual diario'
+      ],
 
       // Journey (6)
       journeyTitle: 'Elige tu camino',
@@ -1081,6 +1194,8 @@
 
       // Mini-games (15)
       minijogosTitle: 'Minijuegos',
+      minijogosCarouselSub: 'Ejercicios rápidos para romper el impulso',
+      minijogosToolsSub: 'Ejercicios y distracción',
       gameMemTitle: 'Memoria',
       gameMemSub: 'Encuentra las parejas',
       gameSeqTitle: 'Secuencia',
@@ -1101,12 +1216,17 @@
       calTitle: 'Calendario',
       calToday: 'Hoy',
       calWeekdays: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-      calLegendGoal: 'En la meta',
+      calLegendGoal: 'Dentro de la meta',
       calLegendOver: 'Sobre la meta',
       calLegendEmpty: 'Sin registro',
       calStatClean: 'Sin fumar',
       calStatGoal: 'En la meta',
       calStatUrges: 'Deseos',
+      calGoalNoLogs: 'Sin registros • Meta {0}/día',
+      calGoalExceeded: '{0} / {1} cigarrillos • +{2} sobre la meta',
+      calGoalInProgress: '{0} / {1} cigarrillos • En progreso',
+      calGoalSmokeFree: '0 / {0} cigarrillos • Sin fumar',
+      calGoalWithin: '{0} / {1} cigarrillos • Dentro de la meta',
       calEventEdit: 'Editar',
       calEventRemove: 'Eliminar',
       calEventAdd: 'Añadir registro',
@@ -1114,6 +1234,24 @@
       calDemoTitle: '1 cigarrillo',
       calDemoSub: 'Ejemplo de demostración',
       calMoreLogs: 'Ver {0} registros más',
+      calSeeMoreLogs: 'Ver otros {0} {1}',
+      calSeeMoreSingular: 'registro',
+      calSeeMorePlural: 'registros',
+      calShowLess: 'Mostrar menos',
+
+      // Quick Register Sheet
+      qregAddTitle: 'Agregar registro',
+      qregEditTitle: 'Editar registro',
+      qregNoSmokeBtn: 'No fumé hoy',
+      qregUrgeBtn: 'Deseo superado',
+      qregDateCigsLbl: 'Consumo en la fecha',
+      qregCigsUnit: 'cigarrillos',
+      qregAddCigBtn: '+1 cigarrillo',
+      qregMoodQuestion: '¿Cómo te sientes?',
+      qregMoods: { Feliz: 'Feliz', Calmo: 'Calmado', Ansioso: 'Ansioso', Triste: 'Triste', Irritado: 'Irritado' },
+      qregInfluences: { Sono: 'Sueño', Exercício: 'Ejercicio', Trabalho: 'Trabajo', Relações: 'Relaciones', Alimentação: 'Alimentación' },
+      qregNotePlaceholder: 'Nota opcional...',
+      qregSaveMoodBtn: 'Guardar ánimo',
 
       // Progress (17)
       progressTitle: 'Mi progreso',
@@ -1351,14 +1489,14 @@
     // Screen 3: Onboarding 1
     const s3 = document.querySelector('.screen[data-screen="3"]');
     if (s3) {
-      const step = s3.querySelector('.onboarding-top .caption');
-      if (step) step.innerText = t.onb1Step;
+      const step = s3.querySelector('.onboarding-top .caption, .wl-step-pill');
+      if (step) step.innerText = t.onb1Step || '1 de 3';
       const h1 = s3.querySelector('h1');
       if (h1) h1.innerHTML = t.onb1Title;
       const p = s3.querySelector('p.caption');
       if (p) p.innerText = t.onb1Desc;
-      const btn = document.getElementById('btn-onboarding-1-next');
-      if (btn) btn.innerText = t.onb1Next;
+      const btnSpan = s3.querySelector('#btn-onboarding-1-next span');
+      if (btnSpan) btnSpan.innerText = t.onb1Next || 'ADICIONAR';
     }
 
     // Screen 4: Onboarding 2
@@ -1367,9 +1505,13 @@
       const step = s4.querySelector('.onboarding-top .caption, .wl-step-pill');
       if (step) step.innerText = t.onb2Step || '2 de 3';
       const h1 = s4.querySelector('h1');
-      if (h1) h1.innerHTML = t.onb2Title || 'Um empurrãozinho<br>quando precisar.';
+      if (h1) h1.innerHTML = t.onb2Title || 'Identifique gatilhos';
       const p = s4.querySelector('p.caption');
       if (p) p.innerText = t.onb2Desc || 'Pequenos incentivos para seguir no seu ritmo.';
+      const notifTitle = s4.querySelector('.wl-notif-bubble strong');
+      if (notifTitle) notifTitle.innerText = t.onbNotifTitle || 'Que tal distrair a mente?';
+      const notifSub = s4.querySelector('.wl-notif-bubble span:not(.wl-notif-time)');
+      if (notifSub) notifSub.innerText = t.onbNotifSub || 'Lembretes e ferramentas para te acompanhar.';
       const btn = document.getElementById('btn-onboarding-2-next');
       if (btn) btn.innerText = t.onbRemindersEnable || 'Ativar lembretes';
       const btnSkip = document.getElementById('btn-onboarding-2-skip');
@@ -1379,15 +1521,37 @@
     // Screen 5: Onboarding 3
     const s5 = document.querySelector('.screen[data-screen="5"]');
     if (s5) {
-      const step = s5.querySelector('.onboarding-top .caption');
-      if (step) step.innerText = t.onb3Step;
+      const step = s5.querySelector('.onboarding-top .caption, .wl-step-pill');
+      if (step) step.innerText = t.onb3Step || '3 de 3';
       const h1 = s5.querySelector('h1');
       if (h1) h1.innerHTML = t.onb3Title;
-      const p = s5.querySelector('p.caption');
-      if (p) p.innerText = t.onb3Desc;
+      const badH3 = s5.querySelector('.wl-compare-card.bad h3');
+      if (badH3) badH3.innerHTML = t.onbCompareBadTitle || 'No piloto<br>automático';
+      const badLis = s5.querySelectorAll('.wl-compare-card.bad li');
+      if (badLis.length && t.onbCompareBadList) {
+        badLis.forEach((li, idx) => {
+          if (t.onbCompareBadList[idx]) {
+            li.innerHTML = `<span class="wl-mark bad">\u2715</span> ${t.onbCompareBadList[idx]}`;
+          }
+        });
+      }
+      const goodH3 = s5.querySelector('.wl-compare-card.good h3');
+      if (goodH3) goodH3.innerHTML = t.onbCompareGoodTitle || 'Com o<br>Habbi';
+      const goodLis = s5.querySelectorAll('.wl-compare-card.good li');
+      if (goodLis.length && t.onbCompareGoodList) {
+        goodLis.forEach((li, idx) => {
+          if (t.onbCompareGoodList[idx]) {
+            li.innerHTML = `<span class="wl-mark good">\u2713</span> ${t.onbCompareGoodList[idx]}`;
+          }
+        });
+      }
       const btn = document.getElementById('btn-onboarding-3-next');
-      if (btn) btn.innerText = t.onb3Next;
+      if (btn) btn.innerText = t.onb3Next || 'Vamos começar!';
     }
+
+    document.querySelectorAll('.wl-onb-screen .wl-skip-btn').forEach(btn => {
+      btn.innerText = t.onbSkip || 'IGNORAR';
+    });
 
     // Screen 6: Jornada
     const s6 = document.querySelector('.screen[data-screen="6"]');
@@ -1614,8 +1778,12 @@
     }
 
     // Screen 15: Minijogos
-    const miniTitle = document.querySelector('.wl-minijogos-title');
-    if (miniTitle) miniTitle.innerText = t.minijogosTitle;
+    const miniTitles = document.querySelectorAll('.wl-minijogos-title');
+    miniTitles.forEach(el => { el.innerText = t.minijogosTitle || 'Minijogos'; });
+    const miniIntroSub = document.querySelector('.wl-minijogos-carousel-intro .caption');
+    if (miniIntroSub) miniIntroSub.innerText = t.minijogosCarouselSub || 'Exercícios rápidos para quebrar a fissura';
+    const miniToolsSub = document.querySelector('#wl-minijogos-tools-header .caption');
+    if (miniToolsSub) miniToolsSub.innerText = t.minijogosToolsSub || 'Exercícios e distração';
     const gMem = document.getElementById('btn-game-memory');
     if (gMem) {
       const tEl = gMem.querySelector('.game-grid-card-title');
@@ -2042,6 +2210,50 @@
     if (fbDec) fbDec.innerHTML = `<strong>${t.feedbackDecStrong}</strong><small>${t.feedbackDecSmall}</small>`;
     const fbStill = document.querySelector('#wl-sos-feedback-step-ask .still');
     if (fbStill) fbStill.innerHTML = `<strong>${t.feedbackStillStrong}</strong><small>${t.feedbackStillSmall}</small>`;
+
+    // Painel Rápido de Registro (Sheet)
+    const qHeaderTitle = document.getElementById('wl-qreg-header-title');
+    if (qHeaderTitle) {
+      qHeaderTitle.innerText = (typeof quickEditingEventId !== 'undefined' && quickEditingEventId) ? (t.qregEditTitle || 'Editar registro') : (t.qregAddTitle || 'Adicionar registro');
+    }
+    const qRegNoSmoke = document.getElementById('wl-qreg-confirm-lbl');
+    if (qRegNoSmoke) qRegNoSmoke.innerText = t.qregNoSmokeBtn || 'Não fumei hoje';
+    const qUrgeBtnSpan = document.querySelector('.wl-qreg-action-btn.blue span');
+    if (qUrgeBtnSpan) qUrgeBtnSpan.innerText = t.qregUrgeBtn || 'Vontade superada';
+    const qCardLbl = document.querySelector('.wl-qreg-card .wl-qreg-section-lbl');
+    if (qCardLbl) qCardLbl.innerText = t.qregDateCigsLbl || 'Consumo na data';
+    const qMetaSpan = document.querySelector('.wl-qreg-cig-counter span');
+    if (qMetaSpan) {
+      const curMeta = (userState.dailyRecords[userState.activeRegisterDateKey || getDateKey(new Date())] && userState.dailyRecords[userState.activeRegisterDateKey || getDateKey(new Date())].meta) || userState.todayMeta || 11;
+      qMetaSpan.innerHTML = `/ <em id="wl-qreg-meta-num">${curMeta}</em> ${t.qregCigsUnit || 'cigarros'}`;
+    }
+    const qPlusBtn = document.querySelector('.wl-qreg-step-btn.plus');
+    if (qPlusBtn) qPlusBtn.innerText = t.qregAddCigBtn || '+1 cigarro';
+    const qMoodLbl = document.querySelector('.wl-qreg-mood-block > .wl-qreg-section-lbl');
+    if (qMoodLbl) qMoodLbl.innerText = t.qregMoodQuestion || 'Como está se sentindo?';
+    if (t.qregMoods) {
+      document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(pill => {
+        const m = pill.dataset.mood;
+        const sp = pill.querySelector('span');
+        if (sp && m && t.qregMoods[m]) sp.innerText = t.qregMoods[m];
+      });
+    }
+    if (t.qregInfluences) {
+      document.querySelectorAll('#wl-qreg-influence-chips .wl-qreg-tag').forEach(tag => {
+        const v = tag.dataset.val;
+        if (v && t.qregInfluences[v]) tag.innerText = t.qregInfluences[v];
+      });
+    }
+    const qNoteInp = document.getElementById('wl-qreg-mood-note');
+    if (qNoteInp) qNoteInp.placeholder = t.qregNotePlaceholder || 'Nota opcional...';
+    const qSaveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
+    if (qSaveMoodBtn) qSaveMoodBtn.innerText = t.qregSaveMoodBtn || 'Salvar humor';
+
+    // Atualiza detalhes do calendário se visível
+    if (currentScreen === 16 && typeof updateCalendarSummaryAndDetails === 'function' && typeof userState.calViewYear === 'number') {
+      const daysInMonth = new Date(userState.calViewYear, userState.calViewMonth + 1, 0).getDate();
+      updateCalendarSummaryAndDetails(userState.calViewYear, userState.calViewMonth, daysInMonth);
+    }
 
     // Atualiza o tutorial se estiver em execução
     if (window.habbiTutorialActive && typeof currentTutorialStep === 'number' && typeof renderTutorialStep === 'function') {
@@ -2843,6 +3055,8 @@
       screenElements.forEach(s => {
         if (!s.classList.contains('onb-slide')) {
           s.classList.remove('active');
+        } else {
+          s.classList.add('active');
         }
       });
     } else {
@@ -3001,9 +3215,21 @@
       if (packPriceField) packPriceField.value = userState.packPrice ? userState.packPrice.toFixed(2) : '10.00';
     }
 
-    // Screen 29: Economia
+    // Screen 29: Conquista / Economia (Modo Carrossel vs Modo Ferramentas)
     if (screenNum === 29) {
+      const isCarouselMode = userState.conquistaMode !== 'tools';
+      const s29El = document.querySelector('.screen[data-screen="29"]');
+      if (s29El) {
+        s29El.classList.toggle('tools-mode', !isCarouselMode);
+      }
+      const backBtn = document.getElementById('btn-conquista-back') || document.querySelector('.btn-back.wl-sav-back');
+      if (backBtn) {
+        backBtn.style.setProperty('display', isCarouselMode ? 'none' : 'inline-flex', 'important');
+      }
       updateSavingsDisplay();
+      if (typeof window.updateConquistaBagUI === 'function') {
+        window.updateConquistaBagUI();
+      }
     }
   }
 
@@ -3512,25 +3738,28 @@
     const remainingEl = document.getElementById('wl-conquista-remaining');
     const fillImg = document.getElementById('wl-bag-fill-img');
 
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
+
     if (titleEl) titleEl.innerText = goal.title;
     if (targetEl) targetEl.innerText = formatBrl(targetVal);
     if (pctEl) {
       if (pct >= 100) {
-        pctEl.innerText = '100% atingido!';
+        pctEl.innerText = t.conquistaAchieved || '100% atingido!';
         pctEl.classList.add('is-completed');
       } else {
-        pctEl.innerText = `${pct}% do objetivo`;
+        pctEl.innerText = `${pct}% ${t.conquistaOfGoal || 'do objetivo'}`;
         pctEl.classList.remove('is-completed');
       }
     }
     if (heroValEl) {
-      heroValEl.innerText = `Economia estimada: ${formatBrl(heroSavingsVal)}`;
+      heroValEl.innerText = `${t.conquistaEstPrefix || 'Economia estimada:'} ${formatBrl(heroSavingsVal)}`;
     }
     if (remainingEl) {
       if (remaining <= 0) {
-        remainingEl.innerHTML = '<strong style="color:#16A34A;">Objetivo alcançado! Parabéns!</strong>';
+        remainingEl.innerHTML = `<strong style="color:#16A34A;">${t.conquistaRemainingDone || 'Objetivo alcançado! Parabéns!'}</strong>`;
       } else {
-        remainingEl.innerText = `Faltam ${formatBrl(remaining)}`;
+        remainingEl.innerText = `${t.conquistaRemainingPrefix || 'Faltam'} ${formatBrl(remaining)}`;
       }
     }
 
@@ -3598,7 +3827,8 @@
     }, 2500);
   };
 
-  // Horizontal Carousel Navigation (Conquista 29 ↔ Home 10 ↔ Minijogos 15)
+  // Horizontal Carousel Navigation (Conquista 29 ↔ Home 10 ↔ Minijogos 15) com animação suave
+  let isCarouselNavigating = false;
   window.navigateHorizontalCarousel = function(targetScreen) {
     if (typeof hideTutorialSwipeHint === 'function') {
       hideTutorialSwipeHint();
@@ -3614,6 +3844,9 @@
       userState.minijogosMode = 'carousel';
       userState.minijogosReturnScreen = 10;
     }
+    if (targetScreen === 29) {
+      userState.conquistaMode = 'carousel';
+    }
 
     if (currentScreen === targetScreen) {
       if (targetScreen === 15 && userState.minijogosMode !== 'carousel') {
@@ -3622,6 +3855,94 @@
       }
       return;
     }
+
+    if (isCarouselNavigating) return;
+
+    const fromScreen = currentScreen;
+    const carouselIndexMap = { 29: 0, 10: 1, 15: 2 };
+    const fromIndex = carouselIndexMap[fromScreen];
+    const toIndex = carouselIndexMap[targetScreen];
+
+    if (fromIndex !== undefined && toIndex !== undefined) {
+      isCarouselNavigating = true;
+      const goingRight = toIndex > fromIndex;
+
+      const fromEl = document.querySelector(`.screen[data-screen="${fromScreen}"]`);
+      const toEl = document.querySelector(`.screen[data-screen="${targetScreen}"]`);
+
+      if (fromEl && toEl) {
+        [fromEl, toEl].forEach(el => {
+          el.classList.remove('slide-in-right', 'slide-out-left', 'slide-in-left', 'slide-out-right');
+        });
+
+        const outClass = goingRight ? 'slide-out-left' : 'slide-out-right';
+        const inClass = goingRight ? 'slide-in-right' : 'slide-in-left';
+
+        toEl.scrollTop = 0;
+        toEl.classList.add(inClass);
+        fromEl.classList.add(outClass);
+
+        currentScreen = targetScreen;
+        localStorage.setItem('habbi-current-screen', targetScreen);
+
+        if (targetScreen === 15) {
+          const carouselHeader = document.getElementById('wl-minijogos-carousel-header');
+          const toolsHeader = document.getElementById('wl-minijogos-tools-header');
+          if (carouselHeader) carouselHeader.style.setProperty('display', 'block', 'important');
+          if (toolsHeader) toolsHeader.style.setProperty('display', 'none', 'important');
+          const dayNumEl = document.getElementById('wl-minijogos-day-num');
+          if (dayNumEl) dayNumEl.innerText = new Date().getDate();
+          const savingsEl = document.getElementById('minijogos-savings-top');
+          if (savingsEl) {
+            const homeSavings = document.getElementById('home-savings-top');
+            if (homeSavings) savingsEl.innerText = homeSavings.innerText;
+          }
+          if (typeof updateMinigamesRecordUI === 'function') {
+            updateMinigamesRecordUI();
+          }
+        }
+
+        if (targetScreen === 29) {
+          const s29El = document.querySelector('.screen[data-screen="29"]');
+          if (s29El) s29El.classList.remove('tools-mode');
+          const backBtn = document.getElementById('btn-conquista-back') || document.querySelector('.btn-back.wl-sav-back');
+          if (backBtn) backBtn.style.setProperty('display', 'none', 'important');
+          if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
+          if (typeof window.updateConquistaBagUI === 'function') window.updateConquistaBagUI();
+        }
+
+        if (targetScreen === 10) {
+          if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
+        }
+
+        // Sincroniza dots do carrossel
+        const activeIdx = toIndex;
+        document.querySelectorAll('.wl-pager-nav-dots').forEach(bar => {
+          const dots = bar.querySelectorAll('.wl-pager-dot');
+          dots.forEach((dot, idx) => {
+            if (idx === activeIdx) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        });
+
+        // Sincroniza idioma se necessário
+        if (typeof window.applyAppLanguage === 'function') {
+          window.applyAppLanguage(userState.currentLang || 'PT');
+        }
+
+        setTimeout(() => {
+          fromEl.classList.remove('active', outClass);
+          toEl.classList.remove(inClass);
+          toEl.classList.add('active');
+          isCarouselNavigating = false;
+        }, 300);
+        return;
+      }
+    }
+
     showScreen(targetScreen);
   };
 
@@ -4023,7 +4344,7 @@
     const s3 = document.querySelector('.screen[data-screen="3"]');
     if (s3) {
       s3.removeAttribute('style');
-      s3.className = 'screen wl-onb-screen';
+      s3.className = 'screen wl-onb-screen onb-slide';
       const cigImgSrc = 'assets/ilustracoes/cigarro_Prancheta 1.png';
       const cigImgFallback = 'assets/ilustracoes/cigarro_Prancheta 1.png';
       s3.innerHTML = `
@@ -4732,7 +5053,7 @@
         <div class="wl-sav-wrap wl-conquista-wrap">
           <header class="wl-sav-header wl-conquista-header">
             <div class="wl-sav-header-left">
-              <button type="button" class="btn-back wl-sav-back" onclick="handleBackFromScreen(29)" aria-label="Voltar">
+              <button type="button" class="btn-back wl-sav-back" id="btn-conquista-back" onclick="handleBackFromScreen(29)" aria-label="Voltar" style="display:none !important;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
               </button>
               <h2 class="wl-sav-title">Minha conquista</h2>
@@ -6781,7 +7102,10 @@
     // 1. Atualiza título do cabeçalho ("Novembro de 2026") e botão rápido "Hoje"
     const titleEl = document.getElementById('wl-cal-month-title');
     if (titleEl) {
-      titleEl.innerText = `${getMonthNamePt(viewMonth)} de ${viewYear}`;
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      titleEl.innerText = activeLang === 'EN'
+        ? `${getMonthNamePt(viewMonth)} ${viewYear}`
+        : `${getMonthNamePt(viewMonth)} de ${viewYear}`;
     }
     const todayBtn = document.getElementById('wl-cal-today-btn');
     if (todayBtn) {
@@ -6908,6 +7232,9 @@
 
     // Botão "Não fumei hoje" foi movido para dentro da aba de registro — sem referências diretas no calendário
 
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
     const goalPillEl = document.getElementById('wl-cal-daily-goal-pill');
     const goalBarFillEl = document.getElementById('wl-cal-goal-bar-fill');
     const goalBarOverEl = document.getElementById('wl-cal-goal-bar-over');
@@ -6919,7 +7246,7 @@
 
       if (!hasEvents) {
         goalPillEl.classList.add('neutral');
-        goalPillEl.innerText = `Sem registros • Meta ${meta}/dia`;
+        goalPillEl.innerText = (t.calGoalNoLogs || 'Sem registros • Meta {0}/dia').replace('{0}', meta);
         goalBarFillEl.classList.add('neutral');
         goalBarFillEl.style.width = '0%';
       } else if (selStatus === 'exceeded') {
@@ -6927,14 +7254,19 @@
         const greenPct = Math.round((meta / Math.max(1, cigs)) * 100);
         const pinkPct = Math.max(8, 100 - greenPct);
         goalPillEl.classList.add('pink');
-        goalPillEl.innerText = `${cigs} / ${meta} cigarros • +${exceededCount} acima da meta`;
+        goalPillEl.innerText = (t.calGoalExceeded || '{0} / {1} cigarros • +{2} acima da meta')
+          .replace('{0}', cigs)
+          .replace('{1}', meta)
+          .replace('{2}', exceededCount);
         goalBarFillEl.classList.add('green');
         goalBarFillEl.style.width = `${100 - pinkPct}%`;
         if (goalBarOverEl) goalBarOverEl.style.width = `${pinkPct}%`;
       } else if (selStatus === 'neutral') {
         const pctUsed = Math.min(100, Math.round((cigs / Math.max(1, meta)) * 100));
         goalPillEl.classList.add('neutral');
-        goalPillEl.innerText = `${cigs} / ${meta} cigarros • Em andamento`;
+        goalPillEl.innerText = (t.calGoalInProgress || '{0} / {1} cigarros • Em andamento')
+          .replace('{0}', cigs)
+          .replace('{1}', meta);
         goalBarFillEl.classList.add('neutral');
         goalBarFillEl.style.width = `${pctUsed}%`;
       } else {
@@ -6942,8 +7274,8 @@
         const pctUsed = Math.min(100, Math.round((cigs / Math.max(1, meta)) * 100));
         goalPillEl.classList.add('green');
         goalPillEl.innerText = (cigs === 0)
-          ? `0 / ${meta} cigarros • Sem fumar`
-          : `${cigs} / ${meta} cigarros • Dentro da meta`;
+          ? (t.calGoalSmokeFree || '0 / {0} cigarros • Sem fumar').replace('{0}', meta)
+          : (t.calGoalWithin || '{0} / {1} cigarros • Dentro da meta').replace('{0}', cigs).replace('{1}', meta);
         goalBarFillEl.classList.add('green');
         goalBarFillEl.style.width = (cigs === 0) ? '100%' : `${pctUsed}%`;
       }
@@ -6992,13 +7324,13 @@
               </div>
             </div>
             <div class="wl-cal-event-actions">
-              <button type="button" class="wl-cal-ev-btn" onclick="editHabbiEvent('${selKey}', '${ev.id}')" title="Editar registro">
+              <button type="button" class="wl-cal-ev-btn" onclick="editHabbiEvent('${selKey}', '${ev.id}')" title="${t.calEventEdit || 'Editar'}">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
-                <span>Editar</span>
+                <span>${t.calEventEdit || 'Editar'}</span>
               </button>
-              <button type="button" class="wl-cal-ev-btn danger" onclick="deleteHabbiEvent('${selKey}', '${ev.id}')" title="Remover registro">
+              <button type="button" class="wl-cal-ev-btn danger" onclick="deleteHabbiEvent('${selKey}', '${ev.id}')" title="${t.calEventRemove || 'Remover'}">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                <span>Remover</span>
+                <span>${t.calEventRemove || 'Remover'}</span>
               </button>
             </div>
           `;
@@ -7024,12 +7356,18 @@
           }
           eventsWrap.appendChild(moreContainer);
 
+          const noun = remainingCount === 1 ? (t.calSeeMoreSingular || 'registro') : (t.calSeeMorePlural || 'registros');
+          const seeMoreText = (t.calSeeMoreLogs || 'Ver outros {0} {1}')
+            .replace('{0}', remainingCount)
+            .replace('{1}', noun);
+          const showLessText = t.calShowLess || 'Mostrar menos';
+
           const toggleBtn = document.createElement('button');
           toggleBtn.type = 'button';
           toggleBtn.id = 'wl-cal-toggle-events-btn';
           toggleBtn.className = `wl-cal-toggle-events-btn ${isExpanded ? 'is-expanded' : ''}`.trim();
           toggleBtn.innerHTML = `
-            <span id="wl-cal-toggle-events-txt">${isExpanded ? 'Mostrar menos' : `Ver outros ${remainingCount} ${remainingCount === 1 ? 'registro' : 'registros'}`}</span>
+            <span id="wl-cal-toggle-events-txt">${isExpanded ? showLessText : seeMoreText}</span>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
           `;
           toggleBtn.onclick = function() {
@@ -7037,12 +7375,12 @@
             if (currentlyOpen) {
               moreContainer.style.display = 'none';
               toggleBtn.classList.remove('is-expanded');
-              document.getElementById('wl-cal-toggle-events-txt').innerText = `Ver outros ${remainingCount} ${remainingCount === 1 ? 'registro' : 'registros'}`;
+              document.getElementById('wl-cal-toggle-events-txt').innerText = seeMoreText;
               userState.calEventsExpandedDate = null;
             } else {
               moreContainer.style.display = 'flex';
               toggleBtn.classList.add('is-expanded');
-              document.getElementById('wl-cal-toggle-events-txt').innerText = 'Mostrar menos';
+              document.getElementById('wl-cal-toggle-events-txt').innerText = showLessText;
               userState.calEventsExpandedDate = selKey;
             }
           };
@@ -8343,27 +8681,47 @@
     });
   })();
 
-  // Carrossel horizontal das telas principais (Conquista 29 ↔ Home 10 ↔ Minijogos 15)
+  // Carrossel horizontal das telas principais (Conquista 29 ↔ Home 10 ↔ Minijogos 15) com suporte a touch e mouse drag
   (function initHorizontalCarouselGestures() {
     let startX = 0;
     let startY = 0;
     let isTracking = false;
+    let hasDragged = false;
 
     function handleStart(x, y, target) {
       if (!target) return;
       if (window.habbiTutorialActive) return;
-      if (target.closest('input, button, select, textarea, a, .chip, .game-grid-card, .wl-sos-card, .wl-quest-card, .wl-hub-overlay.is-open, .wl-sav-sheet-overlay.is-open, .wl-goal-modal-overlay.is-open')) {
+      // Não inicia se algum modal/sheet estiver aberto
+      if (target.closest('.wl-hub-overlay.is-open, .wl-sav-sheet-overlay.is-open, .wl-goal-modal-overlay.is-open, .wl-qreg-overlay.is-open, .wl-sos-modal.is-open')) {
         return;
       }
+      // Se estiver jogando minijogo ativo na Tela 15, preserva o jogo
       if (userState.isGameActive && currentScreen === 15) {
         return;
       }
+      // Somente as 3 telas do carrossel principal
       if (currentScreen !== 10 && currentScreen !== 29 && currentScreen !== 15) {
         return;
       }
+      // Não inicia arrasto em controles que já usam toque direto
+      if (target.closest('input, textarea, select, .slider-container, .game-board, .wl-pager-dot')) {
+        return;
+      }
+
       startX = x;
       startY = y;
       isTracking = true;
+      hasDragged = false;
+    }
+
+    function handleMove(x, y, e) {
+      if (!isTracking) return;
+      const diffX = x - startX;
+      const diffY = y - startY;
+      if (Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
+        hasDragged = true;
+        if (e && e.cancelable) e.preventDefault();
+      }
     }
 
     function handleEnd(endX, endY) {
@@ -8373,7 +8731,8 @@
       const diffX = endX - startX;
       const diffY = endY - startY;
 
-      if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) * 1.2) {
+        hasDragged = true;
         if (currentScreen === 10) {
           if (diffX > 0) {
             navigateHorizontalCarousel(29);
@@ -8391,7 +8750,20 @@
           }
         }
       }
+
+      if (hasDragged) {
+        window.habbiCarouselJustDragged = true;
+        setTimeout(() => { window.habbiCarouselJustDragged = false; }, 200);
+      }
     }
+
+    // Suprime clique acidental se acabou de arrastar
+    document.addEventListener('click', (e) => {
+      if (window.habbiCarouselJustDragged) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+      }
+    }, true);
 
     document.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches.length === 1) {
@@ -8399,11 +8771,35 @@
       }
     }, { passive: true });
 
+    document.addEventListener('touchmove', (e) => {
+      if (isTracking && e.touches && e.touches.length === 1) {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY, e);
+      }
+    }, { passive: false });
+
     document.addEventListener('touchend', (e) => {
       if (e.changedTouches && e.changedTouches.length === 1) {
         handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
       }
     }, { passive: true });
+
+    // Suporte a mouse drag no Desktop
+    document.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      handleStart(e.clientX, e.clientY, e.target);
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isTracking) {
+        handleMove(e.clientX, e.clientY, e);
+      }
+    });
+
+    document.addEventListener('mouseup', (e) => {
+      if (isTracking) {
+        handleEnd(e.clientX, e.clientY);
+      }
+    });
   })();
 
   /* ==========================================================================
