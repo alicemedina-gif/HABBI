@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaExpensesToday: 'Hoje',
       conquistaExpensesMonth: 'Neste mês',
       conquistaExpensesPerCig: 'Custo estimado: {0} / cigarro',
-      homeRemoveCigAria: 'Remover um cigarro',
+      homeRemoveCigAria: 'Desfazer último cigarro registrado',
       homeRemoveCigToast: '1 cigarro removido',
       goalModalTitle: 'Definir objetivo',
       goalModalSub: 'Defina para onde vai o fruto da sua vitória:',
@@ -937,7 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaExpensesToday: 'Today',
       conquistaExpensesMonth: 'This month',
       conquistaExpensesPerCig: 'Estimated cost: {0} / cigarette',
-      homeRemoveCigAria: 'Remove one cigarette',
+      homeRemoveCigAria: 'Undo last logged cigarette',
       homeRemoveCigToast: '1 cigarette removed',
       goalModalTitle: 'Set goal',
       goalModalSub: 'Choose where the reward of your victory goes:',
@@ -1372,7 +1372,7 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaExpensesToday: 'Hoy',
       conquistaExpensesMonth: 'Este mes',
       conquistaExpensesPerCig: 'Costo estimado: {0} / cigarrillo',
-      homeRemoveCigAria: 'Quitar un cigarrillo',
+      homeRemoveCigAria: 'Deshacer último cigarrillo registrado',
       homeRemoveCigToast: '1 cigarrillo eliminado',
       goalModalTitle: 'Definir objetivo',
       goalModalSub: 'Define hacia dónde irá el fruto de tu victoria:',
@@ -1713,7 +1713,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (homeAddCigText) homeAddCigText.innerText = t.homeAddCig || 'Registrar cigarro';
     const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
     if (homeRemoveBtn) {
-      const remLabel = t.homeRemoveCigAria || 'Remover um cigarro';
+      const remLabel = t.homeRemoveCigAria || 'Desfazer último cigarro registrado';
       homeRemoveBtn.setAttribute('aria-label', remLabel);
       homeRemoveBtn.setAttribute('title', remLabel);
     }
@@ -3873,8 +3873,12 @@ document.addEventListener('DOMContentLoaded', () => {
         pctEl.classList.remove('is-completed');
       }
     }
+    const heroLblEl = document.getElementById('wl-conquista-hero-lbl');
+    if (heroLblEl) {
+      heroLblEl.innerText = (t.conquistaEstPrefix || 'Economia estimada:').replace(/:\s*$/, '');
+    }
     if (heroValEl) {
-      heroValEl.innerText = `${t.conquistaEstPrefix || 'Economia estimada:'} ${formatBrl(heroSavingsVal)}`;
+      heroValEl.innerText = formatBrl(heroSavingsVal);
     }
     if (remainingEl) {
       if (remaining <= 0) {
@@ -4953,12 +4957,12 @@ document.addEventListener('DOMContentLoaded', () => {
           </button>
 
           <div class="wl-home-primary-row">
-            <button type="button" class="wl-home-remove-btn" id="btn-home-remove-cig" onclick="handleHomeRemoveCigarette()" aria-label="Remover um cigarro" title="Remover um cigarro" disabled aria-disabled="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <button type="button" class="wl-home-remove-btn" id="btn-home-remove-cig" onclick="handleHomeRemoveCigarette()" aria-label="Desfazer último cigarro registrado" title="Desfazer último cigarro registrado" disabled aria-disabled="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" style="display:block;"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
 
             <button type="button" class="wl-dark-pill-btn wl-home-add-btn" id="btn-home-add-cig" onclick="handleHomeAddCigarette()" aria-label="Registrar cigarro" title="Registrar cigarro">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="display:block;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               <span>Registrar cigarro</span>
             </button>
           </div>
@@ -5253,18 +5257,20 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          <!-- Métricas Centrais da Conquista -->
+          <!-- Métricas Centrais da Conquista: Economia em destaque -> Progresso + Restante -> Legenda -->
           <div class="wl-conquista-metrics">
-            <div class="wl-conquista-pct-pill" id="wl-conquista-pct-pill">0% do objetivo</div>
-            <div class="wl-conquista-main-val" id="wl-conquista-main-val">Economia estimada: R$ 0,00</div>
-            <div class="wl-conquista-remaining" id="wl-conquista-remaining">Faltam R$ 250,00</div>
+            <span class="wl-conquista-hero-lbl" id="wl-conquista-hero-lbl">Economia estimada</span>
+            <strong class="wl-conquista-main-val" id="wl-conquista-main-val">R$ 0,00</strong>
+            <div class="wl-conquista-progress-row">
+              <span class="wl-conquista-pct-pill" id="wl-conquista-pct-pill">0% do objetivo</span>
+              <span class="wl-conquista-dot-sep" aria-hidden="true">•</span>
+              <span class="wl-conquista-remaining" id="wl-conquista-remaining">Faltam R$ 250,00</span>
+            </div>
+            <p class="wl-conquista-disclaimer" id="wl-conquista-disclaimer">
+              Estimativa baseada nos seus registros.
+            </p>
             <span id="savings-total-value" style="display:none;">R$ 0,00</span>
           </div>
-
-          <!-- Disclaimer sutil e acolhedor -->
-          <p class="wl-conquista-disclaimer" id="wl-conquista-disclaimer">
-            Estimativa baseada nos seus registros.
-          </p>
 
           <!-- Seção secundária e sutil: Seus gastos (independente da economia estimada) -->
           <section class="wl-conquista-expenses-card" id="wl-conquista-expenses-card" aria-labelledby="wl-expenses-title">
