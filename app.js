@@ -497,6 +497,13 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaRemainingDone: 'Objetivo alcançado! Parabéns!',
       conquistaAdjust: 'Ajustar consumo',
       conquistaHistory: 'Histórico',
+      conquistaExpensesTitle: 'Seus gastos',
+      conquistaExpensesSub: 'Gasto estimado com base nos seus registros',
+      conquistaExpensesToday: 'Hoje',
+      conquistaExpensesMonth: 'Neste mês',
+      conquistaExpensesPerCig: 'Custo estimado: {0} / cigarro',
+      homeRemoveCigAria: 'Remover um cigarro',
+      homeRemoveCigToast: '1 cigarro removido',
       goalModalTitle: 'Definir objetivo',
       goalModalSub: 'Defina para onde vai o fruto da sua vitória:',
       goalModalNameLabel: 'O que você quer conquistar?',
@@ -925,6 +932,13 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaRemainingDone: 'Goal reached! Congratulations!',
       conquistaAdjust: 'Adjust intake',
       conquistaHistory: 'History',
+      conquistaExpensesTitle: 'Your spending',
+      conquistaExpensesSub: 'Estimated spending based on your logs',
+      conquistaExpensesToday: 'Today',
+      conquistaExpensesMonth: 'This month',
+      conquistaExpensesPerCig: 'Estimated cost: {0} / cigarette',
+      homeRemoveCigAria: 'Remove one cigarette',
+      homeRemoveCigToast: '1 cigarette removed',
       goalModalTitle: 'Set goal',
       goalModalSub: 'Choose where the reward of your victory goes:',
       goalModalNameLabel: 'What do you want to achieve?',
@@ -1353,6 +1367,13 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaRemainingDone: '¡Objetivo alcanzado! ¡Felicitaciones!',
       conquistaAdjust: 'Ajustar consumo',
       conquistaHistory: 'Historial',
+      conquistaExpensesTitle: 'Tus gastos',
+      conquistaExpensesSub: 'Gasto estimado según tus registros',
+      conquistaExpensesToday: 'Hoy',
+      conquistaExpensesMonth: 'Este mes',
+      conquistaExpensesPerCig: 'Costo estimado: {0} / cigarrillo',
+      homeRemoveCigAria: 'Quitar un cigarrillo',
+      homeRemoveCigToast: '1 cigarrillo eliminado',
       goalModalTitle: 'Definir objetivo',
       goalModalSub: 'Define hacia dónde irá el fruto de tu victoria:',
       goalModalNameLabel: '¿Qué quieres conquistar?',
@@ -1690,6 +1711,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (homeSosBtnText) homeSosBtnText.innerText = t.homeSosBtn || 'SOS • Ajuda rápida';
     const homeAddCigText = document.querySelector('.wl-home-add-btn span');
     if (homeAddCigText) homeAddCigText.innerText = t.homeAddCig || 'Registrar cigarro';
+    const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
+    if (homeRemoveBtn) {
+      const remLabel = t.homeRemoveCigAria || 'Remover um cigarro';
+      homeRemoveBtn.setAttribute('aria-label', remLabel);
+      homeRemoveBtn.setAttribute('title', remLabel);
+    }
     const swipeHint = document.getElementById('wl-home-swipe-hint') || document.querySelector('#wl-carousel-swipe-hint span');
     if (swipeHint) {
       swipeHint.innerText = t.homeSwipeHintText || t.homeSwipeHint || 'Arraste para explorar';
@@ -2120,6 +2147,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (chgChip) chgChip.innerText = t.conquistaChangeChip || 'Trocar';
       const disc = document.getElementById('wl-conquista-disclaimer');
       if (disc) disc.innerText = t.conquistaDisclaimer || 'Estimativa baseada nos seus registros.';
+      const expTitle = document.getElementById('wl-expenses-title');
+      if (expTitle) expTitle.innerText = t.conquistaExpensesTitle || 'Seus gastos';
+      const expSub = document.getElementById('wl-expenses-sub');
+      if (expSub) expSub.innerText = t.conquistaExpensesSub || 'Gasto estimado com base nos seus registros';
+      const expTodayLbl = document.getElementById('wl-expenses-today-lbl');
+      if (expTodayLbl) expTodayLbl.innerText = t.conquistaExpensesToday || 'Hoje';
+      const expMonthLbl = document.getElementById('wl-expenses-month-lbl');
+      if (expMonthLbl) expMonthLbl.innerText = t.conquistaExpensesMonth || 'Neste mês';
+      if (typeof window.updateConquistaBagUI === 'function') window.updateConquistaBagUI();
       const subBtns = document.querySelectorAll('.wl-conquista-action-btn span');
       if (subBtns.length >= 2) {
         subBtns[0].innerText = t.conquistaAdjust || 'Ajustar consumo';
@@ -3336,6 +3372,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let todaySavings = 0;
     let todayIsFinalized = false;
 
+    // Gastos estimados (indicador independente da economia)
+    const currentMonthPrefix = todayKey.slice(0, 7); // YYYY-MM
+    let monthCigs = 0;
+
     const dailyHistoryItems = [];
     const dateKeys = Object.keys(userState.dailyRecords || {}).sort((a, b) => b.localeCompare(a));
 
@@ -3347,6 +3387,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (evs.length === 0 && !rec.smokeFree && !rec.dayCompleted) return;
 
       const dayCigs = Math.max(0, parseInt(rec.cigs, 10) || 0);
+      if (key.startsWith(currentMonthPrefix)) {
+        monthCigs += dayCigs;
+      }
       const dayAvoided = Math.max(0, habitual - dayCigs);
       const daySaved = dayAvoided * costPerCig;
       const isFinalized = key < todayKey || Boolean(rec.smokeFree || rec.dayCompleted);
@@ -3394,6 +3437,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    const todaySpent = todayCigs * costPerCig;
+    const monthSpent = monthCigs * costPerCig;
+
     return {
       habitual,
       packPrice,
@@ -3409,6 +3455,9 @@ document.addEventListener('DOMContentLoaded', () => {
       todayAvoided,
       todaySavings,
       todayIsFinalized,
+      todaySpent,
+      monthCigs,
+      monthSpent,
       packsAvoidedCount,
       moneyNotSpent,
       packsBoughtCount,
@@ -3833,6 +3882,17 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         remainingEl.innerText = `${t.conquistaRemainingPrefix || 'Faltam'} ${formatBrl(remaining)}`;
       }
+    }
+
+    // Atualiza seção secundária "Seus gastos" (independente da economia estimada)
+    const expTodayValEl = document.getElementById('wl-expenses-today-val');
+    const expMonthValEl = document.getElementById('wl-expenses-month-val');
+    const expPerCigEl = document.getElementById('wl-expenses-per-cig');
+    if (expTodayValEl) expTodayValEl.innerText = formatBrl(m.todaySpent || 0);
+    if (expMonthValEl) expMonthValEl.innerText = formatBrl(m.monthSpent || 0);
+    if (expPerCigEl) {
+      const perCigTpl = t.conquistaExpensesPerCig || 'Custo estimado: {0} / cigarro';
+      expPerCigEl.innerText = perCigTpl.replace('{0}', formatBrl(m.costPerCig || 0));
     }
 
     // Confetes na primeira vez que atinge 100%
@@ -4892,10 +4952,16 @@ document.addEventListener('DOMContentLoaded', () => {
             <span>SOS • Ajuda rápida</span>
           </button>
 
-          <button type="button" class="wl-dark-pill-btn wl-home-add-btn" id="btn-home-add-cig" onclick="handleHomeAddCigarette()" aria-label="Registrar cigarro" title="Registrar cigarro">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span>Registrar cigarro</span>
-          </button>
+          <div class="wl-home-primary-row">
+            <button type="button" class="wl-home-remove-btn" id="btn-home-remove-cig" onclick="handleHomeRemoveCigarette()" aria-label="Remover um cigarro" title="Remover um cigarro" disabled aria-disabled="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+
+            <button type="button" class="wl-dark-pill-btn wl-home-add-btn" id="btn-home-add-cig" onclick="handleHomeAddCigarette()" aria-label="Registrar cigarro" title="Registrar cigarro">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Registrar cigarro</span>
+            </button>
+          </div>
         </div>
 
         <!-- Menu Superior Direito (Hub com as demais áreas do app) -->
@@ -5199,6 +5265,26 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="wl-conquista-disclaimer" id="wl-conquista-disclaimer">
             Estimativa baseada nos seus registros.
           </p>
+
+          <!-- Seção secundária e sutil: Seus gastos (independente da economia estimada) -->
+          <section class="wl-conquista-expenses-card" id="wl-conquista-expenses-card" aria-labelledby="wl-expenses-title">
+            <div class="wl-expenses-head">
+              <h3 class="wl-expenses-title" id="wl-expenses-title">Seus gastos</h3>
+              <span class="wl-expenses-per-cig" id="wl-expenses-per-cig">Custo estimado: R$ 0,50 / cigarro</span>
+            </div>
+            <div class="wl-expenses-grid">
+              <div class="wl-expenses-item">
+                <span class="wl-expenses-lbl" id="wl-expenses-today-lbl">Hoje</span>
+                <strong class="wl-expenses-val" id="wl-expenses-today-val">R$ 0,00</strong>
+              </div>
+              <div class="wl-expenses-divider" aria-hidden="true"></div>
+              <div class="wl-expenses-item">
+                <span class="wl-expenses-lbl" id="wl-expenses-month-lbl">Neste mês</span>
+                <strong class="wl-expenses-val" id="wl-expenses-month-val">R$ 0,00</strong>
+              </div>
+            </div>
+            <p class="wl-expenses-sub" id="wl-expenses-sub">Gasto estimado com base nos seus registros</p>
+          </section>
 
           <!-- Ações secundárias -->
           <div class="wl-conquista-sub-actions">
@@ -5911,6 +5997,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (metaCigs) metaCigs.innerText = userState.todayMeta;
     if (metaReg) metaReg.innerText = userState.todayLogged;
+
+    // Atualiza estado do botão secundário "Remover um cigarro" na Home
+    const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
+    if (homeRemoveBtn) {
+      const canRemoveToday = (userState.todayLogged || 0) > 0;
+      homeRemoveBtn.disabled = !canRemoveToday;
+      homeRemoveBtn.setAttribute('aria-disabled', String(!canRemoveToday));
+    }
     
     const pct = Math.min(100, Math.round((userState.todayLogged / Math.max(1, userState.todayMeta)) * 100));
     if (metaPct) metaPct.innerText = `${pct}%`;
@@ -6075,6 +6169,41 @@ document.addEventListener('DOMContentLoaded', () => {
       homeAddBtn.classList.add('is-pressed');
       setTimeout(() => homeAddBtn.classList.remove('is-pressed'), 260);
     }
+  };
+
+  window.handleHomeRemoveCigarette = function() {
+    if (!userState.isAuthenticated) {
+      return;
+    }
+    const todayKey = getDateKey(new Date());
+    const rec = userState.dailyRecords[todayKey];
+    if (!rec || !Array.isArray(rec.events) || (rec.cigs || 0) <= 0) {
+      return;
+    }
+
+    // Remove somente o registro individual de cigarro mais recente de hoje (não afeta outros dias)
+    const smokeIdx = rec.events.findIndex(e => e && e.kind === 'smoke');
+    if (smokeIdx === -1) return;
+
+    rec.events.splice(smokeIdx, 1);
+    recomputeDayAggregates(rec);
+    if (rec.events.length === 0) {
+      delete userState.dailyRecords[todayKey];
+    }
+
+    refreshAllViews();
+
+    const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
+    if (homeRemoveBtn) {
+      homeRemoveBtn.classList.remove('is-pressed');
+      void homeRemoveBtn.offsetWidth;
+      homeRemoveBtn.classList.add('is-pressed');
+      setTimeout(() => homeRemoveBtn.classList.remove('is-pressed'), 220);
+    }
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
+    showToast(t.homeRemoveCigToast || '1 cigarro removido');
   };
 
   // SOS intelligent intervention decision

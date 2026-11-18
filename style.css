@@ -10093,3 +10093,211 @@ textarea:focus-visible,
 .device-screen.dark-theme .main-carousel-track .carousel-slide {
   background-color: var(--bg-color, #121214) !important;
 }
+
+/* ==========================================================================
+   HOME (TELA 10): LINHA PRINCIPAL DE REGISTRO (+ ADICIONAR E − REMOVER)
+   ========================================================================== */
+.wl-home-primary-row {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.wl-home-primary-row .wl-home-add-btn {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+}
+
+.wl-home-remove-btn {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.wl-home-remove-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.wl-home-remove-btn.is-pressed {
+  animation: wlBtnPop 0.22s ease;
+}
+
+.wl-home-remove-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.wl-home-remove-btn:focus-visible {
+  outline: 3px solid #339AF0;
+  outline-offset: 2px;
+}
+
+.device-screen.dark-theme .wl-home-remove-btn {
+  background-color: #1E1E24 !important;
+  border-color: #2D2D34 !important;
+  color: #F3F4F6 !important;
+}
+
+.device-screen.dark-theme .wl-home-remove-btn:focus-visible {
+  outline-color: #74C0FC;
+}
+
+/* ==========================================================================
+   CONQUISTA (TELA 29): SEÇÃO SECUNDÁRIA E SUTIL "SEUS GASTOS"
+   ========================================================================== */
+.wl-conquista-expenses-card {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 10px 0 12px;
+  padding: 12px 14px;
+  border-radius: var(--border-radius-md, 14px);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wl-expenses-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.wl-expenses-title {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.wl-expenses-per-cig {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.wl-expenses-grid {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.wl-expenses-item {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wl-expenses-lbl {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.wl-expenses-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wl-expenses-divider {
+  width: 1px;
+  height: 28px;
+  background-color: var(--border-color);
+  flex-shrink: 0;
+}
+
+.wl-expenses-sub {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.device-screen.dark-theme .wl-conquista-expenses-card {
+  background-color: #1E1E24 !important;
+  border-color: #2D2D34 !important;
+}
+
+.device-screen.dark-theme .wl-expenses-title {
+  color: #D1D5DB !important;
+}
+
+.device-screen.dark-theme .wl-expenses-lbl,
+.device-screen.dark-theme .wl-expenses-per-cig,
+.device-screen.dark-theme .wl-expenses-sub {
+  color: #9CA3AF !important;
+}
+
+.device-screen.dark-theme .wl-expenses-val {
+  color: #F3F4F6 !important;
+}
+
+.device-screen.dark-theme .wl-expenses-divider {
+  background-color: #2D2D34 !important;
+}
+
+@media (max-width: 360px) {
+  .wl-home-primary-row {
+    gap: 8px;
+  }
+  .wl-home-primary-row .wl-home-add-btn {
+    font-size: 15.5px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+  .wl-expenses-val {
+    font-size: 15px;
+  }
+}
+
+@media (max-height: 640px) {
+  .screen[data-screen="10"].carousel-slide {
+    padding: 2px 16px 12px !important;
+  }
+  .wl-home-cig-stage {
+    min-height: 150px !important;
+    margin: 0 !important;
+  }
+  .wl-home-focused-actions {
+    gap: 8px;
+  }
+  .wl-home-primary-row .wl-home-add-btn {
+    height: 48px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-home-remove-btn.is-pressed {
+    animation: none !important;
+  }
+}
