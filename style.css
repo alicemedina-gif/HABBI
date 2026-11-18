@@ -10162,9 +10162,9 @@ textarea:focus-visible,
   min-height: 56px;
   flex-shrink: 0;
   border-radius: 999px;
-  border: 1.5px solid #DCE3EB;
-  background-color: #EEF2F6;
-  color: #334155;
+  border: 1.5px solid #BCE5A6;
+  background-color: #E3F7D8;
+  color: var(--primary-dark, #2E7D32);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -10177,8 +10177,8 @@ textarea:focus-visible,
 }
 
 .wl-home-remove-btn:hover:not(:disabled) {
-  background-color: #E2E8F0;
-  border-color: #CBD5E1;
+  background-color: #D5F1C5;
+  border-color: #A5DB89;
 }
 
 .wl-home-remove-btn:active:not(:disabled) {
@@ -10200,14 +10200,14 @@ textarea:focus-visible,
 }
 
 .device-screen.dark-theme .wl-home-remove-btn {
-  background-color: #24262E !important;
-  border-color: #343844 !important;
-  color: #E5E7EB !important;
+  background-color: #1F3322 !important;
+  border-color: #355E3B !important;
+  color: #86EFAC !important;
 }
 
 .device-screen.dark-theme .wl-home-remove-btn:hover:not(:disabled) {
-  background-color: #2D303A !important;
-  border-color: #424654 !important;
+  background-color: #27422B !important;
+  border-color: #46784D !important;
 }
 
 .device-screen.dark-theme .wl-home-remove-btn:focus-visible {
