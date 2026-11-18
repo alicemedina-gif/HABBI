@@ -424,7 +424,7 @@ body {
   transition: none !important;
 }
 
-.screen:not(.active):not(.slide-in-right):not(.slide-in-left):not(.slide-out-left):not(.slide-out-right):not(.onb-slide) {
+.screen:not(.active):not(.slide-in-right):not(.slide-in-left):not(.slide-out-left):not(.slide-out-right):not(.onb-slide):not(.carousel-slide) {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
@@ -2832,7 +2832,7 @@ textarea:focus-visible,
   top: 112px;
   left: 0;
   width: 100%;
-  padding: 0 16px;
+  padding: 0 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2843,15 +2843,17 @@ textarea:focus-visible,
 
 .wl-splash-headline {
   font-family: var(--font-family);
-  font-size: 26px !important;
+  font-size: 24px !important;
   font-weight: 800 !important;
-  line-height: 1.3 !important;
-  letter-spacing: 0.05em !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.02em !important;
   color: #FFFFFF !important;
   margin: 0 auto !important;
-  max-width: 380px;
+  max-width: 92% !important;
   text-align: center;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  word-break: normal;
+  overflow-wrap: break-word;
   animation: wlSplashHeadlineFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -3057,22 +3059,23 @@ textarea:focus-visible,
 /* Barra inferior com botão INICIAR centralizado e seletor de idioma à esquerda */
 .wl-splash-cta-bar {
   position: relative;
+  z-index: 10 !important;
   width: 100%;
   min-height: 50px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
   transform: translateY(0);
   transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.35s;
 }
 
 .wl-splash-cta-bar.is-ready {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
   transform: translateY(0);
 }
 
@@ -3092,6 +3095,7 @@ textarea:focus-visible,
   cursor: pointer;
   border-radius: 999px;
   flex-shrink: 0;
+  pointer-events: auto !important;
   transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
 }
 
@@ -3116,7 +3120,10 @@ textarea:focus-visible,
   font-weight: 800;
   letter-spacing: 0.03em;
   border: none;
-  cursor: pointer;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   margin: 0;
   flex-shrink: 0;
   box-shadow: 0 10px 24px rgba(17, 24, 39, 0.16);
@@ -9931,7 +9938,7 @@ textarea:focus-visible,
 }
 
 .wl-minijogos-carousel-intro {
-  padding: 10px 4px 14px;
+  padding: 10px 20px 14px;
 }
 
 .wl-minijogos-carousel-intro .wl-minijogos-title {
@@ -9947,4 +9954,120 @@ textarea:focus-visible,
   margin: 3px 0 0;
   color: var(--text-secondary);
 }
+
+/* ==========================================================================
+   CARROSSEL PRINCIPAL (TELAS 29 ↔ 10 ↔ 15) - JANELA HORIZONTAL CONTÍNUA
+   ========================================================================== */
+.main-carousel-container {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background-color: var(--bg-color, #FAFAF7);
+  touch-action: pan-y;
+  z-index: 10;
+}
+
+.main-carousel-container.active {
+  display: flex !important;
+}
+
+.main-carousel-track {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 300% !important;
+  height: 100% !important;
+  will-change: transform;
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.main-carousel-track.is-dragging {
+  transition: none !important;
+}
+
+.main-carousel-track .carousel-slide {
+  width: 33.333333% !important;
+  flex: 0 0 33.333333% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--bg-color, #FAFAF7);
+  padding: 0;
+  box-sizing: border-box !important;
+}
+
+.main-carousel-container:not(.active) .carousel-slide {
+  display: none !important;
+}
+
+/* Cabeçalhos e Modos no Carrossel: Conquista e Minijogos */
+#wl-minijogos-carousel-header,
+#wl-conquista-carousel-header {
+  width: 100%;
+  flex-shrink: 0;
+  padding: 0;
+  display: block;
+}
+
+#wl-minijogos-tools-header,
+#wl-conquista-tools-header {
+  width: 100%;
+  flex-shrink: 0;
+  display: none;
+}
+
+.wl-conquista-carousel-intro {
+  margin: 4px 0 12px;
+  padding: 0 20px;
+}
+
+.wl-conquista-carousel-intro .wl-sav-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.wl-conquista-carousel-intro .caption {
+  font-size: 13.5px;
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+}
+
+.screen[data-screen="15"].tools-mode #wl-minijogos-carousel-header,
+.screen[data-screen="29"].tools-mode #wl-conquista-carousel-header {
+  display: none !important;
+}
+
+.screen[data-screen="15"].tools-mode #wl-minijogos-tools-header,
+.screen[data-screen="29"].tools-mode #wl-conquista-tools-header {
+  display: flex !important;
+  padding: 16px 20px 0;
+}
+
+.device-screen.dark-theme .main-carousel-container,
+.device-screen.dark-theme .main-carousel-track .carousel-slide {
+  background-color: var(--bg-color, #121214) !important;
+}
+
+.screen[data-screen="15"] #minijogos-menu-list {
+  padding: 0 20px 24px;
+}
+
+.screen[data-screen="29"] .wl-sav-wrap {
+  padding: 0 20px 24px;
+}
+
 

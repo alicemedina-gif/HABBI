@@ -1,4 +1,5 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+﻿window.goToScreen = function(screenNum) { if (typeof window.showScreen === 'function') { window.showScreen(screenNum); } };
+document.addEventListener('DOMContentLoaded', () => {
   // Navigation State
   let currentScreen = 1;
   const totalScreens = 29;
@@ -2103,8 +2104,8 @@
     // Screen 29: Economia & Conquista
     const s29 = document.querySelector('.screen[data-screen="29"]');
     if (s29) {
-      const h2 = s29.querySelector('.wl-sav-title');
-      if (h2) h2.innerText = t.conquistaTitle || 'Minha conquista';
+      const h2s = s29.querySelectorAll('.wl-sav-title');
+      h2s.forEach(h2 => { h2.innerText = t.conquistaTitle || 'Minha conquista'; });
       const goalLbl = document.querySelector('.wl-conquista-goal-label');
       if (goalLbl) goalLbl.innerText = t.conquistaGoalLabel || 'Objetivo';
       const chgChip = document.querySelector('.wl-conquista-change-chip');
@@ -3043,6 +3044,13 @@
     currentScreen = screenNum;
     localStorage.setItem('habbi-current-screen', screenNum);
 
+    // Cancelar timers de roleta da splash caso esteja saindo da Tela 1
+    if (prevScreenNum === 1 && screenNum !== 1) {
+      if (typeof window.clearSplashRoulette === 'function') {
+        window.clearSplashRoulette();
+      }
+    }
+
     // Suporte ao Carrossel de Onboarding (Telas 3, 4, 5) com rolagem horizontal contínua
     const onbSlider = document.getElementById('onboarding-slider-container');
     if (screenNum >= 3 && screenNum <= 5) {
@@ -3063,14 +3071,59 @@
       if (onbSlider) {
         onbSlider.classList.remove('active');
       }
-      screenElements.forEach(screen => {
-        if (parseInt(screen.dataset.screen) === screenNum) {
-          screen.classList.add('active');
-          screen.scrollTop = 0;
-        } else if (!screen.classList.contains('onb-slide')) {
-          screen.classList.remove('active');
+    }
+
+    // Suporte ao Carrossel Principal (Telas 29 ↔ 10 ↔ 15) como Janela Contínua
+    const mainCarousel = document.getElementById('main-carousel-container');
+    const isMainCarouselScreen = (screenNum === 10 || screenNum === 29 || screenNum === 15);
+
+    if (isMainCarouselScreen) {
+      if (mainCarousel) {
+        mainCarousel.classList.add('active');
+      }
+      const s15El = document.querySelector('.screen[data-screen="15"]');
+      const s29El = document.querySelector('.screen[data-screen="29"]');
+
+      if (screenNum === 15) {
+        const isTools = (userState.minijogosMode === 'tools');
+        if (s15El) s15El.classList.toggle('tools-mode', isTools);
+        if (typeof window.goToCarouselSlide === 'function') {
+          window.goToCarouselSlide(2, false);
+        }
+      } else if (screenNum === 29) {
+        const isTools = (userState.conquistaMode === 'tools');
+        if (s29El) s29El.classList.toggle('tools-mode', isTools);
+        if (typeof window.goToCarouselSlide === 'function') {
+          window.goToCarouselSlide(0, false);
+        }
+      } else {
+        // Screen 10
+        if (s15El) s15El.classList.remove('tools-mode');
+        if (s29El) s29El.classList.remove('tools-mode');
+        if (typeof window.goToCarouselSlide === 'function') {
+          window.goToCarouselSlide(1, false);
+        }
+      }
+
+      screenElements.forEach(s => {
+        if (!s.classList.contains('carousel-slide') && !s.classList.contains('onb-slide')) {
+          s.classList.remove('active');
         }
       });
+    } else {
+      if (mainCarousel) {
+        mainCarousel.classList.remove('active');
+      }
+      if (!(screenNum >= 3 && screenNum <= 5)) {
+        screenElements.forEach(screen => {
+          if (parseInt(screen.dataset.screen) === screenNum) {
+            screen.classList.add('active');
+            screen.scrollTop = 0;
+          } else if (!screen.classList.contains('onb-slide') && !screen.classList.contains('carousel-slide')) {
+            screen.classList.remove('active');
+          }
+        });
+      }
     }
 
     // Toggle active sidebar menu item
@@ -3827,8 +3880,59 @@
     }, 2500);
   };
 
-  // Horizontal Carousel Navigation (Conquista 29 ↔ Home 10 ↔ Minijogos 15) com animação suave
-  let isCarouselNavigating = false;
+  // ==========================================================================
+  // CARROSSEL PRINCIPAL (TELAS 29 ↔ 10 ↔ 15) - JANELA HORIZONTAL CONTÍNUA
+  // ==========================================================================
+  let currentCarouselSlide = 1; // 0 = Conquista (29), 1 = Início (10), 2 = Minijogos (15)
+
+  window.goToCarouselSlide = function(slideIdx, smooth = true) {
+    if (slideIdx < 0) slideIdx = 0;
+    if (slideIdx > 2) slideIdx = 2;
+    currentCarouselSlide = slideIdx;
+
+    const screenMap = [29, 10, 15];
+    const targetScreen = screenMap[slideIdx];
+    currentScreen = targetScreen;
+    localStorage.setItem('habbi-current-screen', targetScreen);
+
+    const track = document.getElementById('main-carousel-track');
+    if (track) {
+      track.style.transition = smooth ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1)' : 'none';
+      track.style.transform = 'translate3d(-' + (slideIdx * 33.333333) + '%, 0, 0)';
+    }
+
+    // Sincroniza estado ativo de todos os grupos de pager dots (.wl-pager-dot)
+    document.querySelectorAll('.wl-pager-nav-dots').forEach(bar => {
+      const dots = bar.querySelectorAll('.wl-pager-dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === slideIdx);
+      });
+    });
+
+    // Sincroniza badges de dia no calendário e pílulas de economia em todos os cabeçalhos
+    const curDay = new Date().getDate();
+    document.querySelectorAll('.wl-top-cal-badge').forEach(b => { b.innerText = curDay; });
+
+    const homeSavingsEl = document.getElementById('home-savings-top');
+    const curSavingsText = homeSavingsEl ? homeSavingsEl.innerText : 'R$ 0,00';
+    document.querySelectorAll('.top-savings-value-text').forEach(t => { t.innerText = curSavingsText; });
+
+    // Atualização de conteúdo específica por tela
+    if (slideIdx === 0) {
+      if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
+      if (typeof window.updateConquistaBagUI === 'function') window.updateConquistaBagUI();
+    } else if (slideIdx === 1) {
+      if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
+      if (typeof syncDailyGoalAndWeekUI === 'function') syncDailyGoalAndWeekUI();
+    } else if (slideIdx === 2) {
+      if (typeof updateMinigamesRecordUI === 'function') updateMinigamesRecordUI();
+    }
+
+    if (typeof window.applyAppLanguage === 'function') {
+      window.applyAppLanguage(userState.currentLang || 'PT');
+    }
+  };
+
   window.navigateHorizontalCarousel = function(targetScreen) {
     if (typeof hideTutorialSwipeHint === 'function') {
       hideTutorialSwipeHint();
@@ -3843,107 +3947,28 @@
     if (targetScreen === 15) {
       userState.minijogosMode = 'carousel';
       userState.minijogosReturnScreen = 10;
+      const s15El = document.querySelector('.screen[data-screen="15"]');
+      if (s15El) s15El.classList.remove('tools-mode');
     }
     if (targetScreen === 29) {
       userState.conquistaMode = 'carousel';
+      const s29El = document.querySelector('.screen[data-screen="29"]');
+      if (s29El) s29El.classList.remove('tools-mode');
     }
 
-    if (currentScreen === targetScreen) {
-      if (targetScreen === 15 && userState.minijogosMode !== 'carousel') {
-        userState.minijogosMode = 'carousel';
-        showScreen(15);
-      }
-      return;
-    }
-
-    if (isCarouselNavigating) return;
-
-    const fromScreen = currentScreen;
     const carouselIndexMap = { 29: 0, 10: 1, 15: 2 };
-    const fromIndex = carouselIndexMap[fromScreen];
-    const toIndex = carouselIndexMap[targetScreen];
+    const slideIdx = carouselIndexMap[targetScreen];
+    const mainCarousel = document.getElementById('main-carousel-container');
 
-    if (fromIndex !== undefined && toIndex !== undefined) {
-      isCarouselNavigating = true;
-      const goingRight = toIndex > fromIndex;
-
-      const fromEl = document.querySelector(`.screen[data-screen="${fromScreen}"]`);
-      const toEl = document.querySelector(`.screen[data-screen="${targetScreen}"]`);
-
-      if (fromEl && toEl) {
-        [fromEl, toEl].forEach(el => {
-          el.classList.remove('slide-in-right', 'slide-out-left', 'slide-in-left', 'slide-out-right');
-        });
-
-        const outClass = goingRight ? 'slide-out-left' : 'slide-out-right';
-        const inClass = goingRight ? 'slide-in-right' : 'slide-in-left';
-
-        toEl.scrollTop = 0;
-        toEl.classList.add(inClass);
-        fromEl.classList.add(outClass);
-
-        currentScreen = targetScreen;
-        localStorage.setItem('habbi-current-screen', targetScreen);
-
-        if (targetScreen === 15) {
-          const carouselHeader = document.getElementById('wl-minijogos-carousel-header');
-          const toolsHeader = document.getElementById('wl-minijogos-tools-header');
-          if (carouselHeader) carouselHeader.style.setProperty('display', 'block', 'important');
-          if (toolsHeader) toolsHeader.style.setProperty('display', 'none', 'important');
-          const dayNumEl = document.getElementById('wl-minijogos-day-num');
-          if (dayNumEl) dayNumEl.innerText = new Date().getDate();
-          const savingsEl = document.getElementById('minijogos-savings-top');
-          if (savingsEl) {
-            const homeSavings = document.getElementById('home-savings-top');
-            if (homeSavings) savingsEl.innerText = homeSavings.innerText;
-          }
-          if (typeof updateMinigamesRecordUI === 'function') {
-            updateMinigamesRecordUI();
-          }
-        }
-
-        if (targetScreen === 29) {
-          const s29El = document.querySelector('.screen[data-screen="29"]');
-          if (s29El) s29El.classList.remove('tools-mode');
-          const backBtn = document.getElementById('btn-conquista-back') || document.querySelector('.btn-back.wl-sav-back');
-          if (backBtn) backBtn.style.setProperty('display', 'none', 'important');
-          if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
-          if (typeof window.updateConquistaBagUI === 'function') window.updateConquistaBagUI();
-        }
-
-        if (targetScreen === 10) {
-          if (typeof updateSavingsDisplay === 'function') updateSavingsDisplay();
-        }
-
-        // Sincroniza dots do carrossel
-        const activeIdx = toIndex;
-        document.querySelectorAll('.wl-pager-nav-dots').forEach(bar => {
-          const dots = bar.querySelectorAll('.wl-pager-dot');
-          dots.forEach((dot, idx) => {
-            if (idx === activeIdx) {
-              dot.classList.add('active');
-            } else {
-              dot.classList.remove('active');
-            }
-          });
-        });
-
-        // Sincroniza idioma se necessário
-        if (typeof window.applyAppLanguage === 'function') {
-          window.applyAppLanguage(userState.currentLang || 'PT');
-        }
-
-        setTimeout(() => {
-          fromEl.classList.remove('active', outClass);
-          toEl.classList.remove(inClass);
-          toEl.classList.add('active');
-          isCarouselNavigating = false;
-        }, 300);
-        return;
+    if (slideIdx !== undefined) {
+      if (mainCarousel && !mainCarousel.classList.contains('active')) {
+        showScreen(targetScreen);
+      } else {
+        window.goToCarouselSlide(slideIdx, true);
       }
+    } else {
+      showScreen(targetScreen);
     }
-
-    showScreen(targetScreen);
   };
 
   // Abre o Painel Rápido de Registro diretamente sobre a tela atual (sem telas intermediárias)
@@ -4216,15 +4241,18 @@
               <span class="wl-lang-flag-circle" id="wl-lang-flag-circle">${flagSVGs.PT}</span>
               <span class="wl-lang-code-txt" id="wl-lang-code-txt">PT</span>
             </button>
-            <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start">INICIAR</button>
+            <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start" onclick="if(window.clearSplashRoulette)window.clearSplashRoulette(); window.goToScreen(3);" ontouchend="if(window.clearSplashRoulette)window.clearSplashRoulette(); window.goToScreen(3);">INICIAR</button>
           </div>
         </div>
       `;
 
       let splashTimers = [];
-      window.startSplashRoulette = function() {
+      window.clearSplashRoulette = function() {
         splashTimers.forEach(t => clearTimeout(t));
         splashTimers = [];
+      };
+      window.startSplashRoulette = function() {
+        window.clearSplashRoulette();
 
         const frames = s1.querySelectorAll('.wl-splash-cat-frame');
         const shadowEl = document.getElementById('wl-splash-shadow');
@@ -4311,10 +4339,13 @@
       }
       const startBtn = document.getElementById('btn-splash-start');
       if (startBtn) {
-        startBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
+        const handleStartSplash = (e) => {
+          if (e) e.stopPropagation();
+          if (window.clearSplashRoulette) window.clearSplashRoulette();
           showScreen(3);
-        });
+        };
+        startBtn.addEventListener('click', handleStartSplash);
+        startBtn.addEventListener('touchend', handleStartSplash);
       }
 
       // Botão clicável de idioma (PT -> EN -> ES -> PT)
@@ -4722,6 +4753,7 @@
     // 7. Screen 10: Home minimalista e focada (Topo com Calendário + Menu, Progresso Diário, Cigarro Interativo Central e Ação Principal + SOS)
     const s10 = document.querySelector('.screen[data-screen="10"]');
     if (s10) {
+      s10.className = 'screen carousel-slide';
       const cigImgSrc = 'assets/ilustracoes/cigarro_Prancheta 1.png';
       const cigImgFallback = 'assets/ilustracoes/cigarro_Prancheta 1.png';
       s10.innerHTML = `
@@ -5048,22 +5080,63 @@
     const s29 = document.querySelector('.screen[data-screen="29"]');
     if (s29) {
       s29.removeAttribute('style');
-      s29.className = 'screen wl-savings-screen';
+      s29.className = 'screen wl-savings-screen carousel-slide';
       s29.innerHTML = `
-        <div class="wl-sav-wrap wl-conquista-wrap">
-          <header class="wl-sav-header wl-conquista-header">
-            <div class="wl-sav-header-left">
-              <button type="button" class="btn-back wl-sav-back" id="btn-conquista-back" onclick="handleBackFromScreen(29)" aria-label="Voltar" style="display:none !important;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-              </button>
-              <h2 class="wl-sav-title">Minha conquista</h2>
-            </div>
-            <div class="wl-pager-nav-dots wl-pager-nav-header" role="tablist" aria-label="Navegação entre telas">
+        <!-- Modo Carrossel: Topbar da Home (Calendário + Pílula Economia + Menu) e 3 Pager Dots -->
+        <div id="wl-conquista-carousel-header">
+          <div class="wl-home-topbar">
+            <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span class="wl-top-cal-badge" id="wl-conquista-day-num">15</span>
+            </button>
+
+            <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span id="conquista-savings-top" class="top-savings-value-text">R$ 0,00</span>
+            </button>
+
+            <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="7" x2="20" y2="7"></line>
+                <line x1="4" y1="12" x2="20" y2="12"></line>
+                <line x1="4" y1="17" x2="20" y2="17"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="wl-home-pager-bar">
+            <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
               <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Página atual: Conquista"></button>
               <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Ir para Início"></button>
               <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Ir para Minijogos"></button>
             </div>
-          </header>
+          </div>
+
+          <div class="wl-conquista-carousel-intro">
+            <h2 class="wl-sav-title">Minha conquista</h2>
+            <p class="caption">Acompanhe sua economia e metas</p>
+          </div>
+        </div>
+
+        <!-- Modo Ferramentas: Cabeçalho com botão Voltar e título tradicional -->
+        <div id="wl-conquista-tools-header" class="detail-header mb-16 wl-sav-header" style="display:none;">
+          <div class="wl-sav-header-left">
+            <button type="button" class="btn-back wl-sav-back" id="btn-conquista-back" onclick="handleBackFromScreen(29)" aria-label="Voltar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </button>
+            <div>
+              <h2 class="wl-sav-title">Minha conquista</h2>
+              <p class="caption" style="margin:2px 0 0; font-size:13px; color:var(--text-secondary);">Economia e metas</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="wl-sav-wrap wl-conquista-wrap">
 
           <!-- Card do Objetivo Atual -->
           <div class="wl-conquista-goal-card" onclick="openChangeGoalModal()" role="button" tabindex="0" title="Toque para alterar seu objetivo">
@@ -7719,15 +7792,29 @@
       return;
     }
 
-    // 5. Minijogos (respeita tela de retorno do SOS ou Home)
+    // Conquista / Economia (Screen 29)
+    if (fromScreenNum === 29) {
+      if (userState.conquistaMode === 'tools') {
+        const returnScreen = userState.conquistaReturnScreen || 14;
+        showScreen(returnScreen);
+        return;
+      }
+      navigateHorizontalCarousel(10);
+      return;
+    }
+
+    // Minijogos (respeita modo ferramentas, SOS ou Carrossel)
     if (fromScreenNum === 15) {
       if (userState.isGameActive) {
         quitInlineGame();
         return;
       }
-      const returnScreen = userState.minijogosReturnScreen || 10;
-      userState.minijogosReturnScreen = 10;
-      showScreen(returnScreen);
+      if (userState.minijogosMode === 'tools') {
+        const returnScreen = userState.minijogosReturnScreen || 14;
+        showScreen(returnScreen);
+        return;
+      }
+      navigateHorizontalCarousel(10);
       return;
     }
 
@@ -8685,42 +8772,66 @@
   (function initHorizontalCarouselGestures() {
     let startX = 0;
     let startY = 0;
+    let currentX = 0;
     let isTracking = false;
     let hasDragged = false;
+    let isHorizontalSwipe = false;
 
     function handleStart(x, y, target) {
       if (!target) return;
       if (window.habbiTutorialActive) return;
-      // Não inicia se algum modal/sheet estiver aberto
-      if (target.closest('.wl-hub-overlay.is-open, .wl-sav-sheet-overlay.is-open, .wl-goal-modal-overlay.is-open, .wl-qreg-overlay.is-open, .wl-sos-modal.is-open')) {
+      if (target.closest('.wl-hub-overlay.is-open, .wl-sav-sheet-overlay.is-open, .wl-goal-modal-overlay.is-open, .wl-qreg-overlay.is-open, .wl-sos-modal.is-open, #habbi-tutorial-overlay')) {
         return;
       }
-      // Se estiver jogando minijogo ativo na Tela 15, preserva o jogo
       if (userState.isGameActive && currentScreen === 15) {
         return;
       }
-      // Somente as 3 telas do carrossel principal
-      if (currentScreen !== 10 && currentScreen !== 29 && currentScreen !== 15) {
+      if ((currentScreen === 15 && userState.minijogosMode === 'tools') || (currentScreen === 29 && userState.conquistaMode === 'tools')) {
         return;
       }
-      // Não inicia arrasto em controles que já usam toque direto
-      if (target.closest('input, textarea, select, .slider-container, .game-board, .wl-pager-dot')) {
+      const mainCarousel = document.getElementById('main-carousel-container');
+      if (!mainCarousel || !mainCarousel.classList.contains('active')) {
         return;
       }
 
       startX = x;
       startY = y;
+      currentX = x;
       isTracking = true;
       hasDragged = false;
+      isHorizontalSwipe = false;
     }
 
     function handleMove(x, y, e) {
       if (!isTracking) return;
+      currentX = x;
       const diffX = x - startX;
       const diffY = y - startY;
-      if (Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
-        hasDragged = true;
+
+      if (!isHorizontalSwipe) {
+        if (Math.abs(diffX) > 8 && Math.abs(diffX) > Math.abs(diffY)) {
+          isHorizontalSwipe = true;
+          hasDragged = true;
+        } else if (Math.abs(diffY) > 8) {
+          isTracking = false;
+          return;
+        }
+      }
+
+      if (isHorizontalSwipe) {
         if (e && e.cancelable) e.preventDefault();
+        const track = document.getElementById('main-carousel-track');
+        if (track) {
+          track.classList.add('is-dragging');
+          let resistedDiffX = diffX;
+          if (currentCarouselSlide === 0 && diffX > 0) {
+            resistedDiffX = diffX * 0.28;
+          } else if (currentCarouselSlide === 2 && diffX < 0) {
+            resistedDiffX = diffX * 0.28;
+          }
+          const basePct = -currentCarouselSlide * 33.333333;
+          track.style.transform = "translate3d(calc(" + basePct + "% + " + resistedDiffX + "px), 0, 0)";
+        }
       }
     }
 
@@ -8728,36 +8839,27 @@
       if (!isTracking) return;
       isTracking = false;
 
-      const diffX = endX - startX;
-      const diffY = endY - startY;
+      const track = document.getElementById('main-carousel-track');
+      if (track) track.classList.remove('is-dragging');
 
-      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) * 1.2) {
-        hasDragged = true;
-        if (currentScreen === 10) {
-          if (diffX > 0) {
-            navigateHorizontalCarousel(29);
-          } else {
-            userState.minijogosMode = 'carousel';
-            navigateHorizontalCarousel(15);
-          }
-        } else if (currentScreen === 29) {
-          if (diffX < 0) {
-            navigateHorizontalCarousel(10);
-          }
-        } else if (currentScreen === 15) {
-          if (diffX > 0 && !userState.isGameActive) {
-            navigateHorizontalCarousel(10);
-          }
+      if (isHorizontalSwipe) {
+        const finalX = (endX !== undefined ? endX : currentX);
+        const diffX = finalX - startX;
+        const threshold = 40;
+
+        if (diffX < -threshold && currentCarouselSlide < 2) {
+          window.goToCarouselSlide(currentCarouselSlide + 1, true);
+        } else if (diffX > threshold && currentCarouselSlide > 0) {
+          window.goToCarouselSlide(currentCarouselSlide - 1, true);
+        } else {
+          window.goToCarouselSlide(currentCarouselSlide, true);
         }
-      }
 
-      if (hasDragged) {
         window.habbiCarouselJustDragged = true;
         setTimeout(() => { window.habbiCarouselJustDragged = false; }, 200);
       }
     }
 
-    // Suprime clique acidental se acabou de arrastar
     document.addEventListener('click', (e) => {
       if (window.habbiCarouselJustDragged) {
         e.stopImmediatePropagation();
@@ -8765,37 +8867,41 @@
       }
     }, true);
 
-    document.addEventListener('touchstart', (e) => {
+    const container = document.getElementById('main-carousel-container') || document;
+
+    container.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches.length === 1) {
         handleStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
       }
     }, { passive: true });
 
-    document.addEventListener('touchmove', (e) => {
+    container.addEventListener('touchmove', (e) => {
       if (isTracking && e.touches && e.touches.length === 1) {
         handleMove(e.touches[0].clientX, e.touches[0].clientY, e);
       }
     }, { passive: false });
 
-    document.addEventListener('touchend', (e) => {
-      if (e.changedTouches && e.changedTouches.length === 1) {
-        handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-      }
+    container.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches && e.changedTouches[0];
+      handleEnd(touch ? touch.clientX : currentX, touch ? touch.clientY : undefined);
     }, { passive: true });
 
-    // Suporte a mouse drag no Desktop
-    document.addEventListener('mousedown', (e) => {
+    container.addEventListener('touchcancel', () => {
+      handleEnd(currentX);
+    }, { passive: true });
+
+    container.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
       handleStart(e.clientX, e.clientY, e.target);
     });
 
-    document.addEventListener('mousemove', (e) => {
+    window.addEventListener('mousemove', (e) => {
       if (isTracking) {
         handleMove(e.clientX, e.clientY, e);
       }
     });
 
-    document.addEventListener('mouseup', (e) => {
+    window.addEventListener('mouseup', (e) => {
       if (isTracking) {
         handleEnd(e.clientX, e.clientY);
       }
