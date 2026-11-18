@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -210,43 +210,35 @@
         </section>
                 <!-- CONTAINER DO CARROSSEL PRINCIPAL (TELAS 29 ↔ 10 ↔ 15) -->
         <div class="main-carousel-container" id="main-carousel-container">
+          <!-- NAV BAR ESTÁTICA: não se move durante a rolagem; só o conteúdo abaixo desliza -->
+          <div class="main-carousel-fixed-header" id="main-carousel-header">
+            <div class="wl-home-topbar">
+              <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span class="wl-top-cal-badge" id="wl-home-day-num">15</span>
+              </button>
+              <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span id="home-savings-top" class="top-savings-value-text">R$ 0,00</span>
+              </button>
+              <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+              </button>
+            </div>
+            <div class="wl-home-pager-bar">
+              <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
+                <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Ir para Conquista"></button>
+                <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Página atual: Início"></button>
+                <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Ir para Minijogos"></button>
+              </div>
+              <div class="wl-carousel-swipe-hint" id="wl-carousel-swipe-hint" style="display:none;"><span>Arraste para explorar</span></div>
+            </div>
+          </div>
+          <div class="main-carousel-viewport" id="main-carousel-viewport">
           <div class="main-carousel-track" id="main-carousel-track">
             <!-- SLIDE 0: CONQUISTA (SCREEN 29) -->
             <section class="screen wl-savings-screen carousel-slide" data-screen="29">
               <div id="wl-conquista-carousel-header">
-                <div class="wl-home-topbar">
-                  <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <span class="wl-top-cal-badge" id="wl-conquista-day-num">15</span>
-                  </button>
-
-                  <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    <span id="conquista-savings-top" class="top-savings-value-text">R$ 0,00</span>
-                  </button>
-
-                  <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="4" y1="7" x2="20" y2="7"></line>
-                      <line x1="4" y1="12" x2="20" y2="12"></line>
-                      <line x1="4" y1="17" x2="20" y2="17"></line>
-                    </svg>
-                  </button>
-                </div>
-
-                <div class="wl-home-pager-bar">
-                  <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
-                    <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Página atual: Conquista"></button>
-                    <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Ir para Início"></button>
-                    <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Ir para Minijogos"></button>
-                  </div>
-                </div>
-
                 <div class="wl-conquista-carousel-intro">
                   <h2 class="wl-sav-title">Minha conquista</h2>
                   <p class="caption">Acompanhe sua economia e metas</p>
@@ -326,39 +318,6 @@
         <section class="screen carousel-slide" data-screen="15">
           <!-- Modo Carrossel: Topbar da Home (Calendário + Pílula Economia + Menu) e 3 Pager Dots -->
           <div id="wl-minijogos-carousel-header">
-            <div class="wl-home-topbar">
-              <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <span class="wl-top-cal-badge" id="wl-minijogos-day-num">15</span>
-              </button>
-
-              <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                <span id="minijogos-savings-top" class="top-savings-value-text">R$ 56,00</span>
-              </button>
-
-              <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="4" y1="7" x2="20" y2="7"></line>
-                  <line x1="4" y1="12" x2="20" y2="12"></line>
-                  <line x1="4" y1="17" x2="20" y2="17"></line>
-                </svg>
-              </button>
-            </div>
-
-            <div class="wl-home-pager-bar">
-              <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
-                <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Ir para Conquista"></button>
-                <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Ir para Início"></button>
-                <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Página atual: Minijogos"></button>
-              </div>
-            </div>
-
             <div class="wl-minijogos-carousel-intro">
               <h2 class="wl-minijogos-title">Minijogos</h2>
               <p class="caption">Exercícios rápidos para quebrar a fissura</p>
@@ -438,6 +397,7 @@
           </div>
           <div class="grow"></div>
         </section>
+          </div>
           </div>
         </div>
 

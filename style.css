@@ -10071,3 +10071,36 @@ textarea:focus-visible,
 }
 
 
+
+/* ==========================================================================
+   CARROSSEL: NAV BAR ESTÁTICA + CONTEÚDO DESLIZANTE (do meio para baixo)
+   ========================================================================== */
+.main-carousel-container {
+  flex-direction: column !important;
+  max-width: 100%;
+}
+.main-carousel-container.active { display: flex !important; }
+.main-carousel-fixed-header {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 16px 24px 6px;
+  box-sizing: border-box;
+  background-color: var(--bg-color);
+  z-index: 20;
+  position: relative;
+}
+.main-carousel-fixed-header .wl-home-pager-bar { margin: 8px 0 0; flex-direction: column; align-items: center; }
+.main-carousel-container.tools-mode .main-carousel-fixed-header { display: none !important; }
+.main-carousel-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.main-carousel-track { height: 100% !important; width: 300% !important; }
+.main-carousel-track .carousel-slide { min-width: 0; max-width: 33.333333% !important; }
+.screen[data-screen="10"].carousel-slide { padding: 6px 24px 22px !important; }
+.screen[data-screen="29"].carousel-slide .wl-sav-wrap,
+.screen[data-screen="15"] #minijogos-menu-list { padding-left: 20px; padding-right: 20px; }
+.wl-conquista-carousel-intro, .wl-minijogos-carousel-intro { padding-top: 4px; }

@@ -1,4 +1,4 @@
-﻿window.goToScreen = function(screenNum) { if (typeof window.showScreen === 'function') { window.showScreen(screenNum); } };
+window.goToScreen = function(screenNum) { if (typeof window.showScreen === 'function') { window.showScreen(screenNum); } };
 document.addEventListener('DOMContentLoaded', () => {
   // Navigation State
   let currentScreen = 1;
@@ -3083,7 +3083,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const s15El = document.querySelector('.screen[data-screen="15"]');
       const s29El = document.querySelector('.screen[data-screen="29"]');
-
+      if (mainCarousel) {
+        const toolsNow = (screenNum === 15 && userState.minijogosMode === 'tools') || (screenNum === 29 && userState.conquistaMode === 'tools');
+        mainCarousel.classList.toggle('tools-mode', toolsNow);
+      }
       if (screenNum === 15) {
         const isTools = (userState.minijogosMode === 'tools');
         if (s15El) s15El.classList.toggle('tools-mode', isTools);
@@ -3959,6 +3962,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const carouselIndexMap = { 29: 0, 10: 1, 15: 2 };
     const slideIdx = carouselIndexMap[targetScreen];
     const mainCarousel = document.getElementById('main-carousel-container');
+    if (mainCarousel && slideIdx !== undefined) mainCarousel.classList.remove('tools-mode');
 
     if (slideIdx !== undefined) {
       if (mainCarousel && !mainCarousel.classList.contains('active')) {
@@ -4039,13 +4043,16 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         const process = () => {
-          if (!img.naturalWidth) return;
+          if (!img.naturalWidth || (img.getAttribute('src') || '').startsWith('data:')) return;
           try {
             const c = document.createElement('canvas');
-            c.width = img.naturalWidth;
-            c.height = img.naturalHeight;
-            const ctx = c.getContext('2d');
-            ctx.drawImage(img, 0, 0);
+            // Reduz a imagem (máx. 420px) antes do processamento por pixel: evita travar a thread principal
+            const maxDim = 420;
+            const scaleDown = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+            c.width = Math.max(1, Math.round(img.naturalWidth * scaleDown));
+            c.height = Math.max(1, Math.round(img.naturalHeight * scaleDown));
+            const ctx = c.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(img, 0, 0, c.width, c.height);
             const imgData = ctx.getImageData(0, 0, c.width, c.height);
             const d = imgData.data;
             const w = c.width;
@@ -4161,10 +4168,25 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = dataUrl;
           } catch (e) {}
         };
+        // Fila: processa uma imagem por vez, liberando a thread entre elas (splash/toques respondem na hora)
+        const enqueue = () => {
+          window.__mascotQueue = window.__mascotQueue || [];
+          window.__mascotQueue.push(process);
+          if (!window.__mascotQueueRunning) {
+            window.__mascotQueueRunning = true;
+            const runNext = () => {
+              const job = window.__mascotQueue.shift();
+              if (!job) { window.__mascotQueueRunning = false; return; }
+              try { job(); } catch (e) {}
+              setTimeout(runNext, 16);
+            };
+            setTimeout(runNext, 0);
+          }
+        };
         if (img.complete && img.naturalWidth) {
-          process();
+          enqueue();
         } else {
-          img.addEventListener('load', process, { once: true });
+          img.addEventListener('load', enqueue, { once: true });
         }
       });
     };
@@ -4757,44 +4779,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const cigImgSrc = 'assets/ilustracoes/cigarro_Prancheta 1.png';
       const cigImgFallback = 'assets/ilustracoes/cigarro_Prancheta 1.png';
       s10.innerHTML = `
-        <div class="wl-home-topbar">
-          <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            <span class="wl-top-cal-badge" id="wl-home-day-num">15</span>
-          </button>
-
-          <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            <span id="home-savings-top" class="top-savings-value-text">R$ 56,00</span>
-          </button>
-
-          <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="4" y1="7" x2="20" y2="7"></line>
-              <line x1="4" y1="12" x2="20" y2="12"></line>
-              <line x1="4" y1="17" x2="20" y2="17"></line>
-            </svg>
-          </button>
-        </div>
-
-        <div class="wl-home-pager-bar">
-          <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
-            <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Ir para Conquista"></button>
-            <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Página atual: Início"></button>
-            <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Ir para Minijogos"></button>
-          </div>
-          <div class="wl-carousel-swipe-hint" id="wl-carousel-swipe-hint" style="display:none;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Arraste para explorar</span>
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-          </div>
-        </div>
-
         <div class="wl-home-hero-metric">
           <div class="wl-home-big-stat">
             <span id="home-meta-registered">0</span><small> / <span id="home-meta-cigs">11</span> hoje</small>
@@ -5084,39 +5068,6 @@ document.addEventListener('DOMContentLoaded', () => {
       s29.innerHTML = `
         <!-- Modo Carrossel: Topbar da Home (Calendário + Pílula Economia + Menu) e 3 Pager Dots -->
         <div id="wl-conquista-carousel-header">
-          <div class="wl-home-topbar">
-            <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              <span class="wl-top-cal-badge" id="wl-conquista-day-num">15</span>
-            </button>
-
-            <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              <span id="conquista-savings-top" class="top-savings-value-text">R$ 0,00</span>
-            </button>
-
-            <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="4" y1="7" x2="20" y2="7"></line>
-                <line x1="4" y1="12" x2="20" y2="12"></line>
-                <line x1="4" y1="17" x2="20" y2="17"></line>
-              </svg>
-            </button>
-          </div>
-
-          <div class="wl-home-pager-bar">
-            <div class="wl-pager-nav-dots" role="tablist" aria-label="Navegação horizontal entre telas">
-              <button type="button" class="wl-pager-dot active" onclick="navigateHorizontalCarousel(29)" title="Conquista" aria-label="Página atual: Conquista"></button>
-              <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(10)" title="Início" aria-label="Ir para Início"></button>
-              <button type="button" class="wl-pager-dot" onclick="navigateHorizontalCarousel(15)" title="Minijogos" aria-label="Ir para Minijogos"></button>
-            </div>
-          </div>
-
           <div class="wl-conquista-carousel-intro">
             <h2 class="wl-sav-title">Minha conquista</h2>
             <p class="caption">Acompanhe sua economia e metas</p>
