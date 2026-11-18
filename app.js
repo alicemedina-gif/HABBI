@@ -1,5 +1,16 @@
 window.goToScreen = function(screenNum) { if (typeof window.showScreen === 'function') { window.showScreen(screenNum); } };
 document.addEventListener('DOMContentLoaded', () => {
+  // Helper global de sanitização contra XSS
+  function escapeHtml(str) {
+    return String(str == null ? '' : str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  window.escapeHtml = escapeHtml;
+
   // Navigation State
   let currentScreen = 1;
   const totalScreens = 29;
@@ -2510,6 +2521,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function isPlainObject(val) {
+    return val !== null && typeof val === 'object' && !Array.isArray(val);
+  }
+
+  function hasDangerousKey(obj) {
+    if (!isPlainObject(obj)) return false;
+    return Object.prototype.hasOwnProperty.call(obj, '__proto__')
+      || Object.prototype.hasOwnProperty.call(obj, 'constructor')
+      || Object.prototype.hasOwnProperty.call(obj, 'prototype');
+  }
+
+  function isFiniteNumberInRange(val, min, max) {
+    return typeof val === 'number' && Number.isFinite(val) && val >= min && val <= max;
+  }
+
   /**
    * Valida um pacote de backup exportado sem alterar o estado atual.
    * @param {Object|string} data Backup a ser validado.
@@ -2525,29 +2551,180 @@ document.addEventListener('DOMContentLoaded', () => {
         return { valid: false, errors: ['JSON inválido ou corrompido: ' + e.message], summary: null };
       }
     }
-    if (!parsed || typeof parsed !== 'object') {
-      return { valid: false, errors: ['Objeto de backup ausente ou nulo.'], summary: null };
+    if (!isPlainObject(parsed) || hasDangerousKey(parsed)) {
+      return { valid: false, errors: ['Objeto de backup ausente, nulo ou malformado.'], summary: null };
     }
     const state = parsed.userState || parsed.persistedPayload;
-    if (!state || typeof state !== 'object') {
-      errors.push('Falta seção "userState" ou "persistedPayload" no backup.');
+    if (!isPlainObject(state) || hasDangerousKey(state)) {
+      errors.push('Falta seção "userState" ou "persistedPayload" válida no backup.');
     } else {
-      if (typeof state.dailyRecords !== 'object') {
+      // Validação de strings escalares opcionais
+      const optionalStrings = ['name', 'email', 'avatar', 'currentLang', 'theme'];
+      optionalStrings.forEach(field => {
+        if (state[field] !== undefined && state[field] !== null && typeof state[field] !== 'string') {
+          errors.push(`"${field}" deve ser texto.`);
+        }
+      });
+
+      // Validação de números opcionais
+      const numericBounds = {
+        todayMeta: [1, 200],
+        habitualCigs: [1, 200],
+        packPrice: [0, 10000],
+        cigsPerPack: [1, 200],
+        packFreqDays: [1, 365],
+        cigarettesAvoided: [0, 10000000]
+      };
+      Object.keys(numericBounds).forEach(field => {
+        if (state[field] !== undefined && state[field] !== null) {
+          const [min, max] = numericBounds[field];
+          if (!isFiniteNumberInRange(state[field], min, max)) {
+            errors.push(`"${field}" deve ser um número válido entre ${min} e ${max}.`);
+          }
+        }
+      });
+
+      // Validação estrita de dailyRecords
+      if (!isPlainObject(state.dailyRecords) || hasDangerousKey(state.dailyRecords)) {
         errors.push('"dailyRecords" ausente ou inválido.');
+      } else {
+        const dateKeyRe = /^\d{4}-\d{2}-\d{2}$/;
+        const recKeys = Object.keys(state.dailyRecords);
+        for (let i = 0; i < recKeys.length; i++) {
+          const dKey = recKeys[i];
+          if (!dateKeyRe.test(dKey)) {
+            errors.push(`Chave de data inválida em "dailyRecords": ${dKey}`);
+            break;
+          }
+          const rec = state.dailyRecords[dKey];
+          if (!isPlainObject(rec) || hasDangerousKey(rec)) {
+            errors.push(`Registro diário inválido para ${dKey}.`);
+            break;
+          }
+          if (rec.cigs !== undefined && !isFiniteNumberInRange(rec.cigs, 0, 500)) {
+            errors.push(`"cigs" inválido em ${dKey}.`);
+            break;
+          }
+          if (rec.meta !== undefined && !isFiniteNumberInRange(rec.meta, 1, 200)) {
+            errors.push(`"meta" inválido em ${dKey}.`);
+            break;
+          }
+          if (rec.events !== undefined) {
+            if (!Array.isArray(rec.events)) {
+              errors.push(`"events" deve ser lista em ${dKey}.`);
+              break;
+            }
+            for (let j = 0; j < rec.events.length; j++) {
+              const ev = rec.events[j];
+              if (!isPlainObject(ev) || hasDangerousKey(ev) || typeof ev.kind !== 'string' || !ev.kind.trim()) {
+                errors.push(`Evento malformado em ${dKey}[${j}].`);
+                break;
+              }
+              const evStrFields = ['id', 'title', 'desc', 'detail', 'note', 'time', 'clock', 'moodValue', 'type'];
+              let badField = false;
+              for (let k = 0; k < evStrFields.length; k++) {
+                const f = evStrFields[k];
+                if (ev[f] !== undefined && ev[f] !== null && typeof ev[f] !== 'string' && typeof ev[f] !== 'number') {
+                  errors.push(`Campo "${f}" inválido em evento ${dKey}[${j}].`);
+                  badField = true;
+                  break;
+                }
+              }
+              if (badField) break;
+              if (ev.influences !== undefined && (!Array.isArray(ev.influences) || ev.influences.some(x => typeof x !== 'string'))) {
+                errors.push(`Campo "influences" inválido em evento ${dKey}[${j}].`);
+                break;
+              }
+            }
+          }
+        }
       }
-      if (typeof state.todayMeta !== 'number' && typeof state.todayMeta !== 'undefined') {
-        errors.push('"todayMeta" deve ser numérico.');
+
+      // Validação de savingsHistory
+      if (state.savingsHistory !== undefined) {
+        if (!Array.isArray(state.savingsHistory)) {
+          errors.push('"savingsHistory" deve ser uma lista.');
+        } else {
+          for (let i = 0; i < state.savingsHistory.length; i++) {
+            const sh = state.savingsHistory[i];
+            if (!isPlainObject(sh) || hasDangerousKey(sh)) {
+              errors.push(`Item inválido em "savingsHistory"[${i}].`);
+              break;
+            }
+            if (sh.title !== undefined && typeof sh.title !== 'string') {
+              errors.push(`"savingsHistory"[${i}].title deve ser texto.`);
+              break;
+            }
+            if (sh.amount !== undefined && !isFiniteNumberInRange(sh.amount, -1000000, 1000000)) {
+              errors.push(`"savingsHistory"[${i}].amount deve ser numérico.`);
+              break;
+            }
+          }
+        }
+      }
+
+      // Validação de packEvents
+      if (state.packEvents !== undefined) {
+        if (!Array.isArray(state.packEvents)) {
+          errors.push('"packEvents" deve ser uma lista.');
+        } else {
+          for (let i = 0; i < state.packEvents.length; i++) {
+            const pe = state.packEvents[i];
+            if (!isPlainObject(pe) || hasDangerousKey(pe)) {
+              errors.push(`Item inválido em "packEvents"[${i}].`);
+              break;
+            }
+            if (pe.price !== undefined && !isFiniteNumberInRange(pe.price, 0, 10000)) {
+              errors.push(`"packEvents"[${i}].price deve ser numérico.`);
+              break;
+            }
+            if (pe.kind !== undefined && typeof pe.kind !== 'string') {
+              errors.push(`"packEvents"[${i}].kind deve ser texto.`);
+              break;
+            }
+          }
+        }
+      }
+
+      // Validação de savingsGoal
+      if (state.savingsGoal !== undefined && state.savingsGoal !== null) {
+        if (!isPlainObject(state.savingsGoal) || hasDangerousKey(state.savingsGoal)) {
+          errors.push('"savingsGoal" inválido.');
+        } else {
+          if (state.savingsGoal.title !== undefined && typeof state.savingsGoal.title !== 'string') {
+            errors.push('"savingsGoal.title" deve ser texto.');
+          }
+          if (state.savingsGoal.target !== undefined && !isFiniteNumberInRange(state.savingsGoal.target, 1, 10000000)) {
+            errors.push('"savingsGoal.target" deve ser numérico positivo.');
+          }
+        }
       }
     }
 
-    const dailyKeys = (state && state.dailyRecords) ? Object.keys(state.dailyRecords) : [];
+    // Validação de allHabbiLocalStorage (quando presente)
+    if (parsed.allHabbiLocalStorage !== undefined) {
+      if (!isPlainObject(parsed.allHabbiLocalStorage) || hasDangerousKey(parsed.allHabbiLocalStorage)) {
+        errors.push('"allHabbiLocalStorage" deve ser um objeto válido.');
+      } else {
+        const lsKeys = Object.keys(parsed.allHabbiLocalStorage);
+        for (let i = 0; i < lsKeys.length; i++) {
+          const k = lsKeys[i];
+          if (!k.startsWith('habbi-') || typeof parsed.allHabbiLocalStorage[k] !== 'string') {
+            errors.push(`Entrada inválida em "allHabbiLocalStorage": ${k}`);
+            break;
+          }
+        }
+      }
+    }
+
+    const dailyKeys = (state && isPlainObject(state.dailyRecords)) ? Object.keys(state.dailyRecords) : [];
     const summary = {
       app: parsed.app || 'Desconhecido',
       schemaVersion: parsed.schemaVersion || '1.0',
       exportedAt: parsed.exportedAt || 'Desconhecido',
       totalDaysWithRecords: dailyKeys.length,
       hasSavingsGoal: Boolean(state && state.savingsGoal),
-      avatar: (state && state.avatar) || 'verde',
+      avatar: (state && typeof state.avatar === 'string' && state.avatar) || 'verde',
       checksum: parsed.checksum || 'Nenhum'
     };
 
@@ -2590,15 +2767,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Execução real da restauração
     try {
-      if (parsed.allHabbiLocalStorage && typeof parsed.allHabbiLocalStorage === 'object') {
+      if (isPlainObject(parsed.allHabbiLocalStorage)) {
         Object.keys(parsed.allHabbiLocalStorage).forEach(key => {
+          if (!key.startsWith('habbi-') || typeof parsed.allHabbiLocalStorage[key] !== 'string') return;
           try {
             localStorage.setItem(key, parsed.allHabbiLocalStorage[key]);
           } catch (_e) {}
         });
       }
 
-      if (incomingState) {
+      if (isPlainObject(incomingState)) {
         localStorage.setItem(RECORDS_STORAGE_KEY, JSON.stringify(incomingState));
       }
 
@@ -3635,19 +3813,42 @@ document.addEventListener('DOMContentLoaded', () => {
           const isAvoided = ev.kind === 'avoided';
           const row = document.createElement('div');
           row.className = 'wl-sav-history-row';
-          row.innerHTML = `
-            <div class="wl-sav-history-left">
-              <i class="wl-sav-history-dot ${isAvoided ? 'green' : 'blue'}"></i>
-              <div class="wl-sav-history-texts">
-                <strong>${isAvoided ? 'Compra de maço evitada' : 'Maço comprado'}</strong>
-                <span>${ev.timeLabel || 'Hoje'} • ${ isAvoided ? 'Dinheiro não gasto' : 'Gasto registrado' }</span>
-              </div>
-            </div>
-            <div class="wl-sav-history-right">
-              <strong class="${isAvoided ? 'pos' : 'neg'}">${isAvoided ? '+' : '-'}${formatBrl(ev.price)}</strong>
-              <button type="button" class="wl-sav-history-del" onclick="deletePackPurchase('${ev.id}')" title="Remover">✕</button>
-            </div>
-          `;
+
+          const leftEl = document.createElement('div');
+          leftEl.className = 'wl-sav-history-left';
+          const dotEl = document.createElement('i');
+          dotEl.className = `wl-sav-history-dot ${isAvoided ? 'green' : 'blue'}`;
+          const textsEl = document.createElement('div');
+          textsEl.className = 'wl-sav-history-texts';
+          const strongTitle = document.createElement('strong');
+          strongTitle.textContent = isAvoided ? 'Compra de maço evitada' : 'Maço comprado';
+          const subSpan = document.createElement('span');
+          subSpan.textContent = `${ev.timeLabel || 'Hoje'} • ${isAvoided ? 'Dinheiro não gasto' : 'Gasto registrado'}`;
+          textsEl.appendChild(strongTitle);
+          textsEl.appendChild(subSpan);
+          leftEl.appendChild(dotEl);
+          leftEl.appendChild(textsEl);
+
+          const rightEl = document.createElement('div');
+          rightEl.className = 'wl-sav-history-right';
+          const amountEl = document.createElement('strong');
+          amountEl.className = isAvoided ? 'pos' : 'neg';
+          amountEl.textContent = `${isAvoided ? '+' : '-'}${formatBrl(ev.price)}`;
+          const delBtn = document.createElement('button');
+          delBtn.type = 'button';
+          delBtn.className = 'wl-sav-history-del';
+          delBtn.title = 'Remover';
+          delBtn.textContent = '✕';
+          delBtn.addEventListener('click', () => {
+            if (typeof window.deletePackPurchase === 'function') {
+              window.deletePackPurchase(ev.id);
+            }
+          });
+          rightEl.appendChild(amountEl);
+          rightEl.appendChild(delBtn);
+
+          row.appendChild(leftEl);
+          row.appendChild(rightEl);
           historyContainer.appendChild(row);
         });
 
@@ -3655,18 +3856,31 @@ document.addEventListener('DOMContentLoaded', () => {
         m.dailyHistoryItems.forEach(item => {
           const row = document.createElement('div');
           row.className = 'wl-sav-history-row';
-          row.innerHTML = `
-            <div class="wl-sav-history-left">
-              <i class="wl-sav-history-dot green"></i>
-              <div class="wl-sav-history-texts">
-                <strong>${item.title}</strong>
-                <span>${item.subtitle}</span>
-              </div>
-            </div>
-            <div class="wl-sav-history-right">
-              <strong class="pos">+${formatBrl(item.amount)}</strong>
-            </div>
-          `;
+
+          const leftEl = document.createElement('div');
+          leftEl.className = 'wl-sav-history-left';
+          const dotEl = document.createElement('i');
+          dotEl.className = 'wl-sav-history-dot green';
+          const textsEl = document.createElement('div');
+          textsEl.className = 'wl-sav-history-texts';
+          const strongTitle = document.createElement('strong');
+          strongTitle.textContent = String(item.title || '');
+          const subSpan = document.createElement('span');
+          subSpan.textContent = String(item.subtitle || '');
+          textsEl.appendChild(strongTitle);
+          textsEl.appendChild(subSpan);
+          leftEl.appendChild(dotEl);
+          leftEl.appendChild(textsEl);
+
+          const rightEl = document.createElement('div');
+          rightEl.className = 'wl-sav-history-right';
+          const amountEl = document.createElement('strong');
+          amountEl.className = 'pos';
+          amountEl.textContent = `+${formatBrl(item.amount)}`;
+          rightEl.appendChild(amountEl);
+
+          row.appendChild(leftEl);
+          row.appendChild(rightEl);
           historyContainer.appendChild(row);
         });
       }
@@ -4065,12 +4279,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Abre o Painel Rápido de Registro diretamente sobre a tela atual (sem telas intermediárias)
   window.openRegisterSheet = function(dateKey, returnScreen) {
-    if (!userState.isAuthenticated) {
-      showToast('Crie ou acesse sua conta para fazer registros!');
-      userState.authReturnScreen = returnScreen || currentScreen || 10;
-      showScreen(24);
-      return;
-    }
     userState.activeRegisterDateKey = dateKey || getDateKey(new Date());
     userState.returnScreenAfterRegister = returnScreen || currentScreen || 10;
     if (typeof window.openQuickRegisterModal === 'function') {
@@ -4079,12 +4287,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.openRegisterFromCalendar = function() {
-    if (!userState.isAuthenticated) {
-      showToast('Crie ou acesse sua conta para fazer registros!');
-      userState.authReturnScreen = 16;
-      showScreen(24);
-      return;
-    }
     userState.activeRegisterDateKey = userState.calSelectedDate || getDateKey(new Date());
     userState.returnScreenAfterRegister = 16;
     if (typeof window.openQuickRegisterModal === 'function') {
@@ -4094,12 +4296,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // "Não fumei hoje" direto do Calendário: confirma o dia selecionado e abre o "Bate aqui!"
   window.confirmNoSmokeFromCalendar = function() {
-    if (!userState.isAuthenticated) {
-      showToast('Crie ou acesse sua conta para confirmar seu dia!');
-      userState.authReturnScreen = 16;
-      showScreen(24);
-      return;
-    }
     userState.activeRegisterDateKey = userState.calSelectedDate || getDateKey(new Date());
     userState.returnScreenAfterRegister = 16;
     window.quickConfirmDay();
@@ -5705,15 +5901,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  function requireAuthToRegister(returnScreen) {
-    if (!userState.isAuthenticated) {
-      if (typeof showToast === 'function') {
-        showToast('Crie ou acesse sua conta para salvar seus registros!');
-      }
-      userState.authReturnScreen = returnScreen || currentScreen || 10;
-      showScreen(24);
-      return false;
-    }
+  // Modo visitante unificado (Decisão 2A): visitantes podem registrar localmente sem redirecionamento forçado
+  function requireAuthToRegister(_returnScreen) {
     return true;
   }
 
@@ -6128,12 +6317,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.handleHomeNoSmokeToday = function() {
-    if (!userState.isAuthenticated) {
-      showToast('Crie ou acesse sua conta para confirmar seu dia!');
-      userState.authReturnScreen = 10;
-      showScreen(24);
-      return;
-    }
     const todayKey = getDateKey(new Date());
     userState.activeRegisterDateKey = todayKey;
     userState.returnScreenAfterRegister = 10;
@@ -6141,12 +6324,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.handleHomeAddCigarette = function() {
-    if (!userState.isAuthenticated) {
-      showToast('Crie ou acesse sua conta para começar a registrar!');
-      userState.authReturnScreen = 10;
-      showScreen(24);
-      return;
-    }
     const todayKey = getDateKey(new Date());
     const rec = getOrCreateDayRecord(todayKey);
     if (Array.isArray(rec.events)) {
@@ -6178,9 +6355,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.handleHomeRemoveCigarette = function() {
-    if (!userState.isAuthenticated) {
-      return;
-    }
     const todayKey = getDateKey(new Date());
     const rec = userState.dailyRecords[todayKey];
     if (!rec || !Array.isArray(rec.events) || (rec.cigs || 0) <= 0) {
@@ -7510,34 +7684,79 @@ document.addEventListener('DOMContentLoaded', () => {
           } else if (ev.kind === 'urge' || ev.kind === 'sos' || ev.kind === 'mood') {
             dotClass = 'blue';
           }
-          const subText = ev.clock || ev.time;
-          const extraNote = (ev.kind === 'mood' && ev.desc && ev.desc !== 'Sentimento registrado')
-            ? `<small class="wl-cal-event-subdesc">${ev.desc}</small>`
-            : '';
+          const subText = ev.clock || ev.time || '';
           const item = document.createElement('div');
           item.className = `wl-cal-event-row ${rowStateClass}`.trim();
-          item.innerHTML = `
-            <div class="wl-cal-event-main">
-              <i class="wl-cal-event-dot ${dotClass}"></i>
-              <div class="wl-cal-event-texts">
-                <div class="wl-cal-event-title-col">
-                  <strong>${ev.title}</strong>
-                  ${extraNote}
-                </div>
-                <span>${subText}</span>
-              </div>
-            </div>
-            <div class="wl-cal-event-actions">
-              <button type="button" class="wl-cal-ev-btn" onclick="editHabbiEvent('${selKey}', '${ev.id}')" title="${t.calEventEdit || 'Editar'}">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
-                <span>${t.calEventEdit || 'Editar'}</span>
-              </button>
-              <button type="button" class="wl-cal-ev-btn danger" onclick="deleteHabbiEvent('${selKey}', '${ev.id}')" title="${t.calEventRemove || 'Remover'}">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                <span>${t.calEventRemove || 'Remover'}</span>
-              </button>
-            </div>
-          `;
+
+          const mainEl = document.createElement('div');
+          mainEl.className = 'wl-cal-event-main';
+
+          const dotEl = document.createElement('i');
+          dotEl.className = `wl-cal-event-dot ${dotClass}`;
+
+          const textsEl = document.createElement('div');
+          textsEl.className = 'wl-cal-event-texts';
+
+          const titleColEl = document.createElement('div');
+          titleColEl.className = 'wl-cal-event-title-col';
+
+          const strongEl = document.createElement('strong');
+          strongEl.textContent = String(ev.title || '');
+          titleColEl.appendChild(strongEl);
+
+          if (ev.kind === 'mood' && ev.desc && ev.desc !== 'Sentimento registrado') {
+            const subDescEl = document.createElement('small');
+            subDescEl.className = 'wl-cal-event-subdesc';
+            subDescEl.textContent = String(ev.desc);
+            titleColEl.appendChild(subDescEl);
+          }
+
+          const timeSpanEl = document.createElement('span');
+          timeSpanEl.textContent = String(subText);
+
+          textsEl.appendChild(titleColEl);
+          textsEl.appendChild(timeSpanEl);
+          mainEl.appendChild(dotEl);
+          mainEl.appendChild(textsEl);
+
+          const actionsEl = document.createElement('div');
+          actionsEl.className = 'wl-cal-event-actions';
+
+          const editLabel = t.calEventEdit || 'Editar';
+          const editBtn = document.createElement('button');
+          editBtn.type = 'button';
+          editBtn.className = 'wl-cal-ev-btn';
+          editBtn.title = editLabel;
+          editBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>';
+          const editSpan = document.createElement('span');
+          editSpan.textContent = editLabel;
+          editBtn.appendChild(editSpan);
+          editBtn.addEventListener('click', () => {
+            if (typeof window.editHabbiEvent === 'function') {
+              window.editHabbiEvent(selKey, ev.id);
+            }
+          });
+
+          const removeLabel = t.calEventRemove || 'Remover';
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.className = 'wl-cal-ev-btn danger';
+          removeBtn.title = removeLabel;
+          removeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+          const removeSpan = document.createElement('span');
+          removeSpan.textContent = removeLabel;
+          removeBtn.appendChild(removeSpan);
+          removeBtn.addEventListener('click', () => {
+            if (typeof window.deleteHabbiEvent === 'function') {
+              window.deleteHabbiEvent(selKey, ev.id);
+            }
+          });
+
+          actionsEl.appendChild(editBtn);
+          actionsEl.appendChild(removeBtn);
+
+          item.appendChild(mainEl);
+          item.appendChild(actionsEl);
           return item;
         };
 
@@ -8466,23 +8685,42 @@ document.addEventListener('DOMContentLoaded', () => {
         markerSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
       }
 
-      const itemHtml = `
-        <div class="history-item">
-          <div class="history-circle ${markerClass}">
-            ${markerSvg}
-          </div>
-          <div class="history-content">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px; gap: 8px;">
-              <span style="font-weight:700; font-size:14px; color:var(--text-primary);">${evt.title}</span>
-              <span class="caption" style="color:var(--text-muted); font-size:11px; flex-shrink:0;">${evt.time}</span>
-            </div>
-            <p class="caption" style="margin-bottom:0; font-size:12px;">${evt.desc || evt.detail || ''}</p>
-          </div>
-        </div>
-      `;
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = itemHtml;
-      container.appendChild(wrapper.firstElementChild);
+      const itemEl = document.createElement('div');
+      itemEl.className = 'history-item';
+
+      const circleEl = document.createElement('div');
+      circleEl.className = `history-circle ${markerClass}`;
+      circleEl.innerHTML = markerSvg;
+
+      const contentEl = document.createElement('div');
+      contentEl.className = 'history-content';
+
+      const headerRow = document.createElement('div');
+      headerRow.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px; gap: 8px;';
+
+      const titleSpan = document.createElement('span');
+      titleSpan.style.cssText = 'font-weight:700; font-size:14px; color:var(--text-primary);';
+      titleSpan.textContent = String(evt.title || '');
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'caption';
+      timeSpan.style.cssText = 'color:var(--text-muted); font-size:11px; flex-shrink:0;';
+      timeSpan.textContent = String(evt.time || '');
+
+      headerRow.appendChild(titleSpan);
+      headerRow.appendChild(timeSpan);
+
+      const descP = document.createElement('p');
+      descP.className = 'caption';
+      descP.style.cssText = 'margin-bottom:0; font-size:12px;';
+      descP.textContent = String(evt.desc || evt.detail || '');
+
+      contentEl.appendChild(headerRow);
+      contentEl.appendChild(descP);
+
+      itemEl.appendChild(circleEl);
+      itemEl.appendChild(contentEl);
+      container.appendChild(itemEl);
     });
   }
 
