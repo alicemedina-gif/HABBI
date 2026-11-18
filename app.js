@@ -2831,39 +2831,30 @@
     currentScreen = screenNum;
     localStorage.setItem('habbi-current-screen', screenNum);
 
-    // Animação de rolagem / deslizamento suave entre telas de onboarding (3, 4, 5)
-    const isOnbSlide = (prevScreenNum >= 3 && prevScreenNum <= 5) && (screenNum >= 3 && screenNum <= 5) && (prevScreenNum !== screenNum);
-    const prevScreenEl = document.querySelector(`.screen[data-screen="${prevScreenNum}"]`);
-    const nextScreenEl = document.querySelector(`.screen[data-screen="${screenNum}"]`);
-
-    if (isOnbSlide && prevScreenEl && nextScreenEl) {
-      const isForward = screenNum > prevScreenNum;
-      ['onb-sliding-in-right', 'onb-sliding-out-left', 'onb-sliding-in-left', 'onb-sliding-out-right'].forEach(c => {
-        prevScreenEl.classList.remove(c);
-        nextScreenEl.classList.remove(c);
-      });
+    // Suporte ao Carrossel de Onboarding (Telas 3, 4, 5) com rolagem horizontal contínua
+    const onbSlider = document.getElementById('onboarding-slider-container');
+    if (screenNum >= 3 && screenNum <= 5) {
+      if (onbSlider) {
+        onbSlider.classList.add('active');
+        if (typeof window.goToOnboardingSlide === 'function') {
+          window.goToOnboardingSlide(screenNum - 3, false);
+        }
+      }
       screenElements.forEach(s => {
-        if (s !== prevScreenEl && s !== nextScreenEl) {
-          s.classList.remove('active', 'onb-sliding-in-right', 'onb-sliding-out-left', 'onb-sliding-in-left', 'onb-sliding-out-right');
+        if (!s.classList.contains('onb-slide')) {
+          s.classList.remove('active');
         }
       });
-
-      prevScreenEl.classList.add(isForward ? 'onb-sliding-out-left' : 'onb-sliding-out-right');
-      nextScreenEl.classList.add('active');
-      nextScreenEl.classList.add(isForward ? 'onb-sliding-in-right' : 'onb-sliding-in-left');
-      nextScreenEl.scrollTop = 0;
-
-      setTimeout(() => {
-        prevScreenEl.classList.remove('active', 'onb-sliding-out-left', 'onb-sliding-out-right');
-        nextScreenEl.classList.remove('onb-sliding-in-right', 'onb-sliding-in-left');
-      }, 310);
     } else {
-      // Toggle active screen element padrão
+      if (onbSlider) {
+        onbSlider.classList.remove('active');
+      }
       screenElements.forEach(screen => {
-        screen.classList.remove('active', 'onb-sliding-in-right', 'onb-sliding-out-left', 'onb-sliding-in-left', 'onb-sliding-out-right');
         if (parseInt(screen.dataset.screen) === screenNum) {
           screen.classList.add('active');
           screen.scrollTop = 0;
+        } else if (!screen.classList.contains('onb-slide')) {
+          screen.classList.remove('active');
         }
       });
     }
@@ -2942,6 +2933,32 @@
     // Screen 13: SOS Intervenção (Execution)
     if (screenNum === 13) {
       initInterventionScreen();
+    }
+
+    // Screen 15: Minijogos (Modo Carrossel vs Modo Ferramentas)
+    if (screenNum === 15) {
+      const carouselHeader = document.getElementById('wl-minijogos-carousel-header');
+      const toolsHeader = document.getElementById('wl-minijogos-tools-header');
+      const isCarouselMode = userState.minijogosMode !== 'tools';
+
+      if (carouselHeader) carouselHeader.style.setProperty('display', isCarouselMode ? 'block' : 'none', 'important');
+      if (toolsHeader) toolsHeader.style.setProperty('display', isCarouselMode ? 'none' : 'flex', 'important');
+
+      const dayNumEl = document.getElementById('wl-minijogos-day-num');
+      if (dayNumEl) {
+        dayNumEl.innerText = new Date().getDate();
+      }
+      const savingsEl = document.getElementById('minijogos-savings-top');
+      if (savingsEl) {
+        const homeSavings = document.getElementById('home-savings-top');
+        if (homeSavings) {
+          savingsEl.innerText = homeSavings.innerText;
+        }
+      }
+
+      if (typeof updateMinigamesRecordUI === 'function') {
+        updateMinigamesRecordUI();
+      }
     }
 
     // Screen 16: Calendário
@@ -3593,7 +3610,18 @@
       }
     }
 
-    if (currentScreen === targetScreen) return;
+    if (targetScreen === 15) {
+      userState.minijogosMode = 'carousel';
+      userState.minijogosReturnScreen = 10;
+    }
+
+    if (currentScreen === targetScreen) {
+      if (targetScreen === 15 && userState.minijogosMode !== 'carousel') {
+        userState.minijogosMode = 'carousel';
+        showScreen(15);
+      }
+      return;
+    }
     showScreen(targetScreen);
   };
 
@@ -4039,7 +4067,7 @@
           </div>
         </div>
         <div class="wl-onb-footer">
-          <div class="onboarding-progress"><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div></div>
+          <div class="onboarding-progress"><div class="progress-dot active" onclick="goToOnboardingSlide(0)"></div><div class="progress-dot" onclick="goToOnboardingSlide(1)"></div><div class="progress-dot" onclick="goToOnboardingSlide(2)"></div></div>
           <button type="button" class="wl-dark-pill-btn" id="btn-onboarding-1-next" onclick="triggerOnb1CigFill()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             <span>ADICIONAR</span>
@@ -4085,13 +4113,17 @@
         setTimeout(() => {
           onb3Advancing = false;
           if (nextBtn) nextBtn.classList.remove('is-pressed');
-          showScreen(4);
-        }, 500);
+          if (typeof window.goToOnboardingSlide === 'function') {
+            window.goToOnboardingSlide(1);
+          } else {
+            showScreen(4);
+          }
+        }, 120);
 
         // Watchdog de segurança para garantir que a transição nunca fique travada
         setTimeout(() => {
           onb3Advancing = false;
-        }, 1200);
+        }, 400);
       };
 
       const addNextBtn = document.getElementById('btn-onboarding-1-next');
@@ -4114,17 +4146,21 @@
       userState.remindersEnabled = Boolean(enabled);
       userState.notificationsEnabled = Boolean(enabled);
       savePersistedState();
-      goToScreen(5);
+      if (typeof window.goToOnboardingSlide === 'function') {
+        window.goToOnboardingSlide(2);
+      } else {
+        goToScreen(5);
+      }
     };
 
     const s4 = document.querySelector('.screen[data-screen="4"]');
     if (s4) {
       s4.removeAttribute('style');
-      s4.className = 'screen wl-onb-screen wl-onb-screen-notif';
+      s4.className = 'screen wl-onb-screen wl-onb-screen-notif onb-slide';
       s4.innerHTML = `
         <div class="wl-onb-header">
           <div style="display:flex; align-items:center; gap:6px;">
-            <button type="button" class="wl-onb-back-arrow" onclick="goToScreen(3)" aria-label="Voltar" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer; padding:0 6px 2px; line-height:1;">‹</button>
+            <button type="button" class="wl-onb-back-arrow" onclick="goToOnboardingSlide(0)" aria-label="Voltar" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer; padding:0 6px 2px; line-height:1;">‹</button>
             <span class="wl-step-pill">2 de 3</span>
           </div>
           <button class="wl-skip-btn" onclick="goToScreen(7)">IGNORAR</button>
@@ -4147,7 +4183,7 @@
           </div>
         </div>
         <div class="wl-onb-footer wl-onb-notif-footer">
-          <div class="onboarding-progress"><div class="progress-dot"></div><div class="progress-dot active"></div><div class="progress-dot"></div></div>
+          <div class="onboarding-progress"><div class="progress-dot" onclick="goToOnboardingSlide(0)"></div><div class="progress-dot active" onclick="goToOnboardingSlide(1)"></div><div class="progress-dot" onclick="goToOnboardingSlide(2)"></div></div>
           <div class="wl-onb-notif-actions">
             <button type="button" class="wl-dark-pill-btn wl-notif-cta-btn" id="btn-onboarding-2-next" onclick="handleOnboardingRemindersChoice(true)">Ativar lembretes</button>
             <button type="button" class="wl-subtle-link-btn" id="btn-onboarding-2-skip" onclick="handleOnboardingRemindersChoice(false)">Agora não</button>
@@ -4160,17 +4196,17 @@
     const s5 = document.querySelector('.screen[data-screen="5"]');
     if (s5) {
       s5.removeAttribute('style');
-      s5.className = 'screen wl-onb-screen';
+      s5.className = 'screen wl-onb-screen onb-slide';
       s5.innerHTML = `
         <div class="wl-onb-header">
           <div style="display:flex; align-items:center; gap:6px;">
-            <button type="button" class="wl-onb-back-arrow" onclick="goToScreen(4)" aria-label="Voltar" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer; padding:0 6px 2px; line-height:1;">‹</button>
+            <button type="button" class="wl-onb-back-arrow" onclick="goToOnboardingSlide(1)" aria-label="Voltar" style="background:none; border:none; font-size:22px; color:var(--text-muted); cursor:pointer; padding:0 6px 2px; line-height:1;">‹</button>
             <span class="wl-step-pill">3 de 3</span>
           </div>
           <button class="wl-skip-btn" onclick="goToScreen(7)">IGNORAR</button>
         </div>
         <div class="wl-onb-titles" style="margin-bottom:6px;">
-          <h1>Uma nova forma de<br>cuidar de voc\u00ea.</h1>
+          <h1>Uma nova forma de<br>cuidar de você.</h1>
         </div>
         <div class="wl-compare-grid">
           <div class="wl-compare-card bad">
@@ -4200,6 +4236,7 @@
           </div>
         </div>
         <div class="wl-onb-footer">
+          <div class="onboarding-progress" style="margin-bottom:12px;"><div class="progress-dot" onclick="goToOnboardingSlide(0)"></div><div class="progress-dot" onclick="goToOnboardingSlide(1)"></div><div class="progress-dot active" onclick="goToOnboardingSlide(2)"></div></div>
           <button class="wl-dark-pill-btn" id="btn-onboarding-3-next" onclick="goToScreen(7)" style="width:100%;">Vamos começar!</button>
         </div>
       `;
@@ -4572,6 +4609,7 @@
         userState.selectedIntervention = 'Respiração 4-6';
         showScreen(13);
       } else if (tool === 'minijogos') {
+        userState.minijogosMode = 'tools';
         userState.minijogosReturnScreen = 14;
         showScreen(15);
       } else if (tool === 'sos') {
@@ -6126,11 +6164,16 @@
   }
   window.saveGameRecord = saveGameRecord;
 
-  function updateMinigamesRecordUI() {
-    const records = getGameRecords();
+  function getGameRecordWord() {
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
-    const recWord = t.recordWord || 'Recorde';
+    return t.recordWord || 'Recorde';
+  }
+  window.getGameRecordWord = getGameRecordWord;
+
+  function updateMinigamesRecordUI() {
+    const records = getGameRecords();
+    const recWord = getGameRecordWord();
     const map = {
       memory: 'record-game-memory',
       sequence: 'record-game-sequence',
@@ -6140,7 +6183,7 @@
     Object.keys(map).forEach(k => {
       const el = document.getElementById(map[k]);
       if (el) {
-        el.innerText = `🏆 ${recWord}: ${records[k] || 0}`;
+        el.innerText = `${recWord}: ${records[k] || 0}`;
       }
     });
   }
@@ -6188,7 +6231,7 @@
     scoreBadge.style.gridColumn = pairCount === 4 ? 'span 2' : 'span 3';
     scoreBadge.style.textAlign = 'center';
     const recMem = getGameRecords().memory;
-    scoreBadge.innerText = `${formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round)} • 🏆 ${recMem}`;
+    scoreBadge.innerText = `${formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round)} • ${getGameRecordWord()}: ${recMem}`;
     container.appendChild(scoreBadge);
 
     let activeTiles = [];
@@ -6222,7 +6265,7 @@
             memoryGameState.totalMatches++;
             const isNew = saveGameRecord('memory', memoryGameState.totalMatches);
             const curRec = getGameRecords().memory;
-            scoreBadge.innerText = `${formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round)} • 🏆 ${curRec}`;
+            scoreBadge.innerText = `${formatGameScore('gameScorePairs', memoryGameState.totalMatches, memoryGameState.round)} • ${getGameRecordWord()}: ${curRec}`;
             if (isNew && memoryGameState.totalMatches > 1) {
               scoreBadge.classList.add('record-burst');
               setTimeout(() => scoreBadge.classList.remove('record-burst'), 600);
@@ -6273,7 +6316,7 @@
     const badgeEl = document.getElementById('game-sequence-badge');
     if (badgeEl) {
       const recSeq = getGameRecords().sequence;
-      badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • 🏆 ${recSeq}`;
+      badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • ${getGameRecordWord()}: ${recSeq}`;
     }
 
     boardWrapper.innerHTML = '';
@@ -6319,7 +6362,7 @@
             const isNew = saveGameRecord('sequence', sequenceGameState.completed);
             const curRec = getGameRecords().sequence;
             if (badgeEl) {
-              badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • 🏆 ${curRec}`;
+              badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • ${getGameRecordWord()}: ${curRec}`;
               if (isNew && sequenceGameState.completed > 1) {
                 badgeEl.classList.add('record-burst');
                 setTimeout(() => badgeEl.classList.remove('record-burst'), 600);
@@ -6389,7 +6432,7 @@
     scoreDisplay.style.right = '12px';
     scoreDisplay.style.zIndex = '10';
     const recRef = getGameRecords().reflex;
-    scoreDisplay.innerText = `${formatGameScore('gameScoreLeaves', reflexGameState.count)} • 🏆 ${recRef}`;
+    scoreDisplay.innerText = `${formatGameScore('gameScoreLeaves', reflexGameState.count)} • ${getGameRecordWord()}: ${recRef}`;
     board.appendChild(scoreDisplay);
 
     const spawnTarget = () => {
@@ -6431,7 +6474,7 @@
         reflexGameState.count++;
         const isNew = saveGameRecord('reflex', reflexGameState.count);
         const curRec = getGameRecords().reflex;
-        scoreDisplay.innerText = `${formatGameScore('gameScoreLeaves', reflexGameState.count)} • 🏆 ${curRec}`;
+        scoreDisplay.innerText = `${formatGameScore('gameScoreLeaves', reflexGameState.count)} • ${getGameRecordWord()}: ${curRec}`;
         if (isNew && reflexGameState.count > 1) {
           scoreDisplay.classList.add('record-burst');
           setTimeout(() => scoreDisplay.classList.remove('record-burst'), 600);
@@ -6480,7 +6523,7 @@
     const scoreDisplay = document.createElement('div');
     scoreDisplay.className = 'game-score-badge';
     const recMath = getGameRecords().math;
-    scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • 🏆 ${recMath}`;
+    scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • ${getGameRecordWord()}: ${recMath}`;
     layout.appendChild(scoreDisplay);
 
     const questionDisplay = document.createElement('div');
@@ -6557,7 +6600,7 @@
             mathGameState.round++;
             const isNew = saveGameRecord('math', mathGameState.score);
             const curRec = getGameRecords().math;
-            scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • 🏆 ${curRec}`;
+            scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • ${getGameRecordWord()}: ${curRec}`;
             if (isNew && mathGameState.score > 1) {
               scoreDisplay.classList.add('record-burst');
               setTimeout(() => scoreDisplay.classList.remove('record-burst'), 600);
@@ -6579,7 +6622,7 @@
 
             mathGameState.round++;
             const curRec = getGameRecords().math;
-            scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • 🏆 ${curRec}`;
+            scoreDisplay.innerText = `${formatGameScore('gameScoreMath', mathGameState.score, mathGameState.round)} • ${getGameRecordWord()}: ${curRec}`;
 
             setTimeout(() => {
               generateQuestion();
@@ -7267,6 +7310,7 @@
   window.handleSosChoice = function(choice) {
     userState.openedFromMenu = false;
     if (choice === 'distrair') {
+      userState.minijogosMode = 'tools';
       userState.minijogosReturnScreen = 12;
       showScreen(15);
     } else if (choice === 'respirar') {
@@ -8172,7 +8216,134 @@
     logoutBtn.addEventListener('click', window.handleProfileLogout);
   }
 
-  // Inicializa detecção de gestos horizontais de swipe para o carrossel (Conquista 29 ↔ Home 10 ↔ Minijogos 15)
+  // Onboarding Carousel Controller (Screens 3, 4, 5) com rolagem física contínua
+  let currentOnbSlideIndex = 0;
+  window.goToOnboardingSlide = function(slideIndex, updateScreenState = true) {
+    currentOnbSlideIndex = Math.max(0, Math.min(2, slideIndex));
+    const track = document.getElementById('onboarding-slider-track');
+    const container = document.getElementById('onboarding-slider-container');
+    if (track) {
+      track.classList.remove('is-dragging');
+      track.style.transform = `translate3d(-${currentOnbSlideIndex * 33.333333}%, 0, 0)`;
+    }
+    if (container) {
+      container.classList.add('active');
+    }
+    const targetScreenNum = currentOnbSlideIndex + 3;
+    if (updateScreenState && currentScreen !== targetScreenNum) {
+      currentScreen = targetScreenNum;
+      localStorage.setItem('habbi-current-screen', currentScreen);
+    }
+    // Sincroniza progress dots
+    document.querySelectorAll('.onboarding-slider-container .onboarding-progress').forEach(p => {
+      const dots = p.querySelectorAll('.progress-dot');
+      dots.forEach((dot, idx) => {
+        if (idx === currentOnbSlideIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    });
+  };
+
+  // Detecção de gestos físicos com resposta em tempo real no Onboarding (Telas 3, 4, 5)
+  (function initOnboardingSliderTouch() {
+    let startX = 0;
+    let startY = 0;
+    let currentDeltaX = 0;
+    let isTracking = false;
+    let isHorizontalGesture = false;
+
+    const getContainer = () => document.getElementById('onboarding-slider-container');
+    const getTrack = () => document.getElementById('onboarding-slider-track');
+
+    function onTouchStart(e) {
+      const container = getContainer();
+      if (!container || !container.classList.contains('active')) return;
+      if (e.target && e.target.closest('button, input, a, .progress-dot')) return;
+
+      const touch = e.touches ? e.touches[0] : e;
+      startX = touch.clientX;
+      startY = touch.clientY;
+      currentDeltaX = 0;
+      isTracking = true;
+      isHorizontalGesture = false;
+    }
+
+    function onTouchMove(e) {
+      if (!isTracking) return;
+      const touch = e.touches ? e.touches[0] : e;
+      const diffX = touch.clientX - startX;
+      const diffY = touch.clientY - startY;
+
+      if (!isHorizontalGesture) {
+        if (Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
+          isHorizontalGesture = true;
+        } else if (Math.abs(diffY) > 10) {
+          isTracking = false;
+          return;
+        }
+      }
+
+      if (isHorizontalGesture) {
+        if (e.cancelable) e.preventDefault();
+        currentDeltaX = diffX;
+        const track = getTrack();
+        if (track) {
+          track.classList.add('is-dragging');
+          let effectiveDelta = diffX;
+          if ((currentOnbSlideIndex === 0 && diffX > 0) || (currentOnbSlideIndex === 2 && diffX < 0)) {
+            effectiveDelta = diffX * 0.35;
+          }
+          track.style.transform = `translate3d(calc(-${currentOnbSlideIndex * 33.333333}% + ${effectiveDelta}px), 0, 0)`;
+        }
+      }
+    }
+
+    function onTouchEnd() {
+      if (!isTracking) return;
+      isTracking = false;
+      const track = getTrack();
+      if (track) track.classList.remove('is-dragging');
+
+      if (isHorizontalGesture) {
+        if (currentDeltaX < -45 && currentOnbSlideIndex < 2) {
+          window.goToOnboardingSlide(currentOnbSlideIndex + 1);
+        } else if (currentDeltaX > 45 && currentOnbSlideIndex > 0) {
+          window.goToOnboardingSlide(currentOnbSlideIndex - 1);
+        } else {
+          window.goToOnboardingSlide(currentOnbSlideIndex);
+        }
+      }
+      currentDeltaX = 0;
+      isHorizontalGesture = false;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const container = getContainer();
+      if (!container) return;
+      container.addEventListener('touchstart', onTouchStart, { passive: true });
+      container.addEventListener('touchmove', onTouchMove, { passive: false });
+      container.addEventListener('touchend', onTouchEnd, { passive: true });
+
+      // Suporte suave a mouse drag no container de onboarding (desktop)
+      container.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        onTouchStart(e);
+        const onMouseMove = (ev) => onTouchMove(ev);
+        const onMouseUp = () => {
+          onTouchEnd();
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseup', onMouseUp);
+        };
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      });
+    });
+  })();
+
+  // Carrossel horizontal das telas principais (Conquista 29 ↔ Home 10 ↔ Minijogos 15)
   (function initHorizontalCarouselGestures() {
     let startX = 0;
     let startY = 0;
@@ -8180,18 +8351,14 @@
 
     function handleStart(x, y, target) {
       if (!target) return;
-      // Não intercepta se o tutorial interativo estiver ativo
-      if (window.habbiTutorialActive) {
-        return;
-      }
-      // Não intercepta se tocar em inputs, botões, modais abertos ou no meio de um minijogo ativo
-      if (target.closest('input, button, select, textarea, .wl-hub-overlay.is-open, .wl-sav-sheet-overlay.is-open, .wl-goal-modal-overlay.is-open')) {
+      if (window.habbiTutorialActive) return;
+      if (target.closest('input, button, select, textarea, a, .chip, .game-grid-card, .wl-sos-card, .wl-quest-card, .wl-hub-overlay.is-open, .wl-sav-sheet-overlay.is-open, .wl-goal-modal-overlay.is-open')) {
         return;
       }
       if (userState.isGameActive && currentScreen === 15) {
         return;
       }
-      if (currentScreen !== 10 && currentScreen !== 29 && currentScreen !== 15 && currentScreen !== 3 && currentScreen !== 4 && currentScreen !== 5) {
+      if (currentScreen !== 10 && currentScreen !== 29 && currentScreen !== 15) {
         return;
       }
       startX = x;
@@ -8206,49 +8373,26 @@
       const diffX = endX - startX;
       const diffY = endY - startY;
 
-      // Gesto horizontal predominante
       if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
-        if (currentScreen === 3) {
-          if (diffX < -40) {
-            // Arrastou para a esquerda -> Avança para Tela 4 com slide
-            showScreen(4);
-          }
-        } else if (currentScreen === 4) {
-          if (diffX > 40) {
-            // Arrastou para a direita -> Retorna para Tela 3 com slide
-            showScreen(3);
-          } else if (diffX < -40) {
-            // Arrastou para a esquerda -> Avança para Tela 5 com slide
-            showScreen(5);
-          }
-        } else if (currentScreen === 5) {
-          if (diffX > 40) {
-            // Arrastou para a direita -> Retorna para Tela 4 com slide
-            showScreen(4);
-          }
-        } else if (currentScreen === 10) {
+        if (currentScreen === 10) {
           if (diffX > 0) {
-            // Arrastou para a direita -> Abre Conquista (à esquerda)
             navigateHorizontalCarousel(29);
           } else {
-            // Arrastou para a esquerda -> Abre Minijogos (à direita)
+            userState.minijogosMode = 'carousel';
             navigateHorizontalCarousel(15);
           }
         } else if (currentScreen === 29) {
           if (diffX < 0) {
-            // Arrastou para a esquerda -> Retorna à Home
             navigateHorizontalCarousel(10);
           }
         } else if (currentScreen === 15) {
           if (diffX > 0 && !userState.isGameActive) {
-            // Arrastou para a direita -> Retorna à Home
             navigateHorizontalCarousel(10);
           }
         }
       }
     }
 
-    // Touch mobile
     document.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches.length === 1) {
         handleStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
@@ -8260,20 +8404,6 @@
         handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
       }
     }, { passive: true });
-
-    // Mouse drag desktop
-    let isMouseDown = false;
-    document.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return;
-      isMouseDown = true;
-      handleStart(e.clientX, e.clientY, e.target);
-    });
-
-    document.addEventListener('mouseup', (e) => {
-      if (!isMouseDown) return;
-      isMouseDown = false;
-      handleEnd(e.clientX, e.clientY);
-    });
   })();
 
   /* ==========================================================================

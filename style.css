@@ -423,7 +423,7 @@ body {
   transition: none !important;
 }
 
-.screen:not(.active):not(.slide-in-right):not(.slide-in-left):not(.slide-out-left):not(.slide-out-right) {
+.screen:not(.active):not(.slide-in-right):not(.slide-in-left):not(.slide-out-left):not(.slide-out-right):not(.onb-slide) {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
@@ -7879,7 +7879,7 @@ textarea:focus-visible,
 }
 
 .wl-minijogos-header {
-  display: flex !important;
+  display: flex;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
@@ -9855,3 +9855,86 @@ textarea:focus-visible,
 .habbi-tutorial-content::-webkit-scrollbar {
   display: none !important;
 }
+
+/* ==========================================================================
+   CARROSSEL REAL DE ONBOARDING (TELAS 3, 4, 5) COM ARRASTE FÍSICO CONTÍNUO
+   ========================================================================== */
+.onboarding-slider-container {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 10;
+  background-color: var(--bg-color, #FAFAF7);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.onboarding-slider-container.active {
+  display: flex !important;
+}
+
+.onboarding-slider-track {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 300% !important;
+  height: 100% !important;
+  will-change: transform;
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.onboarding-slider-track.is-dragging {
+  transition: none !important;
+}
+
+.onboarding-slider-track .onb-slide {
+  width: 33.333333% !important;
+  flex: 0 0 33.333333% !important;
+  height: 100% !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.onboarding-slider-container:not(.active) .onb-slide {
+  display: none !important;
+}
+
+.onboarding-progress .progress-dot {
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   MINIJOGOS (TELA 15): MODO CARROSSEL VS MODO FERRAMENTAS
+   ========================================================================== */
+#wl-minijogos-carousel-header {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.wl-minijogos-carousel-intro {
+  padding: 10px 4px 14px;
+}
+
+.wl-minijogos-carousel-intro .wl-minijogos-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.wl-minijogos-carousel-intro .caption {
+  font-size: 13.5px;
+  margin: 3px 0 0;
+  color: var(--text-secondary);
+}
+
