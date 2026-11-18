@@ -579,8 +579,16 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaExpensesTitle: 'Seus gastos',
       conquistaExpensesSub: 'Gasto estimado com base nos seus registros',
       conquistaExpensesToday: 'Hoje',
-      conquistaExpensesMonth: 'Neste mês',
+      conquistaExpensesMonth: 'Este mês',
       conquistaExpensesPerCig: 'Custo estimado: {0} / cigarro',
+      conquistaInfoAria: 'Sobre a economia estimada',
+      backupModalTitle: 'Backup e dados',
+      backupModalDesc: 'Seus registros ficam salvos neste dispositivo. Você pode baixar uma cópia ou gerenciar os dados deste perfil.',
+      backupModalExport: 'Baixar backup (JSON)',
+      backupModalClose: 'Fechar',
+      localTestEnvBadge: 'Ambiente de teste local',
+      aboutCreatedBy: 'Criado por',
+      aboutContact: 'Contato:',
       homeRemoveCigAria: 'Desfazer último cigarro registrado',
       homeRemoveCigToast: '1 cigarro removido',
       goalModalTitle: 'Definir objetivo',
@@ -1079,6 +1087,14 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaExpensesToday: 'Today',
       conquistaExpensesMonth: 'This month',
       conquistaExpensesPerCig: 'Estimated cost: {0} / cigarette',
+      conquistaInfoAria: 'About estimated savings',
+      backupModalTitle: 'Backup and data',
+      backupModalDesc: 'Your records stay saved on this device. You can download a copy or manage this profile\'s data.',
+      backupModalExport: 'Download backup (JSON)',
+      backupModalClose: 'Close',
+      localTestEnvBadge: 'Local test environment',
+      aboutCreatedBy: 'Created by',
+      aboutContact: 'Contact:',
       homeRemoveCigAria: 'Undo last logged cigarette',
       homeRemoveCigToast: '1 cigarette removed',
       goalModalTitle: 'Set goal',
@@ -1577,6 +1593,14 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaExpensesToday: 'Hoy',
       conquistaExpensesMonth: 'Este mes',
       conquistaExpensesPerCig: 'Costo estimado: {0} / cigarrillo',
+      conquistaInfoAria: 'Sobre el ahorro estimado',
+      backupModalTitle: 'Copia de seguridad y datos',
+      backupModalDesc: 'Tus registros se guardan en este dispositivo. Puedes descargar una copia o gestionar los datos de este perfil.',
+      backupModalExport: 'Descargar copia (JSON)',
+      backupModalClose: 'Cerrar',
+      localTestEnvBadge: 'Entorno de prueba local',
+      aboutCreatedBy: 'Creado por',
+      aboutContact: 'Contacto:',
       homeRemoveCigAria: 'Deshacer último cigarrillo registrado',
       homeRemoveCigToast: '1 cigarrillo eliminado',
       goalModalTitle: 'Definir objetivo',
@@ -2378,6 +2402,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (delModalBackup) delModalBackup.innerText = t.delModalBackup || 'Baixar backup JSON antes';
     const delModalConfirm = document.getElementById('habbi-del-modal-confirm');
     if (delModalConfirm) delModalConfirm.innerText = t.delModalConfirm || 'Apagar registros';
+
+    const backupModalTitle = document.getElementById('habbi-backup-modal-title');
+    if (backupModalTitle) backupModalTitle.innerText = t.backupModalTitle || 'Backup e dados';
+    const backupModalDesc = document.getElementById('habbi-backup-modal-desc');
+    if (backupModalDesc) backupModalDesc.innerText = t.backupModalDesc || 'Seus registros ficam salvos neste dispositivo. Você pode baixar uma cópia ou gerenciar os dados deste perfil.';
+    const backupModalExport = document.getElementById('habbi-backup-modal-export');
+    if (backupModalExport) backupModalExport.innerText = t.backupModalExport || 'Baixar backup (JSON)';
+    const backupModalClose = document.getElementById('habbi-backup-modal-close');
+    if (backupModalClose) backupModalClose.innerText = t.backupModalClose || 'Fechar';
+    document.querySelectorAll('.habbi-local-test-badge').forEach(b => {
+      b.textContent = t.localTestEnvBadge || 'Ambiente de teste local';
+    });
     const delModalCancel = document.getElementById('habbi-del-modal-cancel');
     if (delModalCancel) delModalCancel.innerText = t.delModalCancel || 'Cancelar';
 
@@ -2499,6 +2535,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ps[3].innerText = t.aboutP4;
         ps[4].innerText = t.aboutFooter;
       }
+      const createdByLbl = document.getElementById('wl-about-created-by-lbl');
+      if (createdByLbl) createdByLbl.innerText = t.aboutCreatedBy || 'Criado por';
+      const contactLbl = document.getElementById('wl-about-contact-lbl');
+      if (contactLbl) contactLbl.innerText = t.aboutContact || 'Contato:';
     }
 
     // Screen 28: Minha Conta
@@ -2535,16 +2575,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (goalLbl) goalLbl.innerText = t.conquistaGoalLabel || 'Objetivo';
       const chgChip = document.querySelector('.wl-conquista-change-chip');
       if (chgChip) chgChip.innerText = t.conquistaChangeChip || 'Trocar';
-      const disc = document.getElementById('wl-conquista-disclaimer');
+      const disc = document.getElementById('wl-conquista-info-popover');
       if (disc) disc.innerText = t.conquistaDisclaimer || 'Estimativa baseada nos seus registros.';
+      const infoBtn = document.getElementById('wl-conquista-info-btn');
+      if (infoBtn) {
+        const infoAria = t.conquistaInfoAria || 'Sobre a economia estimada';
+        infoBtn.setAttribute('aria-label', infoAria);
+        infoBtn.setAttribute('title', infoAria);
+      }
       const expTitle = document.getElementById('wl-expenses-title');
       if (expTitle) expTitle.innerText = t.conquistaExpensesTitle || 'Seus gastos';
-      const expSub = document.getElementById('wl-expenses-sub');
-      if (expSub) expSub.innerText = t.conquistaExpensesSub || 'Gasto estimado com base nos seus registros';
       const expTodayLbl = document.getElementById('wl-expenses-today-lbl');
       if (expTodayLbl) expTodayLbl.innerText = t.conquistaExpensesToday || 'Hoje';
       const expMonthLbl = document.getElementById('wl-expenses-month-lbl');
-      if (expMonthLbl) expMonthLbl.innerText = t.conquistaExpensesMonth || 'Neste mês';
+      if (expMonthLbl) expMonthLbl.innerText = t.conquistaExpensesMonth || 'Este mês';
       if (typeof window.updateConquistaBagUI === 'function') window.updateConquistaBagUI();
       const subBtns = document.querySelectorAll('.wl-conquista-action-btn span');
       if (subBtns.length >= 2) {
@@ -5347,10 +5391,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    // Destaca visualmente a pílula de economia quando o slide Conquista (0 / Screen 29) está ativo
+    // Mantém a pílula de economia padronizada visualmente em todas as telas do carrossel
     document.querySelectorAll('.wl-home-savings-pill').forEach(pill => {
-      pill.classList.toggle('is-active', slideIdx === 0);
-      pill.setAttribute('aria-pressed', slideIdx === 0 ? 'true' : 'false');
+      pill.classList.remove('is-active');
+      pill.setAttribute('aria-current', slideIdx === 0 ? 'page' : 'false');
     });
 
     // Sincroniza badges de dia no calendário e pílulas de economia em todos os cabeçalhos
@@ -6595,26 +6639,28 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </button>
 
-          <!-- Métricas Centrais da Conquista: Economia em destaque -> Progresso + Restante -> Legenda -->
+          <!-- Métricas Centrais da Conquista: Economia em destaque + ícone info -> Progresso -->
           <div class="wl-conquista-metrics">
-            <span class="wl-conquista-hero-lbl" id="wl-conquista-hero-lbl">Economia estimada</span>
+            <div class="wl-conquista-hero-row">
+              <span class="wl-conquista-hero-lbl" id="wl-conquista-hero-lbl">Economia estimada</span>
+              <button type="button" class="wl-conquista-info-btn" id="wl-conquista-info-btn" aria-expanded="false" aria-controls="wl-conquista-info-popover" aria-label="Sobre a economia estimada" title="Sobre a economia estimada" onclick="toggleConquistaInfoPopover(event)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              </button>
+            </div>
+            <div class="wl-conquista-info-popover" id="wl-conquista-info-popover" role="note" hidden>
+              Estimativa baseada nos seus registros.
+            </div>
             <strong class="wl-conquista-main-val" id="wl-conquista-main-val">R$ 0,00</strong>
             <div class="wl-conquista-progress-row">
               <span class="wl-conquista-pct-pill" id="wl-conquista-pct-pill">0% do objetivo</span>
-              <span class="wl-conquista-dot-sep" aria-hidden="true">•</span>
-              <span class="wl-conquista-remaining" id="wl-conquista-remaining">Faltam R$ 250,00</span>
             </div>
-            <p class="wl-conquista-disclaimer" id="wl-conquista-disclaimer">
-              Estimativa baseada nos seus registros.
-            </p>
             <span id="savings-total-value" style="display:none;">R$ 0,00</span>
           </div>
 
-          <!-- Seção secundária e sutil: Seus gastos (independente da economia estimada) -->
+          <!-- Seção secundária e leve: Seus gastos (independente da economia estimada) -->
           <section class="wl-conquista-expenses-card" id="wl-conquista-expenses-card" aria-labelledby="wl-expenses-title">
             <div class="wl-expenses-head">
               <h3 class="wl-expenses-title" id="wl-expenses-title">Seus gastos</h3>
-              <span class="wl-expenses-per-cig" id="wl-expenses-per-cig">Custo estimado: R$ 0,50 / cigarro</span>
             </div>
             <div class="wl-expenses-grid">
               <div class="wl-expenses-item">
@@ -6623,7 +6669,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="wl-expenses-divider" aria-hidden="true"></div>
               <div class="wl-expenses-item">
-                <span class="wl-expenses-lbl" id="wl-expenses-month-lbl">Neste mês</span>
+                <span class="wl-expenses-lbl" id="wl-expenses-month-lbl">Este mês</span>
                 <strong class="wl-expenses-val" id="wl-expenses-month-val">R$ 0,00</strong>
               </div>
             </div>
@@ -10397,6 +10443,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
     const btnLabel = t.settingsRestartTest || 'Reiniciar experiência de teste';
+    const envBadge = t.localTestEnvBadge || 'Ambiente de teste local';
 
     if (!isLocal) {
       if (settingsSlot) settingsSlot.innerHTML = '';
@@ -10404,26 +10451,79 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (settingsSlot && !document.getElementById('settings-restart-test-btn')) {
+    const mountLocalTestControl = (slotEl, btnId) => {
+      if (!slotEl || document.getElementById(btnId)) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'habbi-local-test-wrap';
+      const badge = document.createElement('span');
+      badge.className = 'habbi-local-test-badge';
+      badge.textContent = envBadge;
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.id = 'settings-restart-test-btn';
+      btn.id = btnId;
       btn.className = 'habbi-local-test-btn';
       btn.textContent = btnLabel;
       btn.addEventListener('click', () => window.restartTestExperience());
-      settingsSlot.appendChild(btn);
-    }
-    if (profileSlot && !document.getElementById('profile-restart-test-btn')) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.id = 'profile-restart-test-btn';
-      btn.className = 'habbi-local-test-btn';
-      btn.textContent = btnLabel;
-      btn.addEventListener('click', () => window.restartTestExperience());
-      profileSlot.appendChild(btn);
-    }
+      wrap.appendChild(badge);
+      wrap.appendChild(btn);
+      slotEl.appendChild(wrap);
+    };
+
+    mountLocalTestControl(settingsSlot, 'settings-restart-test-btn');
+    mountLocalTestControl(profileSlot, 'profile-restart-test-btn');
   }
   window.syncLocalTestEnvControls = syncLocalTestEnvControls;
+
+  // Popover discreto de informação em "Economia estimada" (Tela 29)
+  window.toggleConquistaInfoPopover = function(ev) {
+    if (ev) ev.stopPropagation();
+    const btn = document.getElementById('wl-conquista-info-btn');
+    const pop = document.getElementById('wl-conquista-info-popover');
+    if (!btn || !pop) return;
+    const isHidden = pop.hasAttribute('hidden');
+    if (isHidden) {
+      pop.removeAttribute('hidden');
+      btn.setAttribute('aria-expanded', 'true');
+    } else {
+      pop.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  };
+  document.addEventListener('click', (ev) => {
+    const pop = document.getElementById('wl-conquista-info-popover');
+    const btn = document.getElementById('wl-conquista-info-btn');
+    if (!pop || !btn || pop.hasAttribute('hidden')) return;
+    if (!pop.contains(ev.target) && !btn.contains(ev.target)) {
+      pop.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'Escape') return;
+    const pop = document.getElementById('wl-conquista-info-popover');
+    const btn = document.getElementById('wl-conquista-info-btn');
+    if (pop && btn && !pop.hasAttribute('hidden')) {
+      pop.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.focus();
+    }
+  });
+
+  // Modal Backup e dados (agrupa exportação JSON e ação sensível de apagar registros)
+  window.openBackupAndDataModal = function() {
+    const modal = document.getElementById('habbi-backup-data-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      openAccessibleDialog(modal, window.closeBackupAndDataModal, 'habbi-backup-modal-title');
+    }
+  };
+  window.closeBackupAndDataModal = function() {
+    const modal = document.getElementById('habbi-backup-data-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      closeAccessibleDialog(modal);
+    }
+  };
 
   // Logout NÃO DESTRUTIVO: preserva o cofre do perfil ativo, limpa apenas memória/UI/inputs
   window.handleProfileLogout = function() {

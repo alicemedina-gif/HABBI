@@ -1974,9 +1974,10 @@ textarea:focus-visible,
 
 #settings-logout,
 .menu-list-item#settings-logout {
-  color: var(--coral-alert, #DC2626) !important;
-  border-color: var(--coral-alert, #DC2626) !important;
-  font-weight: 700;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+  background-color: var(--bg-color-alt) !important;
+  font-weight: 600;
 }
 
 .profile-logout-btn:hover {
@@ -8022,31 +8023,6 @@ textarea:focus-visible,
   background-color: var(--primary);
 }
 
-.wl-home-savings-pill.is-active,
-.wl-home-savings-pill.is-active span,
-.wl-home-savings-pill.is-active .top-savings-value-text {
-  border-color: var(--primary-dark) !important;
-  background-color: var(--primary-light) !important;
-  color: var(--text-on-accent) !important;
-}
-
-.wl-home-savings-pill.is-active span,
-.wl-home-savings-pill.is-active .top-savings-value-text {
-  background-color: transparent !important;
-}
-
-.device-screen.dark-theme .wl-home-savings-pill.is-active {
-  border-color: var(--primary) !important;
-  background-color: var(--primary) !important;
-  color: var(--text-on-accent) !important;
-}
-
-.device-screen.dark-theme .wl-home-savings-pill.is-active span,
-.device-screen.dark-theme .wl-home-savings-pill.is-active .top-savings-value-text {
-  background-color: transparent !important;
-  color: var(--text-on-accent) !important;
-}
-
 .wl-home-cig-stage .wl-cig-meter-wrap {
   cursor: default;
 }
@@ -8202,6 +8178,8 @@ textarea:focus-visible,
   width: 100%;
   margin: 2px 0 4px;
   height: 244px;
+  min-height: 200px;
+  flex-shrink: 0;
   overflow: hidden;
   cursor: pointer;
   user-select: none;
@@ -8259,23 +8237,67 @@ textarea:focus-visible,
   filter: url(#wl-bag-green-tint) !important;
 }
 
-/* Métricas da Conquista: Economia em destaque -> Progresso + Restante -> Legenda */
+/* Métricas da Conquista simplificadas: Economia em destaque + info discreto -> Progresso */
 .wl-conquista-metrics {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 3px;
-  margin: 2px 0 12px;
+  gap: 4px;
+  margin: 4px 0 16px;
+  position: relative;
+}
+.wl-conquista-hero-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 .wl-conquista-hero-lbl {
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
   letter-spacing: 0.01em;
 }
+.wl-conquista-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.18s ease, background-color 0.18s ease;
+}
+.wl-conquista-info-btn:hover,
+.wl-conquista-info-btn[aria-expanded="true"] {
+  color: var(--text-primary);
+  background-color: var(--bg-color-alt);
+}
+.wl-conquista-info-popover {
+  margin: 4px auto 6px;
+  padding: 8px 12px;
+  max-width: 268px;
+  border-radius: var(--border-radius-md);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}
+.wl-conquista-info-popover[hidden] {
+  display: none !important;
+}
 .wl-conquista-main-val {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.025em;
@@ -8286,8 +8308,6 @@ textarea:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
   margin-top: 6px;
 }
 .wl-conquista-pct-pill {
@@ -9999,8 +10019,9 @@ textarea:focus-visible,
 }
 .device-screen.dark-theme #settings-logout,
 .device-screen.dark-theme .menu-list-item#settings-logout {
-  color: #FF7F7F !important;
-  border-color: #FF7F7F !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--border-color) !important;
+  background-color: var(--card-bg) !important;
 }
 
 /* 11. RECORDES E GAMIFICAÇÃO DOS MINIJOGOS */
@@ -10552,6 +10573,13 @@ textarea:focus-visible,
   .wl-home-cig-stage .wl-cig-illustration-box {
     transform: scale(0.56) translate(3.45%, -5.38%);
   }
+  .wl-conquista-bag-stage {
+    height: 176px !important;
+    min-height: 176px !important;
+  }
+  .wl-conquista-bag-stage .wl-bag-illustration-box {
+    transform: translate(2.36%, 3.71%) scale(0.76) !important;
+  }
   .wl-home-focused-actions {
     gap: 8px;
   }
@@ -10645,39 +10673,186 @@ textarea:focus-visible,
   color: #111827;
 }
 
-.habbi-danger-action-item {
+.habbi-settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.habbi-settings-list .menu-list-item {
+  padding: 13px 16px;
+}
+
+.habbi-settings-btn-row {
   width: 100%;
-  background-color: var(--card-bg);
-  border: 1px solid var(--coral-alert);
-  color: var(--coral-alert);
-  cursor: pointer;
-  margin-top: 8px;
   font-family: var(--font-family);
+  color: var(--text-primary);
   text-align: left;
+  cursor: pointer;
+}
+
+.habbi-settings-btn-row .label {
+  color: var(--text-primary);
+}
+
+.habbi-settings-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+}
+
+.habbi-settings-logout-item {
+  width: 100%;
+  background-color: var(--bg-color-alt);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.habbi-settings-logout-item .label {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.habbi-settings-logout-item:hover {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+}
+
+.habbi-settings-logout-item:hover .label {
+  color: var(--text-primary);
+}
+
+.habbi-modal-subtle-divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 4px 0;
+}
+
+.habbi-modal-btn-subtle-danger {
+  background-color: var(--bg-color-alt);
+  color: var(--coral-alert);
+  border: 1px solid var(--border-color);
+  font-weight: 600;
+}
+
+.habbi-modal-btn-subtle-danger:hover {
+  border-color: var(--coral-alert);
+}
+
+.habbi-local-test-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.habbi-local-test-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .habbi-local-test-btn {
-  width: 100%;
   min-height: 44px;
-  padding: 10px 14px;
-  margin-top: 8px;
-  background-color: var(--bg-color-alt);
-  border: 1px dashed var(--border-color-active);
-  border-radius: var(--border-radius-md);
+  padding: 8px 14px;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
   color: var(--text-secondary);
   font-family: var(--font-family);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
   box-sizing: border-box;
+  transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.habbi-local-test-btn:hover {
+  background-color: var(--bg-color-alt);
+  color: var(--text-primary);
 }
 
 .habbi-local-test-btn:active {
   transform: scale(0.98);
+}
+
+/* Créditos delicados na tela Sobre o Habbi */
+.habbi-about-credits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.habbi-about-credit-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.habbi-about-author {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.habbi-about-email {
+  color: var(--primary-dark);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.18s ease;
+}
+
+.habbi-about-email:hover,
+.habbi-about-email:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+.device-screen.dark-theme .habbi-about-email {
+  color: var(--primary);
+}
+
+.device-screen.dark-theme .habbi-settings-logout-item {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.device-screen.dark-theme .habbi-local-test-btn {
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.device-screen.dark-theme .habbi-local-test-btn:hover {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
 }
 
 .habbi-form-error {
