@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
       homeDaysPlural: 'dias sem fumar',
       homeMetaPctSuffix: 'da meta de hoje',
       homeNoSmoke: 'Não fumei hoje',
-      homeSosBtn: 'SOS • Ajuda rápida',
+      homeSosBtn: 'SOS',
       homeAddCig: 'Registrar cigarro',
       homeSwipeHint: '‹ Arraste para explorar ›',
 
@@ -710,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
       homeDaysPlural: 'smoke-free days',
       homeMetaPctSuffix: "of today's goal",
       homeNoSmoke: 'Smoke-free today',
-      homeSosBtn: 'SOS • Quick help',
+      homeSosBtn: 'SOS',
       homeAddCig: 'Log cigarette',
       homeSwipeHint: '‹ Swipe to explore ›',
 
@@ -1145,7 +1145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       homeDaysPlural: 'días sin fumar',
       homeMetaPctSuffix: 'de la meta de hoy',
       homeNoSmoke: 'No fumé hoy',
-      homeSosBtn: 'SOS • Ayuda rápida',
+      homeSosBtn: 'SOS',
       homeAddCig: 'Registrar cigarrillo',
       homeSwipeHint: '‹ Desliza para explorar ›',
 
@@ -1708,7 +1708,7 @@ document.addEventListener('DOMContentLoaded', () => {
       homeNoSmokeText.innerText = isConfirmed ? (t.homeNoSmoke + ' ✓') : t.homeNoSmoke;
     }
     const homeSosBtnText = document.querySelector('.wl-home-sos-pill span');
-    if (homeSosBtnText) homeSosBtnText.innerText = t.homeSosBtn || 'SOS • Ajuda rápida';
+    if (homeSosBtnText) homeSosBtnText.innerText = t.homeSosBtn || 'SOS';
     const homeAddCigText = document.querySelector('.wl-home-add-btn span');
     if (homeAddCigText) homeAddCigText.innerText = t.homeAddCig || 'Registrar cigarro';
     const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
@@ -4952,8 +4952,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div class="wl-home-focused-actions">
           <button type="button" class="wl-home-sos-pill" id="btn-home-sos" onclick="goToScreen(12)" aria-label="SOS Ajuda rápida para momentos de vontade" title="SOS Ajuda rápida">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            <span>SOS • Ajuda rápida</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <span>SOS</span>
           </button>
 
           <div class="wl-home-primary-row">

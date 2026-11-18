@@ -4759,7 +4759,7 @@ textarea:focus-visible,
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
@@ -4767,18 +4767,24 @@ textarea:focus-visible,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  align-self: center;
+  margin: 0 auto;
+  gap: 5px;
   height: 44px;
   min-height: 44px;
-  padding: 0 20px;
+  min-width: 84px;
+  padding: 0 18px;
   border-radius: 999px;
   background-color: rgba(255, 159, 67, 0.18);
   border: 1.5px solid rgba(255, 159, 67, 0.55);
   color: #7C2D12;
   font-family: var(--font-family);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 800;
+  letter-spacing: 0.03em;
+  line-height: 1;
   cursor: pointer;
+  box-sizing: border-box;
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
