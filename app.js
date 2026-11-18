@@ -2106,6 +2106,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (s29) {
       const h2s = s29.querySelectorAll('.wl-sav-title');
       h2s.forEach(h2 => { h2.innerText = t.conquistaTitle || 'Minha conquista'; });
+      const conqIntroSub = s29.querySelector('.wl-conquista-carousel-intro .caption');
+      if (conqIntroSub) {
+        conqIntroSub.innerText = lang === 'EN' ? 'Track your savings and goals' : (lang === 'ES' ? 'Sigue tu ahorro y tus metas' : 'Acompanhe sua economia e metas');
+      }
+      const conqToolsSub = s29.querySelector('#wl-conquista-tools-header .caption');
+      if (conqToolsSub) {
+        conqToolsSub.innerText = lang === 'EN' ? 'Savings and goals' : (lang === 'ES' ? 'Ahorro y metas' : 'Economia e metas');
+      }
       const goalLbl = document.querySelector('.wl-conquista-goal-label');
       if (goalLbl) goalLbl.innerText = t.conquistaGoalLabel || 'Objetivo';
       const chgChip = document.querySelector('.wl-conquista-change-chip');
@@ -3014,6 +3022,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (screenNum === 12 && currentScreen !== 12 && currentScreen !== 13 && currentScreen !== 15) {
       userState.sosReturnScreen = currentScreen;
     }
+    if (screenNum === 16 && (currentScreen === 10 || currentScreen === 15 || currentScreen === 29)) {
+      userState.calendarReturnScreen = currentScreen;
+    }
     if ((screenNum === 23 || screenNum === 24) && currentScreen === 21) {
       userState.authReturnScreen = 21;
     }
@@ -3038,6 +3049,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reflexGameState.idleTimer = null;
       }
       userState.isGameActive = false;
+      resetMinigamesUI();
     }
 
     const prevScreenNum = currentScreen;
@@ -3100,7 +3112,9 @@ document.addEventListener('DOMContentLoaded', () => {
           window.goToCarouselSlide(0, false);
         }
       } else {
-        // Screen 10
+        // Home: sempre volta ao modo carrossel (sem botão voltar)
+        userState.minijogosMode = 'carousel';
+        userState.conquistaMode = 'carousel';
         if (s15El) s15El.classList.remove('tools-mode');
         if (s29El) s29El.classList.remove('tools-mode');
         if (typeof window.goToCarouselSlide === 'function') {
@@ -3211,8 +3225,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const toolsHeader = document.getElementById('wl-minijogos-tools-header');
       const isCarouselMode = userState.minijogosMode !== 'tools';
 
-      if (carouselHeader) carouselHeader.style.setProperty('display', isCarouselMode ? 'block' : 'none', 'important');
-      if (toolsHeader) toolsHeader.style.setProperty('display', isCarouselMode ? 'none' : 'flex', 'important');
+      // Cabeçalhos são controlados só por CSS (.tools-mode) — sem estilos inline que "vazam" o botão voltar
+      if (carouselHeader) carouselHeader.style.removeProperty('display');
+      if (toolsHeader) toolsHeader.style.removeProperty('display');
+      if (!userState.isGameActive) resetMinigamesUI();
 
       const dayNumEl = document.getElementById('wl-minijogos-day-num');
       if (dayNumEl) {
@@ -3280,7 +3296,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const backBtn = document.getElementById('btn-conquista-back') || document.querySelector('.btn-back.wl-sav-back');
       if (backBtn) {
-        backBtn.style.setProperty('display', isCarouselMode ? 'none' : 'inline-flex', 'important');
+        backBtn.style.removeProperty('display');
       }
       updateSavingsDisplay();
       if (typeof window.updateConquistaBagUI === 'function') {
@@ -3891,6 +3907,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.goToCarouselSlide = function(slideIdx, smooth = true) {
     if (slideIdx < 0) slideIdx = 0;
     if (slideIdx > 2) slideIdx = 2;
+    if (currentCarouselSlide === 2 && slideIdx !== 2) {
+      // Saindo dos Minijogos pelo carrossel: encerra jogo em andamento e restaura o menu
+      if (typeof reflexGameState !== 'undefined' && reflexGameState && reflexGameState.idleTimer) {
+        clearTimeout(reflexGameState.idleTimer);
+        reflexGameState.idleTimer = null;
+      }
+      resetMinigamesUI();
+    }
     currentCarouselSlide = slideIdx;
 
     const screenMap = [29, 10, 15];
@@ -4039,20 +4063,38 @@ document.addEventListener('DOMContentLoaded', () => {
           ? rawSrc + '#bushCorner'
           : (isSplashFrame ? rawSrc + '#splashNorm' : rawSrc);
         if (cleanImgCache[cacheKey]) {
-          img.src = cleanImgCache[cacheKey];
+          if (cleanImgCache[cacheKey] !== rawSrc) {
+            img.src = cleanImgCache[cacheKey];
+          }
           return;
         }
         const process = () => {
           if (!img.naturalWidth || (img.getAttribute('src') || '').startsWith('data:')) return;
           try {
+            // Verificação ultra-rápida dos 4 cantos: se o PNG já tem fundo transparente,
+            // mantém a imagem original intacta (qualidade 100% original e zero travamento na Splash)
+            if (!isBushCorner) {
+              const probe = document.createElement('canvas');
+              probe.width = 2;
+              probe.height = 2;
+              const pctx = probe.getContext('2d', { willReadFrequently: true });
+              const nw = img.naturalWidth;
+              const nh = img.naturalHeight;
+              pctx.drawImage(img, 0, 0, 1, 1, 0, 0, 1, 1);
+              pctx.drawImage(img, nw - 1, 0, 1, 1, 1, 0, 1, 1);
+              pctx.drawImage(img, 0, nh - 1, 1, 1, 0, 1, 1, 1);
+              pctx.drawImage(img, nw - 1, nh - 1, 1, 1, 1, 1, 1, 1);
+              const pd = pctx.getImageData(0, 0, 2, 2).data;
+              if (pd[3] < 20 && pd[7] < 20 && pd[11] < 20 && pd[15] < 20) {
+                cleanImgCache[cacheKey] = rawSrc;
+                return;
+              }
+            }
             const c = document.createElement('canvas');
-            // Reduz a imagem (máx. 420px) antes do processamento por pixel: evita travar a thread principal
-            const maxDim = 420;
-            const scaleDown = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
-            c.width = Math.max(1, Math.round(img.naturalWidth * scaleDown));
-            c.height = Math.max(1, Math.round(img.naturalHeight * scaleDown));
+            c.width = img.naturalWidth;
+            c.height = img.naturalHeight;
             const ctx = c.getContext('2d', { willReadFrequently: true });
-            ctx.drawImage(img, 0, 0, c.width, c.height);
+            ctx.drawImage(img, 0, 0);
             const imgData = ctx.getImageData(0, 0, c.width, c.height);
             const d = imgData.data;
             const w = c.width;
@@ -4263,7 +4305,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="wl-lang-flag-circle" id="wl-lang-flag-circle">${flagSVGs.PT}</span>
               <span class="wl-lang-code-txt" id="wl-lang-code-txt">PT</span>
             </button>
-            <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start" onclick="if(window.clearSplashRoulette)window.clearSplashRoulette(); window.goToScreen(3);" ontouchend="if(window.clearSplashRoulette)window.clearSplashRoulette(); window.goToScreen(3);">INICIAR</button>
+            <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start">INICIAR</button>
           </div>
         </div>
       `;
@@ -4361,13 +4403,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       const startBtn = document.getElementById('btn-splash-start');
       if (startBtn) {
-        const handleStartSplash = (e) => {
-          if (e) e.stopPropagation();
+        startBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           if (window.clearSplashRoulette) window.clearSplashRoulette();
           showScreen(3);
-        };
-        startBtn.addEventListener('click', handleStartSplash);
-        startBtn.addEventListener('touchend', handleStartSplash);
+        });
       }
 
       // Botão clicável de idioma (PT -> EN -> ES -> PT)
@@ -4946,6 +4987,8 @@ document.addEventListener('DOMContentLoaded', () => {
         userState.selectedIntervention = 'Respiração 4-6';
         showScreen(13);
       } else if (tool === 'minijogos') {
+        if (typeof resetMinigamesUI === 'function') resetMinigamesUI();
+        window._screen15EntryTime = Date.now();
         userState.minijogosMode = 'tools';
         userState.minijogosReturnScreen = 14;
         showScreen(15);
@@ -5075,7 +5118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <!-- Modo Ferramentas: Cabeçalho com botão Voltar e título tradicional -->
-        <div id="wl-conquista-tools-header" class="detail-header mb-16 wl-sav-header" style="display:none;">
+        <div id="wl-conquista-tools-header" class="detail-header mb-16 wl-sav-header">
           <div class="wl-sav-header-left">
             <button type="button" class="btn-back wl-sav-back" id="btn-conquista-back" onclick="handleBackFromScreen(29)" aria-label="Voltar">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -6984,6 +7027,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Game Play selectors
   function playInlineGame(gameType) {
+    // Impede toque fantasma ao abrir Minijogos a partir de Ferramentas ou SOS
+    if (window._screen15EntryTime && (Date.now() - window._screen15EntryTime) < 280) {
+      return;
+    }
     userState.isGameActive = true;
     const menuEl = document.getElementById('minijogos-menu-list');
     const panelEl = document.getElementById('game-execution-panel');
@@ -7034,28 +7081,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function quitInlineGame() {
+  function resetMinigamesUI() {
     userState.isGameActive = false;
-    if (reflexGameState.idleTimer) {
+    if (typeof reflexGameState !== 'undefined' && reflexGameState && reflexGameState.idleTimer) {
       clearTimeout(reflexGameState.idleTimer);
       reflexGameState.idleTimer = null;
     }
-    const bgSilEl = document.getElementById('game-screen-bg-silhouette');
-    if (bgSilEl) {
-      bgSilEl.style.display = 'none';
-    }
     const menuEl = document.getElementById('minijogos-menu-list');
     const panelEl = document.getElementById('game-execution-panel');
-    if (menuEl && panelEl) {
-      menuEl.style.display = '';
-      panelEl.style.display = 'none';
-    }
+    const bgSilEl = document.getElementById('game-screen-bg-silhouette');
+    const boardEl = document.getElementById('game-board-container');
+    if (menuEl) menuEl.style.display = '';
+    if (panelEl) panelEl.style.display = 'none';
+    if (bgSilEl) bgSilEl.style.display = 'none';
+    if (boardEl) boardEl.innerHTML = '';
+  }
+
+  function quitInlineGame() {
+    resetMinigamesUI();
     if (typeof updateMinigamesRecordUI === 'function') {
       updateMinigamesRecordUI();
-    }
-    if (userState.minijogosReturnScreen === 12) {
-      userState.minijogosReturnScreen = 10;
-      showScreen(12);
     }
   }
   window.quitInlineGame = quitInlineGame;
@@ -7672,6 +7717,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.handleSosChoice = function(choice) {
     userState.openedFromMenu = false;
     if (choice === 'distrair') {
+      if (typeof resetMinigamesUI === 'function') resetMinigamesUI();
+      window._screen15EntryTime = Date.now();
       userState.minijogosMode = 'tools';
       userState.minijogosReturnScreen = 12;
       showScreen(15);
@@ -7733,13 +7780,25 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 4. Retorno ao Menu Lateral (Hub) caso a tela tenha sido aberta diretamente por ele
-    if (userState.openedFromMenu) {
+    // 4. Retorno ao Menu Lateral (Hub) apenas para as 4 telas raiz abertas diretamente pelo menu (14, 17, 21, 22)
+    if (userState.openedFromMenu && (fromScreenNum === 14 || fromScreenNum === 17 || fromScreenNum === 21 || fromScreenNum === 22)) {
       userState.openedFromMenu = false;
       showScreen(10);
       setTimeout(() => {
         window.toggleHabbiHubMenu(true);
       }, 40);
+      return;
+    }
+
+    // Calendário (Tela 16): retorna ao slide do carrossel de onde veio (Conquista, Home ou Minijogos)
+    if (fromScreenNum === 16) {
+      const returnScreen = userState.calendarReturnScreen || 10;
+      userState.calendarReturnScreen = 10;
+      if (returnScreen === 29 || returnScreen === 10 || returnScreen === 15) {
+        userState.minijogosMode = 'carousel';
+        userState.conquistaMode = 'carousel';
+      }
+      showScreen(returnScreen);
       return;
     }
 
@@ -8230,8 +8289,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (gmMath) gmMath.addEventListener('click', () => playInlineGame('math'));
   const gmRef = document.getElementById('btn-game-reflex');
   if (gmRef) gmRef.addEventListener('click', () => playInlineGame('reflex'));
-  const gmQuit = document.getElementById('btn-quit-game');
-  if (gmQuit) gmQuit.addEventListener('click', () => quitInlineGame());
+  // btn-quit-game já usa onclick="quitInlineGame()" no HTML (evita disparo duplicado)
 
   // History timeline rendering (mostra tudo o que o usuário fez, somente leitura, sem opção de editar)
   function renderHistoryTimeline() {
@@ -8696,15 +8754,14 @@ document.addEventListener('DOMContentLoaded', () => {
       isHorizontalGesture = false;
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const container = getContainer();
-      if (!container) return;
-      container.addEventListener('touchstart', onTouchStart, { passive: true });
-      container.addEventListener('touchmove', onTouchMove, { passive: false });
-      container.addEventListener('touchend', onTouchEnd, { passive: true });
+    const onbContainer = getContainer();
+    if (onbContainer) {
+      onbContainer.addEventListener('touchstart', onTouchStart, { passive: true });
+      onbContainer.addEventListener('touchmove', onTouchMove, { passive: false });
+      onbContainer.addEventListener('touchend', onTouchEnd, { passive: true });
 
       // Suporte suave a mouse drag no container de onboarding (desktop)
-      container.addEventListener('mousedown', (e) => {
+      onbContainer.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         onTouchStart(e);
         const onMouseMove = (ev) => onTouchMove(ev);
@@ -8716,7 +8773,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
       });
-    });
+    }
   })();
 
   // Carrossel horizontal das telas principais (Conquista 29 ↔ Home 10 ↔ Minijogos 15) com suporte a touch e mouse drag
@@ -8760,10 +8817,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const diffY = y - startY;
 
       if (!isHorizontalSwipe) {
-        if (Math.abs(diffX) > 8 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (Math.abs(diffX) > 16 && Math.abs(diffX) > Math.abs(diffY) * 1.25) {
           isHorizontalSwipe = true;
           hasDragged = true;
-        } else if (Math.abs(diffY) > 8) {
+        } else if (Math.abs(diffY) > 12) {
           isTracking = false;
           return;
         }
@@ -8797,6 +8854,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const finalX = (endX !== undefined ? endX : currentX);
         const diffX = finalX - startX;
         const threshold = 40;
+        userState.minijogosMode = 'carousel';
+        userState.conquistaMode = 'carousel';
+        const mc = document.getElementById('main-carousel-container');
+        if (mc) mc.classList.remove('tools-mode');
+        const s15 = document.querySelector('.screen[data-screen="15"]');
+        if (s15) s15.classList.remove('tools-mode');
+        const s29 = document.querySelector('.screen[data-screen="29"]');
+        if (s29) s29.classList.remove('tools-mode');
 
         if (diffX < -threshold && currentCarouselSlide < 2) {
           window.goToCarouselSlide(currentCarouselSlide + 1, true);
@@ -8807,7 +8872,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         window.habbiCarouselJustDragged = true;
-        setTimeout(() => { window.habbiCarouselJustDragged = false; }, 200);
+        setTimeout(() => { window.habbiCarouselJustDragged = false; }, 180);
       }
     }
 
@@ -8818,7 +8883,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, true);
 
-    const container = document.getElementById('main-carousel-container') || document;
+    // Gestos de arrasto ficam SOMENTE no viewport (abaixo da nav bar fixa) para nunca interferir nos botões do topo
+    const container = document.getElementById('main-carousel-viewport') || document.getElementById('main-carousel-container') || document;
 
     container.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches.length === 1) {
@@ -9199,6 +9265,14 @@ document.addEventListener('DOMContentLoaded', () => {
   window.checkAndTriggerFirstTimeTutorial = checkAndTriggerFirstTimeTutorial;
   window.ensureCalTutorialDemoRow = ensureCalTutorialDemoRow;
   window.removeCalTutorialDemoRow = removeCalTutorialDemoRow;
+
+  // Overlays (menu Hub, objetivo, parâmetros) ficam fora das telas que deslizam:
+  // um ancestral com transform quebraria o posicionamento/cliques deles.
+  ['wl-hub-menu-modal', 'wl-goal-modal-overlay', 'wl-sav-sheet-overlay'].forEach(id => {
+    const el = document.getElementById(id);
+    const host = document.querySelector('.device-screen');
+    if (el && host && el.parentElement !== host) host.appendChild(el);
+  });
 
   // Initial runs
   if (typeof window.applyAppLanguage === 'function') {
