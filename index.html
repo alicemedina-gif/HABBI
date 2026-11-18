@@ -212,33 +212,33 @@
                 <!-- CONTAINER DO CARROSSEL PRINCIPAL (TELAS 29 ↔ 10 ↔ 15) -->
         <div class="main-carousel-container" id="main-carousel-container">
           <!-- NAV BAR ESTÁTICA: não se move durante a rolagem; só o conteúdo abaixo desliza -->
-          <div class="main-carousel-fixed-header" id="main-carousel-header">
+          <header class="main-carousel-fixed-header" id="main-carousel-header">
             <div class="wl-home-topbar">
               <button type="button" class="wl-top-nav-btn" onclick="goToScreen(16)" title="Calendário" aria-label="Calendário">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span class="wl-top-cal-badge" id="wl-home-day-num">15</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="18" rx="3" ry="3"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span class="wl-top-cal-badge" id="wl-home-day-num" aria-hidden="true">15</span>
               </button>
-              <button type="button" class="wl-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <button type="button" class="wl-home-savings-pill" id="btn-home-savings-pill" onclick="navigateHorizontalCarousel(29)" title="Ver sua conquista" aria-label="Economia estimada: R$ 0,00. Abrir Conquista">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 <span id="home-savings-top" class="top-savings-value-text">R$ 0,00</span>
               </button>
               <button type="button" class="wl-top-nav-btn" onclick="toggleHabbiHubMenu(true)" title="Menu" aria-label="Abrir menu">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
               </button>
             </div>
-            <div class="wl-home-pager-bar">
+            <nav class="wl-home-pager-bar" aria-label="Abas principais">
               <div class="wl-pager-nav-dots wl-carousel-tabs" role="tablist" aria-label="Navegação entre abas principais">
                 <button type="button" class="wl-pager-dot wl-pager-tab" id="wl-tab-conquista" role="tab" data-slide-idx="0" aria-selected="false" aria-controls="slide-conquista" tabindex="-1" onclick="navigateHorizontalCarousel(29)" title="Conquista"><span id="wl-tab-lbl-conquista">Conquista</span></button>
                 <button type="button" class="wl-pager-dot wl-pager-tab active" id="wl-tab-inicio" role="tab" data-slide-idx="1" aria-selected="true" aria-controls="slide-inicio" tabindex="0" onclick="navigateHorizontalCarousel(10)" title="Início"><span id="wl-tab-lbl-inicio">Início</span></button>
                 <button type="button" class="wl-pager-dot wl-pager-tab" id="wl-tab-minijogos" role="tab" data-slide-idx="2" aria-selected="false" aria-controls="slide-minijogos" tabindex="-1" onclick="navigateHorizontalCarousel(15)" title="Minijogos"><span id="wl-tab-lbl-minijogos">Minijogos</span></button>
               </div>
               <div class="wl-carousel-swipe-hint" id="wl-carousel-swipe-hint" style="display:none;"><span>Arraste para explorar</span></div>
-            </div>
-          </div>
+            </nav>
+          </header>
           <div class="main-carousel-viewport" id="main-carousel-viewport">
           <div class="main-carousel-track" id="main-carousel-track">
             <!-- SLIDE 0: CONQUISTA (SCREEN 29) -->
-            <section class="screen wl-savings-screen carousel-slide" data-screen="29">
+            <section class="screen wl-savings-screen carousel-slide" id="slide-conquista" role="tabpanel" aria-labelledby="wl-tab-conquista" data-screen="29">
               <div id="wl-conquista-carousel-header">
                 <div class="wl-conquista-carousel-intro">
                   <h2 class="wl-sav-title">Minha conquista</h2>
@@ -262,7 +262,7 @@
               </div>
             </section>
 <!-- SCREEN 10: HOME -->
-        <section class="screen carousel-slide" data-screen="10" style="padding:0; overflow:hidden;">
+        <section class="screen carousel-slide" id="slide-inicio" role="tabpanel" aria-labelledby="wl-tab-inicio" data-screen="10" style="padding:0; overflow:hidden;">
 
           <!-- Header compacto -->
           <div class="home-v2-header">
@@ -316,8 +316,8 @@
 
         </section>
 <!-- SCREEN 15: MINIJOGOS -->
-        <section class="screen carousel-slide" data-screen="15">
-          <!-- Modo Carrossel: Topbar da Home (Calendário + Pílula Economia + Menu) e 3 Pager Dots -->
+        <section class="screen carousel-slide" id="slide-minijogos" role="tabpanel" aria-labelledby="wl-tab-minijogos" data-screen="15">
+          <!-- Modo Carrossel: Topbar da Home (Calendário + Pílula Economia + Menu) e 3 Abas -->
           <div id="wl-minijogos-carousel-header">
             <div class="wl-minijogos-carousel-intro">
               <h2 class="wl-minijogos-title">Minijogos</h2>
@@ -329,7 +329,7 @@
           <div id="wl-minijogos-tools-header" class="detail-header mb-16 wl-minijogos-header">
             <div class="wl-minijogos-header-left">
               <button type="button" class="btn-back wl-minijogos-back" onclick="handleMinijogosBack()" aria-label="Voltar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-primary)" stroke-width="2.5" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
               </button>
               <div>
                 <h2 class="wl-minijogos-title">Minijogos</h2>
@@ -340,48 +340,48 @@
 
           <div id="minijogos-menu-list" class="games-grid-2x2">
             <!-- 1. Memória Rápida -->
-            <div class="game-grid-card" id="btn-game-memory" role="button" tabindex="0">
-              <div class="game-icon-square teal">
-                <img src="assets/memoria_icon.png" alt="Memória Rápida" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/memoria_Prancheta 1.png';">
-              </div>
-              <div class="game-grid-card-info">
+            <button type="button" class="game-grid-card" id="btn-game-memory">
+              <span class="game-icon-square teal" aria-hidden="true">
+                <img src="assets/memoria_icon.png" alt="" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/memoria_Prancheta 1.png';">
+              </span>
+              <span class="game-grid-card-info">
                 <span class="game-grid-card-title">Memória</span>
                 <span class="game-grid-card-record" id="record-game-memory">Recorde: 0</span>
-              </div>
-            </div>
+              </span>
+            </button>
 
             <!-- 2. Sequência Numérica -->
-            <div class="game-grid-card" id="btn-game-sequence" role="button" tabindex="0">
-              <div class="game-icon-square green">
-                <img src="assets/sequencia_icon.png" alt="Sequência Numérica" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/sequencia_Prancheta 1.png';">
-              </div>
-              <div class="game-grid-card-info">
+            <button type="button" class="game-grid-card" id="btn-game-sequence">
+              <span class="game-icon-square green" aria-hidden="true">
+                <img src="assets/sequencia_icon.png" alt="" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/sequencia_Prancheta 1.png';">
+              </span>
+              <span class="game-grid-card-info">
                 <span class="game-grid-card-title">Sequência</span>
                 <span class="game-grid-card-record" id="record-game-sequence">Recorde: 0</span>
-              </div>
-            </div>
+              </span>
+            </button>
 
             <!-- 3. Matemática Básica -->
-            <div class="game-grid-card" id="btn-game-math" role="button" tabindex="0">
-              <div class="game-icon-square purple">
-                <img src="assets/matematica_icon.png" alt="Matemática Básica" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/matematica_Prancheta 1.png';">
-              </div>
-              <div class="game-grid-card-info">
+            <button type="button" class="game-grid-card" id="btn-game-math">
+              <span class="game-icon-square purple" aria-hidden="true">
+                <img src="assets/matematica_icon.png" alt="" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/matematica_Prancheta 1.png';">
+              </span>
+              <span class="game-grid-card-info">
                 <span class="game-grid-card-title">Matemática</span>
                 <span class="game-grid-card-record" id="record-game-math">Recorde: 0</span>
-              </div>
-            </div>
+              </span>
+            </button>
 
             <!-- 4. Jogo do Tap -->
-            <div class="game-grid-card" id="btn-game-reflex" role="button" tabindex="0">
-              <div class="game-icon-square yellow">
-                <img src="assets/patinha_icon.png" alt="Jogo do Tap" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/patinha_icon.png';">
-              </div>
-              <div class="game-grid-card-info">
+            <button type="button" class="game-grid-card" id="btn-game-reflex">
+              <span class="game-icon-square yellow" aria-hidden="true">
+                <img src="assets/patinha_icon.png" alt="" class="game-card-icon-img" onerror="this.onerror=null;this.src='assets/patinha_icon.png';">
+              </span>
+              <span class="game-grid-card-info">
                 <span class="game-grid-card-title">Jogo do Tap</span>
                 <span class="game-grid-card-record" id="record-game-reflex">Recorde: 0</span>
-              </div>
-            </div>
+              </span>
+            </button>
           </div>
           <div id="game-execution-panel" style="display:none;flex-direction:column;flex:1;width:100%;height:100%;position:relative;overflow:hidden;">
             <img id="game-screen-bg-silhouette" class="game-screen-bg-silhouette" alt="" aria-hidden="true">

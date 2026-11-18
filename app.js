@@ -3872,6 +3872,131 @@ document.addEventListener('DOMContentLoaded', () => {
   window.showToast = showToast;
   window.hideToast = hideToast;
 
+  // ==========================================================================
+  // Helper reutilizável de diálogo acessível (WCAG 2.2 AA)
+  // Garante role="dialog", aria-modal="true", aria-labelledby, foco inicial,
+  // focus trap (Tab/Shift+Tab), fechamento por Escape e restauração de foco.
+  // ==========================================================================
+  const habbiDialogStack = [];
+
+  function getFocusableElements(container) {
+    if (!container) return [];
+    const selector = [
+      'a[href]',
+      'button:not([disabled]):not([aria-hidden="true"])',
+      'input:not([disabled]):not([type="hidden"])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])'
+    ].join(', ');
+    return Array.from(container.querySelectorAll(selector)).filter(el => {
+      if (el.closest('[aria-hidden="true"]') || el.closest('[inert]')) return false;
+      const st = window.getComputedStyle(el);
+      if (st.display === 'none' || st.visibility === 'hidden') return false;
+      return el.offsetParent !== null || st.position === 'fixed';
+    });
+  }
+
+  function openAccessibleDialog(overlayEl, closeFn, labelledById) {
+    if (!overlayEl) return;
+    const dialogRoot = overlayEl.querySelector('[role="dialog"]') || overlayEl;
+    if (!dialogRoot.getAttribute('role')) dialogRoot.setAttribute('role', 'dialog');
+    dialogRoot.setAttribute('aria-modal', 'true');
+    if (labelledById && !dialogRoot.getAttribute('aria-labelledby')) {
+      dialogRoot.setAttribute('aria-labelledby', labelledById);
+    }
+
+    const existingIdx = habbiDialogStack.findIndex(item => item.overlayEl === overlayEl);
+    const prevFocus = existingIdx !== -1
+      ? habbiDialogStack[existingIdx].prevFocus
+      : (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+
+    if (existingIdx !== -1) {
+      document.removeEventListener('keydown', habbiDialogStack[existingIdx].onKeydown, true);
+      habbiDialogStack.splice(existingIdx, 1);
+    }
+
+    const onKeydown = (e) => {
+      if (habbiDialogStack.length === 0 || habbiDialogStack[habbiDialogStack.length - 1].overlayEl !== overlayEl) {
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof closeFn === 'function') closeFn();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const focusables = getFocusableElements(dialogRoot);
+        if (focusables.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement;
+        if (e.shiftKey) {
+          if (active === first || !dialogRoot.contains(active)) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (active === last || !dialogRoot.contains(active)) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    habbiDialogStack.push({ overlayEl, dialogRoot, prevFocus, closeFn, onKeydown });
+    document.addEventListener('keydown', onKeydown, true);
+
+    const focusInitial = () => {
+      const focusables = getFocusableElements(dialogRoot);
+      if (focusables.length > 0) {
+        focusables[0].focus();
+      } else {
+        if (!dialogRoot.hasAttribute('tabindex')) dialogRoot.setAttribute('tabindex', '-1');
+        dialogRoot.focus();
+      }
+    };
+    focusInitial();
+    requestAnimationFrame(() => {
+      if (!dialogRoot.contains(document.activeElement)) {
+        focusInitial();
+      }
+    });
+  }
+
+  function closeAccessibleDialog(overlayEl, restoreFocus = true) {
+    if (!overlayEl) return;
+    const idx = habbiDialogStack.findIndex(item => item.overlayEl === overlayEl);
+    if (idx === -1) return;
+    const entry = habbiDialogStack[idx];
+    document.removeEventListener('keydown', entry.onKeydown, true);
+    habbiDialogStack.splice(idx, 1);
+    if (restoreFocus && entry.prevFocus && typeof entry.prevFocus.focus === 'function' && document.contains(entry.prevFocus)) {
+      const target = entry.prevFocus;
+      if (!target.disabled && !target.closest('[inert]')) {
+        try { target.focus(); } catch (_e) {}
+      }
+    }
+  }
+  window.openAccessibleDialog = openAccessibleDialog;
+  window.closeAccessibleDialog = closeAccessibleDialog;
+
+  function syncCarouselSlidesInert(activeSlideIdx, carouselIsVisible) {
+    const screenMap = [29, 10, 15];
+    screenMap.forEach((scrId, idx) => {
+      const slideEl = document.querySelector(`.screen[data-screen="${scrId}"]`);
+      if (!slideEl) return;
+      const isActive = Boolean(carouselIsVisible && idx === activeSlideIdx);
+      slideEl.inert = !isActive;
+      slideEl.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    });
+  }
+
   // Function to transition to a screen
   function showScreen(screenNum) {
     if (screenNum === 2) screenNum = 1;
@@ -4002,6 +4127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (mainCarousel) {
         mainCarousel.classList.remove('active');
       }
+      syncCarouselSlidesInert(-1, false);
       if (!(screenNum >= 3 && screenNum <= 5)) {
         screenElements.forEach(screen => {
           if (parseInt(screen.dataset.screen) === screenNum) {
@@ -4336,6 +4462,13 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerText = heroFormatted;
     });
 
+    const activeLangPill = (userState.currentLang || 'PT').toUpperCase();
+    const tPill = (window.HABBI_I18N && window.HABBI_I18N[activeLangPill]) ? window.HABBI_I18N[activeLangPill] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    const pillAriaTpl = tPill.savingsPillAria || 'Economia estimada: {0}. Abrir Conquista';
+    document.querySelectorAll('.wl-home-savings-pill').forEach(pill => {
+      pill.setAttribute('aria-label', pillAriaTpl.replace('{0}', heroFormatted));
+    });
+
     // Elementos da nova Tela 29 (Sua economia)
     const statusBadgeEl = document.getElementById('wl-sav-status-badge');
     const cigsSummaryEl = document.getElementById('wl-sav-cigs-summary');
@@ -4624,11 +4757,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateSavingsDisplay();
     overlay.classList.add('is-open');
+    openAccessibleDialog(overlay, window.closeSavingsSheet, 'wl-sav-sheet-title');
   };
 
   window.closeSavingsSheet = function() {
     const overlay = document.getElementById('wl-sav-sheet-overlay');
-    if (overlay) overlay.classList.remove('is-open');
+    if (overlay) {
+      overlay.classList.remove('is-open');
+      closeAccessibleDialog(overlay);
+    }
   };
 
   window.adjustSavingsHabitual = function(delta) {
@@ -4688,11 +4825,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nameInput) nameInput.value = curGoal.title || '';
     if (amountInput) amountInput.value = curGoal.target || '';
     modal.classList.add('is-open');
+    openAccessibleDialog(modal, window.closeChangeGoalModal, 'wl-goal-modal-title');
   };
 
   window.closeChangeGoalModal = function() {
     const modal = document.getElementById('wl-goal-modal-overlay');
-    if (modal) modal.classList.remove('is-open');
+    if (modal) {
+      modal.classList.remove('is-open');
+      closeAccessibleDialog(modal);
+    }
   };
 
   window.selectGoalPreset = function(title, target) {
@@ -4852,7 +4993,10 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeConfirmLeaveGameModal = function() {
     pendingCarouselTargetAfterLeaveGame = null;
     const modal = document.getElementById('habbi-confirm-leave-game-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+      modal.style.display = 'none';
+      closeAccessibleDialog(modal);
+    }
   };
 
   window.confirmPendingLeaveGame = function() {
@@ -4863,6 +5007,33 @@ document.addEventListener('DOMContentLoaded', () => {
       window.navigateHorizontalCarousel(nextScreen, true);
     }
   };
+
+  // Navegação por teclado WAI-ARIA tablist nas abas do carrossel (ArrowLeft, ArrowRight, Home, End)
+  document.querySelectorAll('.wl-pager-nav-dots').forEach(bar => {
+    bar.addEventListener('keydown', (e) => {
+      const tabs = Array.from(bar.querySelectorAll('.wl-pager-tab'));
+      if (tabs.length === 0) return;
+      const curIdx = tabs.indexOf(document.activeElement);
+      if (curIdx === -1) return;
+      let nextIdx = null;
+      if (e.key === 'ArrowRight') nextIdx = (curIdx + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft') nextIdx = (curIdx - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') nextIdx = 0;
+      else if (e.key === 'End') nextIdx = tabs.length - 1;
+      if (nextIdx === null) return;
+      e.preventDefault();
+      const targetMap = [29, 10, 15];
+      const targetScreen = targetMap[nextIdx];
+      if (typeof window.navigateHorizontalCarousel === 'function') {
+        window.navigateHorizontalCarousel(targetScreen);
+      }
+      // Só move o foco para a aba alvo se o diálogo de saída do jogo não bloqueou a troca
+      const leaveModal = document.getElementById('habbi-confirm-leave-game-modal');
+      if (!leaveModal || leaveModal.style.display === 'none') {
+        tabs[nextIdx].focus();
+      }
+    });
+  });
 
   window.goToCarouselSlide = function(slideIdx, smooth = true) {
     if (slideIdx < 0) slideIdx = 0;
@@ -4882,11 +5053,15 @@ document.addEventListener('DOMContentLoaded', () => {
     currentScreen = targetScreen;
     localStorage.setItem('habbi-current-screen', targetScreen);
 
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const track = document.getElementById('main-carousel-track');
     if (track) {
-      track.style.transition = smooth ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1)' : 'none';
+      track.style.transition = (smooth && !prefersReducedMotion) ? 'transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1)' : 'none';
       track.style.transform = 'translate3d(-' + (slideIdx * 33.333333) + '%, 0, 0)';
     }
+
+    // Isola slides ocultos do foco de teclado e leitores de tela (inert + aria-hidden)
+    syncCarouselSlidesInert(slideIdx, true);
 
     // Sincroniza estado ativo de todos os grupos de abas do carrossel (.wl-pager-tab / .wl-pager-dot)
     document.querySelectorAll('.wl-pager-nav-dots').forEach(bar => {
@@ -4936,6 +5111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const modal = document.getElementById('habbi-confirm-leave-game-modal');
       if (modal) {
         modal.style.display = 'flex';
+        openAccessibleDialog(modal, window.closeConfirmLeaveGameModal, 'habbi-leave-game-title');
         return;
       }
     }
@@ -6102,7 +6278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="wl-sav-wrap wl-conquista-wrap">
 
           <!-- Card do Objetivo Atual -->
-          <div class="wl-conquista-goal-card" onclick="openChangeGoalModal()" role="button" tabindex="0" title="Toque para alterar seu objetivo">
+          <button type="button" class="wl-conquista-goal-card" id="wl-conquista-goal-card" onclick="openChangeGoalModal()" title="Toque para alterar seu objetivo" aria-label="Alterar objetivo de conquista">
             <div class="wl-conquista-goal-left">
               <span class="wl-conquista-goal-label">Objetivo</span>
               <strong class="wl-conquista-goal-title" id="wl-conquista-goal-title">Minha conquista</strong>
@@ -6111,11 +6287,11 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="wl-conquista-goal-target" id="wl-conquista-goal-target">R$ 250,00</span>
               <span class="wl-conquista-change-chip">Trocar</span>
             </div>
-          </div>
+          </button>
 
           <!-- Palco da Sacola de Compras Preenchível (Habbi Flat Style com Ilustração Original) -->
-          <div class="wl-conquista-bag-stage" id="wl-conquista-bag-stage" onclick="openChangeGoalModal()" role="button" tabindex="0" title="Toque para alterar seu objetivo">
-            <svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
+          <button type="button" class="wl-conquista-bag-stage" id="wl-conquista-bag-stage" onclick="openChangeGoalModal()" title="Toque para alterar seu objetivo" aria-label="Sacola de economia. Toque para alterar seu objetivo">
+            <svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true" focusable="false">
               <defs>
                 <filter id="wl-bag-yellow-tint" color-interpolation-filters="sRGB">
                   <feFlood flood-color="#43A027" result="flood" />
@@ -6154,7 +6330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 >
               </div>
             </div>
-          </div>
+          </button>
 
           <!-- Métricas Centrais da Conquista: Economia em destaque -> Progresso + Restante -> Legenda -->
           <div class="wl-conquista-metrics">
@@ -6194,11 +6370,11 @@ document.addEventListener('DOMContentLoaded', () => {
           <!-- Ações secundárias -->
           <div class="wl-conquista-sub-actions">
             <button type="button" class="wl-conquista-action-btn" onclick="openSavingsSheet('config')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
               <span>Ajustar consumo</span>
             </button>
             <button type="button" class="wl-conquista-action-btn" onclick="openSavingsSheet('history')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               <span>Histórico</span>
             </button>
           </div>
@@ -6206,7 +6382,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <!-- Modal: Trocar Objetivo de Conquista -->
         <div class="wl-goal-modal-overlay" id="wl-goal-modal-overlay" onclick="if(event.target===this)closeChangeGoalModal()">
-          <div class="wl-goal-modal-sheet" role="dialog" aria-labelledby="wl-goal-modal-title">
+          <div class="wl-goal-modal-sheet" role="dialog" aria-modal="true" aria-labelledby="wl-goal-modal-title">
             <div class="wl-calc-sheet-handle" aria-hidden="true"></div>
             <div class="wl-goal-modal-header">
               <h3 id="wl-goal-modal-title">Definir objetivo</h3>
@@ -6329,6 +6505,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const celModal = document.createElement('div');
       celModal.id = 'wl-celebration-modal';
       celModal.className = 'wl-celebration-modal';
+      celModal.setAttribute('role', 'dialog');
+      celModal.setAttribute('aria-modal', 'true');
+      celModal.setAttribute('aria-labelledby', 'wl-cel-title');
       celModal.style.display = 'none';
       celModal.innerHTML = `
         <div class="wl-cel-msg-card" id="wl-cel-msg-card">
@@ -6356,16 +6535,20 @@ document.addEventListener('DOMContentLoaded', () => {
           pawStageEl.classList.add('is-highfiving');
         });
       }
+      window.closeCelebrationModal = function() {
+        celModal.style.display = 'none';
+        celModal.classList.remove('is-playing');
+        closeAccessibleDialog(celModal);
+        const targetScr = userState.returnScreenAfterRegister || currentScreen || 10;
+        userState.returnScreenAfterRegister = 10;
+        if (currentScreen !== targetScr) {
+          showScreen(targetScr);
+        }
+      };
       const celBtn = document.getElementById('wl-cel-btn');
       if (celBtn) {
         celBtn.addEventListener('click', () => {
-          celModal.style.display = 'none';
-          celModal.classList.remove('is-playing');
-          const targetScr = userState.returnScreenAfterRegister || currentScreen || 10;
-          userState.returnScreenAfterRegister = 10;
-          if (currentScreen !== targetScr) {
-            showScreen(targetScr);
-          }
+          window.closeCelebrationModal();
         });
       }
 
@@ -6376,7 +6559,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === qregModal) window.closeQuickRegisterModal();
       };
       qregModal.innerHTML = `
-        <div class="wl-qreg-sheet">
+        <div class="wl-qreg-sheet" role="dialog" aria-modal="true" aria-labelledby="wl-qreg-header-title">
           <div class="wl-qreg-header">
             <div>
               <h3 class="wl-qreg-title" id="wl-qreg-header-title">Adicionar registro</h3>
@@ -6386,12 +6569,12 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
 
           <div class="wl-qreg-actions-grid">
-            <button type="button" class="wl-qreg-action-btn green" id="wl-qreg-btn-confirm-day" onclick="quickConfirmDay()">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <button type="button" class="wl-qreg-action-btn green" id="wl-qreg-btn-confirm-day" aria-pressed="false" onclick="quickConfirmDay()">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"></polyline></svg>
               <span id="wl-qreg-confirm-lbl">Não fumei hoje</span>
             </button>
             <button type="button" class="wl-qreg-action-btn blue" onclick="quickAddUrge()">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
               <span>Vontade superada</span>
             </button>
           </div>
@@ -6407,7 +6590,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="wl-qreg-stepper">
                 <button type="button" class="wl-qreg-step-btn minus" id="wl-qreg-btn-minus" onclick="quickAdjustCigarette(-1)" aria-label="Remover 1 cigarro">−</button>
-                <button type="button" class="wl-qreg-step-btn plus" onclick="quickAdjustCigarette(1)">+1 cigarro</button>
+                <button type="button" class="wl-qreg-step-btn plus" id="wl-qreg-btn-plus" onclick="quickAdjustCigarette(1)">+1 cigarro</button>
               </div>
             </div>
           </div>
@@ -6415,37 +6598,38 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="wl-qreg-mood-block" id="wl-qreg-mood-block">
             <span class="wl-qreg-section-lbl">Como está se sentindo?</span>
             <div class="wl-qreg-mood-row" id="wl-qreg-mood-row">
-              <button type="button" class="wl-qreg-mood-pill" data-mood="Feliz" onclick="selectQuickMood('Feliz')" title="Feliz">
-                <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes feliz.png" alt="Feliz" class="wl-qreg-mood-img">
+              <button type="button" class="wl-qreg-mood-pill" data-mood="Feliz" aria-pressed="false" onclick="selectQuickMood('Feliz')" title="Feliz">
+                <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes feliz.png" alt="" aria-hidden="true" class="wl-qreg-mood-img">
                 <span>Feliz</span>
               </button>
-              <button type="button" class="wl-qreg-mood-pill" data-mood="Calmo" onclick="selectQuickMood('Calmo')" title="Calmo">
-                <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes calmo.png" alt="Calmo" class="wl-qreg-mood-img">
+              <button type="button" class="wl-qreg-mood-pill" data-mood="Calmo" aria-pressed="false" onclick="selectQuickMood('Calmo')" title="Calmo">
+                <img src="assets/ilustracoes/Cabeça de Gato Preto com Olhos Verdes calmo.png" alt="" aria-hidden="true" class="wl-qreg-mood-img">
                 <span>Calmo</span>
               </button>
-              <button type="button" class="wl-qreg-mood-pill" data-mood="Ansioso" onclick="selectQuickMood('Ansioso')" title="Ansioso">
-                <img src="assets/ilustracoes/Gato Preto Ansioso com Gotas Azuis.png" alt="Ansioso" class="wl-qreg-mood-img">
+              <button type="button" class="wl-qreg-mood-pill" data-mood="Ansioso" aria-pressed="false" onclick="selectQuickMood('Ansioso')" title="Ansioso">
+                <img src="assets/ilustracoes/Gato Preto Ansioso com Gotas Azuis.png" alt="" aria-hidden="true" class="wl-qreg-mood-img">
                 <span>Ansioso</span>
               </button>
-              <button type="button" class="wl-qreg-mood-pill" data-mood="Triste" onclick="selectQuickMood('Triste')" title="Triste">
-                <img src="assets/ilustracoes/Gatinho Preto Triste com Olhos Verdes.png" alt="Triste" class="wl-qreg-mood-img">
+              <button type="button" class="wl-qreg-mood-pill" data-mood="Triste" aria-pressed="false" onclick="selectQuickMood('Triste')" title="Triste">
+                <img src="assets/ilustracoes/Gatinho Preto Triste com Olhos Verdes.png" alt="" aria-hidden="true" class="wl-qreg-mood-img">
                 <span>Triste</span>
               </button>
-              <button type="button" class="wl-qreg-mood-pill" data-mood="Irritado" onclick="selectQuickMood('Irritado')" title="Irritado">
-                <img src="assets/ilustracoes/Rosto de Gato Preto Irritado.png" alt="Irritado" class="wl-qreg-mood-img">
+              <button type="button" class="wl-qreg-mood-pill" data-mood="Irritado" aria-pressed="false" onclick="selectQuickMood('Irritado')" title="Irritado">
+                <img src="assets/ilustracoes/Rosto de Gato Preto Irritado.png" alt="" aria-hidden="true" class="wl-qreg-mood-img">
                 <span>Irritado</span>
               </button>
             </div>
 
             <div class="wl-qreg-mood-extra" id="wl-qreg-mood-extra" style="display:none;">
               <div class="wl-qreg-tags-row" id="wl-qreg-influence-chips">
-                <button type="button" class="wl-qreg-tag" data-val="Sono" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Sono</button>
-                <button type="button" class="wl-qreg-tag" data-val="Exercício" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Exercício</button>
-                <button type="button" class="wl-qreg-tag" data-val="Trabalho" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Trabalho</button>
-                <button type="button" class="wl-qreg-tag" data-val="Relações" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Relações</button>
-                <button type="button" class="wl-qreg-tag" data-val="Alimentação" onclick="this.classList.toggle('selected'); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Alimentação</button>
+                <button type="button" class="wl-qreg-tag" data-val="Sono" aria-pressed="false" onclick="this.classList.toggle('selected'); this.setAttribute('aria-pressed', String(this.classList.contains('selected'))); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Sono</button>
+                <button type="button" class="wl-qreg-tag" data-val="Exercício" aria-pressed="false" onclick="this.classList.toggle('selected'); this.setAttribute('aria-pressed', String(this.classList.contains('selected'))); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Exercício</button>
+                <button type="button" class="wl-qreg-tag" data-val="Trabalho" aria-pressed="false" onclick="this.classList.toggle('selected'); this.setAttribute('aria-pressed', String(this.classList.contains('selected'))); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Trabalho</button>
+                <button type="button" class="wl-qreg-tag" data-val="Relações" aria-pressed="false" onclick="this.classList.toggle('selected'); this.setAttribute('aria-pressed', String(this.classList.contains('selected'))); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Relações</button>
+                <button type="button" class="wl-qreg-tag" data-val="Alimentação" aria-pressed="false" onclick="this.classList.toggle('selected'); this.setAttribute('aria-pressed', String(this.classList.contains('selected'))); if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">Alimentação</button>
               </div>
               <div class="wl-qreg-note-row">
+                <label for="wl-qreg-mood-note" class="sr-only" id="wl-qreg-mood-note-label">Nota opcional</label>
                 <input type="text" id="wl-qreg-mood-note" class="wl-qreg-note-input" placeholder="Nota opcional..." oninput="if(window.syncQuickMoodExtraVisibility) window.syncQuickMoodExtraVisibility();">
                 <button type="button" class="wl-qreg-save-mood-btn" id="wl-qreg-save-mood-btn" onclick="saveQuickMood()">Salvar humor</button>
               </div>
@@ -6520,6 +6704,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : (t.noSmokeOtherDay || 'Não fumei neste dia');
       const isConfirmed = Boolean(rec && (rec.smokeFree || (Array.isArray(rec.events) && rec.events.some(e => e.kind === 'no-smoke'))));
       confirmLbl.innerText = isConfirmed ? `${baseLabel} ✓` : baseLabel;
+      confirmBtn.setAttribute('aria-pressed', isConfirmed ? 'true' : 'false');
       if (isConfirmed) {
         confirmBtn.classList.add('is-confirmed');
       } else {
@@ -6547,8 +6732,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     quickSelectedMood = '';
-    document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('#wl-qreg-influence-chips .wl-qreg-tag').forEach(t => t.classList.remove('selected'));
+    document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    document.querySelectorAll('#wl-qreg-influence-chips .wl-qreg-tag').forEach(t => {
+      t.classList.remove('selected');
+      t.setAttribute('aria-pressed', 'false');
+    });
     const noteIn = document.getElementById('wl-qreg-mood-note');
     if (noteIn) noteIn.value = '';
     const saveMoodBtn = document.getElementById('wl-qreg-save-mood-btn');
@@ -6567,7 +6758,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (targetMoodEv) {
       quickSelectedMood = targetMoodEv.moodValue || (targetMoodEv.title ? targetMoodEv.title.replace(/^Humor:\s*/i, '').trim() : '');
       document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(b => {
-        b.classList.toggle('active', b.dataset.mood === quickSelectedMood);
+        const isSel = b.dataset.mood === quickSelectedMood;
+        b.classList.toggle('active', isSel);
+        b.setAttribute('aria-pressed', isSel ? 'true' : 'false');
       });
 
       const knownTags = ['Sono', 'Exercício', 'Trabalho', 'Relações', 'Alimentação'];
@@ -6592,7 +6785,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       document.querySelectorAll('#wl-qreg-influence-chips .wl-qreg-tag').forEach(t => {
-        t.classList.toggle('selected', savedInfluences.includes(t.dataset.val));
+        const isTagSel = savedInfluences.includes(t.dataset.val);
+        t.classList.toggle('selected', isTagSel);
+        t.setAttribute('aria-pressed', isTagSel ? 'true' : 'false');
       });
       if (noteIn) noteIn.value = savedNote;
       if (saveMoodBtn) saveMoodBtn.innerText = 'Salvar humor';
@@ -6604,13 +6799,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.syncQuickRegisterModalUI();
 
     const modal = document.getElementById('wl-quick-register-modal');
-    if (modal) modal.classList.add('is-open');
+    if (modal) {
+      modal.classList.add('is-open');
+      openAccessibleDialog(modal, window.closeQuickRegisterModal, 'wl-qreg-header-title');
+    }
   };
 
   window.closeQuickRegisterModal = function() {
     quickEditingEventId = null;
     const modal = document.getElementById('wl-quick-register-modal');
-    if (modal) modal.classList.remove('is-open');
+    if (modal) {
+      modal.classList.remove('is-open');
+      closeAccessibleDialog(modal);
+    }
     if (userState.openedFromMenu) {
       userState.openedFromMenu = false;
       setTimeout(() => window.toggleHabbiHubMenu(true), 40);
@@ -6655,10 +6856,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!rec || !Array.isArray(rec.events)) return;
       const smokeIdx = rec.events.findIndex(e => e.kind === 'smoke');
       if (smokeIdx !== -1) {
+        const minusBtn = document.getElementById('wl-qreg-btn-minus');
+        const plusBtn = document.getElementById('wl-qreg-btn-plus');
+        const minusWasFocused = Boolean(minusBtn && document.activeElement === minusBtn);
         rec.events.splice(smokeIdx, 1);
         recomputeDayAggregates(rec);
+        const remainingCigs = rec.cigs || 0;
         if (rec.events.length === 0) {
           delete userState.dailyRecords[targetKey];
+        }
+        // Se o botão "-" estiver focado e for desabilitado ao zerar, move o foco para "+1 cigarro" antes
+        if (minusWasFocused && remainingCigs <= 0 && plusBtn) {
+          plusBtn.focus();
         }
         refreshAllViews();
       }
@@ -6670,7 +6879,10 @@ document.addEventListener('DOMContentLoaded', () => {
   window.closeConfirmNoSmokeModal = function() {
     pendingNoSmokeTargetKey = null;
     const modal = document.getElementById('habbi-confirm-nosmoke-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+      modal.style.display = 'none';
+      closeAccessibleDialog(modal);
+    }
   };
 
   window.confirmPendingNoSmokeDay = function() {
@@ -6709,6 +6921,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (modal) {
         modal.style.display = 'flex';
+        openAccessibleDialog(modal, window.closeConfirmNoSmokeModal, 'habbi-nosmoke-modal-title');
         return;
       }
     }
@@ -6787,11 +7000,14 @@ document.addEventListener('DOMContentLoaded', () => {
       quickSelectedMood = '';
       document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
         btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
       });
     } else {
       quickSelectedMood = moodName;
       document.querySelectorAll('#wl-qreg-mood-row .wl-qreg-mood-pill').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mood === moodName);
+        const isSel = btn.dataset.mood === moodName;
+        btn.classList.toggle('active', isSel);
+        btn.setAttribute('aria-pressed', isSel ? 'true' : 'false');
       });
     }
     window.syncQuickMoodExtraVisibility();
@@ -6879,6 +7095,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pawStageEl) {
       pawStageEl.classList.add('is-highfiving');
     }
+    openAccessibleDialog(modal, window.closeCelebrationModal, 'wl-cel-title');
   };
 
   window.triggerQuickNoSmoke = function() {
@@ -7008,16 +7225,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const overLimit = Math.max(0, loggedVal - metaVal);
 
     if (metaReg) {
+      metaReg.style.color = '';
+      metaReg.classList.remove('is-over-yellow', 'is-over-orange', 'is-over-red', 'is-over-dark');
       if (overLimit === 1) {
-        metaReg.style.color = '#D97706';
+        metaReg.classList.add('is-over-yellow');
       } else if (overLimit === 2 || overLimit === 3) {
-        metaReg.style.color = '#EA580C';
+        metaReg.classList.add('is-over-orange');
       } else if (overLimit === 4 || overLimit === 5) {
-        metaReg.style.color = '#FF4736';
+        metaReg.classList.add('is-over-red');
       } else if (overLimit >= 6) {
-        metaReg.style.color = '#4A0E17';
-      } else {
-        metaReg.style.color = '';
+        metaReg.classList.add('is-over-dark');
       }
     }
 
@@ -7144,16 +7361,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const smokeIdx = rec.events.findIndex(e => e && e.kind === 'smoke');
     if (smokeIdx === -1) return;
 
+    const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
+    const homeAddBtn = document.getElementById('btn-home-add-cig');
+    const removeWasFocused = Boolean(homeRemoveBtn && document.activeElement === homeRemoveBtn);
+
     rec.events.splice(smokeIdx, 1);
     recomputeDayAggregates(rec);
+    const remainingCigs = rec.cigs || 0;
     if (rec.events.length === 0) {
       delete userState.dailyRecords[todayKey];
     }
 
+    // Se o botão "−" estava focado ao zerar, move o foco para "+ Registrar cigarro" antes de desabilitar "−"
+    if (removeWasFocused && remainingCigs <= 0 && homeAddBtn) {
+      homeAddBtn.focus();
+    }
+
     refreshAllViews();
 
-    const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
-    if (homeRemoveBtn) {
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (homeRemoveBtn && !prefersReducedMotion) {
       homeRemoveBtn.classList.remove('is-pressed');
       void homeRemoveBtn.offsetWidth;
       homeRemoveBtn.classList.add('is-pressed');
@@ -8253,7 +8480,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generateCalendar(true);
   };
 
-  window.selectCalendarDate = function(dateKey, animatePaw) {
+  window.selectCalendarDate = function(dateKey, animatePaw, shouldRestoreFocus = false) {
     if (!dateKey) return;
     const todayKey = getDateKey(new Date());
     if (dateKey > todayKey) {
@@ -8262,12 +8489,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (typeof showToast === 'function') showToast(t.futureDateBlocked || 'Não é possível registrar em datas futuras.');
       return;
     }
+    const grid = document.getElementById('calendar-month-grid');
+    const focusInsideGrid = Boolean(grid && document.activeElement && grid.contains(document.activeElement));
     const { year, month } = parseDateKey(dateKey);
     userState.calViewYear = year;
     userState.calViewMonth = month;
     userState.calSelectedDate = dateKey;
     userState.calEventsExpandedDate = null;
     generateCalendar(Boolean(animatePaw));
+    if (shouldRestoreFocus || focusInsideGrid) {
+      const nextGrid = document.getElementById('calendar-month-grid');
+      const targetBtn = nextGrid ? nextGrid.querySelector(`button[data-date-key="${dateKey}"]`) : null;
+      if (targetBtn && !targetBtn.disabled) {
+        targetBtn.focus();
+      }
+    }
   };
 
   function generateCalendar(animatePaw) {
@@ -8314,6 +8550,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevMonthYear = viewMonth === 0 ? viewYear - 1 : viewYear;
     const prevMonthIdx = viewMonth === 0 ? 11 : viewMonth - 1;
 
+    const activeLangCal = (userState.currentLang || 'PT').toUpperCase();
+    const tCal = (window.HABBI_I18N && window.HABBI_I18N[activeLangCal]) ? window.HABBI_I18N[activeLangCal] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
     for (let i = firstDayOfWeek - 1; i >= 0; i--) {
       const prevDay = daysInPrevMonth - i;
       const prevKey = `${prevMonthYear}-${String(prevMonthIdx + 1).padStart(2, '0')}-${String(prevDay).padStart(2, '0')}`;
@@ -8321,13 +8560,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const dayEl = document.createElement('button');
       dayEl.type = 'button';
       dayEl.className = `calendar-grid-day is-outside${isFuture ? ' is-future' : ''}`;
-      dayEl.setAttribute('aria-label', `${prevDay} de ${getMonthNamePt(prevMonthIdx)} de ${prevMonthYear}`);
+      dayEl.dataset.dateKey = prevKey;
+      dayEl.setAttribute('aria-label', `${prevDay} ${getMonthNamePt(prevMonthIdx)} ${prevMonthYear}`);
       dayEl.innerHTML = `<span class="calendar-grid-circle state-outside">${prevDay}</span>`;
       if (isFuture) {
         dayEl.disabled = true;
         dayEl.setAttribute('aria-disabled', 'true');
       } else {
-        dayEl.addEventListener('click', () => window.selectCalendarDate(prevKey, true));
+        dayEl.addEventListener('click', () => window.selectCalendarDate(prevKey, true, true));
       }
       grid.appendChild(dayEl);
     }
@@ -8336,6 +8576,8 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let day = 1; day <= daysInMonth; day++) {
       const dKey = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const status = getDayStatus(dKey);
+      const dayRec = userState.dailyRecords[dKey];
+      const dayHasEvents = Boolean(dayRec && Array.isArray(dayRec.events) && dayRec.events.length > 0);
       const isToday = dKey === todayKey;
       const isFuture = dKey > todayKey;
       const isSelected = !isFuture && dKey === userState.calSelectedDate;
@@ -8344,7 +8586,10 @@ document.addEventListener('DOMContentLoaded', () => {
       dayEl.type = 'button';
       dayEl.className = 'calendar-grid-day';
       dayEl.dataset.dateKey = dKey;
-      if (isToday) dayEl.classList.add('is-today');
+      if (isToday) {
+        dayEl.classList.add('is-today');
+        dayEl.setAttribute('aria-current', 'date');
+      }
       if (isSelected) dayEl.classList.add('is-selected');
       if (isFuture) {
         dayEl.classList.add('is-future');
@@ -8352,8 +8597,19 @@ document.addEventListener('DOMContentLoaded', () => {
         dayEl.setAttribute('aria-disabled', 'true');
       }
 
-      const statusDesc = isFuture ? 'Data futura bloqueada' : (status === 'green' ? 'Meta atingida' : status === 'exceeded' ? 'Meta ultrapassada' : status === 'zero' ? 'Sem consumo' : 'Sem registros');
-      dayEl.setAttribute('aria-label', `${day} de ${getMonthNamePt(viewMonth)} de ${viewYear}, ${statusDesc}${isToday ? ' (Hoje)' : ''}`);
+      const statusDesc = isFuture
+        ? (tCal.calStatusFuture || 'Data futura bloqueada')
+        : (status === 'green'
+          ? (tCal.calStatusMet || 'Meta atingida')
+          : status === 'exceeded'
+            ? (tCal.calStatusExceeded || 'Meta ultrapassada')
+            : status === 'zero'
+              ? (tCal.calStatusZero || 'Sem consumo')
+              : (dayHasEvents
+                ? (tCal.calStatusInProgress || 'Em andamento')
+                : (tCal.calStatusNoLogs || 'Sem registros')));
+      const todayWord = tCal.calTodayWord || 'Hoje';
+      dayEl.setAttribute('aria-label', `${day} ${getMonthNamePt(viewMonth)} ${viewYear}, ${statusDesc}${isToday ? ` (${todayWord})` : ''}`);
 
       const circle = document.createElement('span');
       circle.className = `calendar-grid-circle state-${isFuture ? 'neutral' : status}`;
@@ -8368,7 +8624,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!isFuture) {
-        dayEl.addEventListener('click', () => window.selectCalendarDate(dKey, true));
+        dayEl.addEventListener('click', () => window.selectCalendarDate(dKey, true, true));
       }
       grid.appendChild(dayEl);
     }
@@ -8385,13 +8641,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const dayEl = document.createElement('button');
       dayEl.type = 'button';
       dayEl.className = `calendar-grid-day is-outside${isFuture ? ' is-future' : ''}`;
-      dayEl.setAttribute('aria-label', `${nextDay} de ${getMonthNamePt(nextMonthIdx)} de ${nextMonthYear}`);
+      dayEl.dataset.dateKey = nextKey;
+      dayEl.setAttribute('aria-label', `${nextDay} ${getMonthNamePt(nextMonthIdx)} ${nextMonthYear}`);
       dayEl.innerHTML = `<span class="calendar-grid-circle state-outside">${nextDay}</span>`;
       if (isFuture) {
         dayEl.disabled = true;
         dayEl.setAttribute('aria-disabled', 'true');
       } else {
-        dayEl.addEventListener('click', () => window.selectCalendarDate(nextKey, true));
+        dayEl.addEventListener('click', () => window.selectCalendarDate(nextKey, true, true));
       }
       grid.appendChild(dayEl);
     }
@@ -8556,12 +8813,14 @@ document.addEventListener('DOMContentLoaded', () => {
           actionsEl.className = 'wl-cal-event-actions';
 
           // Decisão 5A: botão Editar exibido apenas para eventos de humor (mood)
+          const evTitleContext = String(strongEl.textContent || ev.title || '').trim();
           if (ev.kind === 'mood') {
             const editLabel = t.calEventEdit || 'Editar';
             const editBtn = document.createElement('button');
             editBtn.type = 'button';
             editBtn.className = 'wl-cal-ev-btn';
             editBtn.title = editLabel;
+            editBtn.setAttribute('aria-label', evTitleContext ? `${editLabel}: ${evTitleContext}` : editLabel);
             editBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>';
             const editSpan = document.createElement('span');
             editSpan.textContent = editLabel;
@@ -8579,6 +8838,7 @@ document.addEventListener('DOMContentLoaded', () => {
           removeBtn.type = 'button';
           removeBtn.className = 'wl-cal-ev-btn danger';
           removeBtn.title = removeLabel;
+          removeBtn.setAttribute('aria-label', evTitleContext ? `${removeLabel}: ${evTitleContext}` : removeLabel);
           removeBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
           const removeSpan = document.createElement('span');
           removeSpan.textContent = removeLabel;
@@ -8625,20 +8885,24 @@ document.addEventListener('DOMContentLoaded', () => {
           toggleBtn.type = 'button';
           toggleBtn.id = 'wl-cal-toggle-events-btn';
           toggleBtn.className = `wl-cal-toggle-events-btn ${isExpanded ? 'is-expanded' : ''}`.trim();
+          toggleBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+          toggleBtn.setAttribute('aria-controls', 'wl-cal-more-events');
           toggleBtn.innerHTML = `
             <span id="wl-cal-toggle-events-txt">${isExpanded ? showLessText : seeMoreText}</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="6 9 12 15 18 9"></polyline></svg>
           `;
           toggleBtn.onclick = function() {
             const currentlyOpen = moreContainer.style.display === 'flex';
             if (currentlyOpen) {
               moreContainer.style.display = 'none';
               toggleBtn.classList.remove('is-expanded');
+              toggleBtn.setAttribute('aria-expanded', 'false');
               document.getElementById('wl-cal-toggle-events-txt').innerText = seeMoreText;
               userState.calEventsExpandedDate = null;
             } else {
               moreContainer.style.display = 'flex';
               toggleBtn.classList.add('is-expanded');
+              toggleBtn.setAttribute('aria-expanded', 'true');
               document.getElementById('wl-cal-toggle-events-txt').innerText = showLessText;
               userState.calEventsExpandedDate = selKey;
             }
@@ -9954,12 +10218,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ação SEPARADA em Configurações: apagar registros apenas do perfil ativo
   window.openDeleteProfileDataModal = function() {
     const modal = document.getElementById('habbi-delete-profile-modal');
-    if (modal) modal.style.display = 'flex';
+    if (modal) {
+      modal.style.display = 'flex';
+      openAccessibleDialog(modal, window.closeDeleteProfileDataModal, 'habbi-del-modal-title');
+    }
   };
 
   window.closeDeleteProfileDataModal = function() {
     const modal = document.getElementById('habbi-delete-profile-modal');
-    if (modal) modal.style.display = 'none';
+    if (modal) {
+      modal.style.display = 'none';
+      closeAccessibleDialog(modal);
+    }
   };
 
   window.confirmDeleteActiveProfileRecords = function() {

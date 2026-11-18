@@ -64,6 +64,29 @@
   --coral: #FF7F7F;
   --coral-light: #FFD1D1;
 
+  /* Tokens semânticos WCAG 2.2 AA (>= 4.5:1) */
+  --text-on-accent: #111827;
+  --accent-green-text: #2D6A1E;
+  --text-over-yellow: #92400E;
+  --text-over-orange: #C2410C;
+  --text-over-red: #B91C1C;
+  --text-over-dark: #7F1D1D;
+  --outside-day-text: #475569;
+  --qreg-btn-plus-bg: #1F2A37;
+  --qreg-btn-plus-text: #FFFFFF;
+  --qreg-btn-green-confirmed-bg: #2E7D32;
+  --qreg-btn-green-confirmed-text: #FFFFFF;
+  --qreg-save-mood-bg: #2E7D32;
+  --qreg-save-mood-text: #FFFFFF;
+  --sav-pos-text: #2D6A1E;
+  --sav-neg-text: #0F3D5E;
+  --cal-ev-btn-bg: #F1F5F9;
+  --cal-ev-btn-text: #1F2A37;
+  --cal-ev-btn-border: #CBD5E1;
+  --cal-ev-danger-bg: #FFEAE6;
+  --cal-ev-danger-text: #B91C1C;
+  --cal-ev-danger-border: #FECACA;
+
   /* Border radius */
   --border-radius-lg: 20px; /* Rounded corners for cards */
   --border-radius-md: 14px; /* Corners for buttons */
@@ -110,6 +133,29 @@
 
   --coral: #FF8787;
   --coral-light: #7F1D1D;
+
+  /* Tokens semânticos WCAG 2.2 AA para modo escuro (>= 4.5:1) */
+  --text-on-accent: #111827;
+  --accent-green-text: #86EFAC;
+  --text-over-yellow: #FDE047;
+  --text-over-orange: #FDBA74;
+  --text-over-red: #FCA5A5;
+  --text-over-dark: #FDA4AF;
+  --outside-day-text: #9CA3AF;
+  --qreg-btn-plus-bg: #6CCB4F;
+  --qreg-btn-plus-text: #111827;
+  --qreg-btn-green-confirmed-bg: #6CCB4F;
+  --qreg-btn-green-confirmed-text: #111827;
+  --qreg-save-mood-bg: #6CCB4F;
+  --qreg-save-mood-text: #111827;
+  --sav-pos-text: #86EFAC;
+  --sav-neg-text: #7DD3FC;
+  --cal-ev-btn-bg: #2D2D34;
+  --cal-ev-btn-text: #F3F4F6;
+  --cal-ev-btn-border: #4B5563;
+  --cal-ev-danger-bg: #451A1A;
+  --cal-ev-danger-text: #FCA5A5;
+  --cal-ev-danger-border: #7F1D1D;
 }
 
 .device-screen.dark-theme .bottom-nav {
@@ -8003,19 +8049,19 @@ textarea:focus-visible,
 .device-screen.dark-theme .wl-pager-dot.active,
 .device-screen.dark-theme .wl-pager-tab.active {
   background-color: var(--primary);
-  color: #111827;
+  color: var(--text-on-accent);
 }
 
 .wl-home-savings-pill.is-active {
   border-color: var(--primary-dark) !important;
   background-color: var(--primary-light) !important;
-  color: #111827 !important;
+  color: var(--text-on-accent) !important;
 }
 
 .device-screen.dark-theme .wl-home-savings-pill.is-active {
   border-color: var(--primary) !important;
   background-color: var(--primary) !important;
-  color: #111827 !important;
+  color: var(--text-on-accent) !important;
 }
 
 .wl-home-cig-stage .wl-cig-meter-wrap {
@@ -8028,7 +8074,7 @@ textarea:focus-visible,
   border-radius: 999px;
   background-color: var(--orange-light);
   border: 1px solid var(--orange-dark);
-  color: #111827;
+  color: var(--text-on-accent);
   font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
@@ -10691,4 +10737,238 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
 }
+
+/* ============================================================================
+   Etapa 5 — Commit 4: Acessibilidade WCAG 2.2 AA
+   (Alvos >= 44x44px sem sobreposição, resets de botões semânticos,
+    contraste >= 4.5:1 via tokens CSS em claro/escuro, reduced motion)
+   ============================================================================ */
+
+/* Resets visuais para elementos convertidos em <button type="button"> */
+button.game-grid-card {
+  width: 100%;
+  font-family: var(--font-family);
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+}
+
+button.wl-conquista-goal-card {
+  width: 100%;
+  font-family: var(--font-family);
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+}
+
+button.wl-conquista-bag-stage {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--font-family);
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+}
+
+/* Alvos de toque >= 44x44 px sem sobreposição e responsivos em 320px */
+.wl-cal-nav-arrow,
+.wl-close-circle {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.wl-cal-today-chip {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.wl-cal-event-row {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wl-cal-event-actions {
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.wl-cal-ev-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 12px;
+  background-color: var(--cal-ev-btn-bg);
+  color: var(--cal-ev-btn-text);
+  border-color: var(--cal-ev-btn-border);
+  box-sizing: border-box;
+}
+
+.wl-cal-ev-btn.danger {
+  background-color: var(--cal-ev-danger-bg);
+  color: var(--cal-ev-danger-text);
+  border-color: var(--cal-ev-danger-border);
+}
+
+.wl-qreg-row-between {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wl-qreg-step-btn {
+  min-height: 44px;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.wl-qreg-step-btn.minus {
+  width: 44px;
+  min-width: 44px;
+}
+
+.wl-qreg-step-btn.plus {
+  min-width: 44px;
+  background-color: var(--qreg-btn-plus-bg);
+  color: var(--qreg-btn-plus-text);
+}
+
+.wl-qreg-tags-row {
+  gap: 8px;
+}
+
+.wl-qreg-tag {
+  min-height: 44px;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.wl-qreg-note-row {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wl-qreg-note-input {
+  min-height: 44px;
+  height: 44px;
+  min-width: 120px;
+  box-sizing: border-box;
+}
+
+.wl-qreg-save-mood-btn {
+  min-height: 44px;
+  height: 44px;
+  padding: 0 16px;
+  background-color: var(--qreg-save-mood-bg);
+  color: var(--qreg-save-mood-text);
+  box-sizing: border-box;
+}
+
+.wl-sav-cfg-row {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wl-sav-step-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.wl-sav-price-input {
+  height: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.wl-sav-freq-chip {
+  min-height: 44px;
+  height: auto;
+  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.wl-sav-history-del {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  background-color: var(--cal-ev-danger-bg);
+  color: var(--cal-ev-danger-text);
+  box-sizing: border-box;
+}
+
+/* Contraste WCAG 2.2 AA (>= 4.5:1) via tokens em Claro e Escuro */
+.wl-home-sub-stat strong,
+.wl-qreg-date,
+.wl-cal-metric-box strong {
+  color: var(--accent-green-text) !important;
+}
+
+.wl-qreg-action-btn.green.is-confirmed {
+  background-color: var(--qreg-btn-green-confirmed-bg) !important;
+  color: var(--qreg-btn-green-confirmed-text) !important;
+}
+
+.calendar-grid-circle.state-outside,
+.device-screen.dark-theme .calendar-grid-circle.state-outside {
+  color: var(--outside-day-text) !important;
+  opacity: 1 !important;
+}
+
+.wl-sav-history-right strong.pos,
+.device-screen.dark-theme .wl-sav-history-right strong.pos {
+  color: var(--sav-pos-text) !important;
+}
+
+.wl-sav-history-right strong.neg,
+.device-screen.dark-theme .wl-sav-history-right strong.neg {
+  color: var(--sav-neg-text) !important;
+}
+
+/* Estágios acima da meta na Home via classes CSS e tokens AA */
+#home-meta-registered.is-over-yellow {
+  color: var(--text-over-yellow) !important;
+}
+
+#home-meta-registered.is-over-orange {
+  color: var(--text-over-orange) !important;
+}
+
+#home-meta-registered.is-over-red {
+  color: var(--text-over-red) !important;
+}
+
+#home-meta-registered.is-over-dark {
+  color: var(--text-over-dark) !important;
+}
+
+/* Movimento reduzido (prefers-reduced-motion: reduce) */
+@media (prefers-reduced-motion: reduce) {
+  #wl-celebration-modal,
+  #wl-celebration-modal *,
+  .main-carousel-track,
+  .wl-home-add-btn.is-pressed,
+  .wl-cig-meter-wrap.is-bumping {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 
