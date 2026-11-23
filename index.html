@@ -126,8 +126,24 @@
           <h1 class="mb-16" style="font-size:24px; margin-top:8px;">Quantos cigarros você fuma por dia?</h1>
           <div class="slider-container mb-24">
             <div class="slider-val-box" id="cigarettes-per-day-val" style="font-size:38px;font-weight:600;">12</div>
-            <span class="caption">cigarros</span>
-            <input type="range" min="1" max="40" value="12" class="custom-range" id="cigarettes-slider" aria-label="Meta diária de cigarros">
+            <span class="caption" id="cigarettes-per-day-unit-label">cigarros habituais</span>
+            <input type="range" min="1" max="40" value="12" class="custom-range" id="cigarettes-slider" aria-label="Consumo habitual diário de cigarros">
+          </div>
+          <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
+            <div class="habbi-suggested-goal-header">
+              <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
+              <strong id="habbi-suggested-goal-title">Meta sugerida para hoje</strong>
+            </div>
+            <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">Que tal começar com 1 cigarro a menos do seu consumo habitual?</p>
+            <div class="habbi-suggested-stepper">
+              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">−</button>
+              <div class="habbi-suggested-display">
+                <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
+                <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
+              </div>
+              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
+            </div>
+            <span class="habbi-suggested-hint" id="habbi-suggested-hint">Você pode confirmar ou ajustar este valor antes de iniciar.</span>
           </div>
           <div class="divider"></div>
           <h2 class="mb-12">Há quantos anos você fuma?</h2>
@@ -820,6 +836,7 @@
             <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Lembretes</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div>
             <div class="menu-list-item" id="settings-theme" style="cursor:pointer;"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>Tema</span><div style="display:flex;align-items:center;gap:8px;"><span class="caption" id="theme-status-label" style="font-weight:600;">Claro</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div></div>
             <div class="menu-list-item" id="settings-lang" style="cursor:pointer;" onclick="cycleAppLanguage()"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span id="settings-lang-label">Idioma</span></span><div style="display:flex;align-items:center;gap:8px;"><span class="caption" id="settings-lang-value" style="font-weight:600; color:var(--text-primary);">Português (BR)</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+            <button type="button" class="menu-list-item habbi-settings-btn-row" id="settings-goal-btn" onclick="openGoalAdjustModal()"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span id="settings-goal-label">Meta diária e consumo</span></span><div style="display:flex;align-items:center;gap:8px;"><span class="caption" id="settings-goal-meta-val" style="font-weight:600; color:var(--text-primary);">11 cig/dia</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div></button>
             <button type="button" class="menu-list-item habbi-settings-btn-row" id="settings-backup-btn" onclick="openBackupAndDataModal()"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Backup e dados</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
             <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Privacidade</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div>
             <div class="menu-list-item"><span style="display:flex;align-items:center;gap:10px;" class="label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Ajuda e suporte</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></div>
@@ -1180,8 +1197,13 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="edit-account-meta">Meta Diária (cigarros/dia)</label>
-              <input type="number" id="edit-account-meta" class="form-input" min="1" placeholder="Ex: 11">
+              <label class="form-label" for="edit-account-meta" id="edit-account-meta-label">Meta diária atual (cigarros/dia)</label>
+              <input type="number" id="edit-account-meta" class="form-input" min="0" max="60" placeholder="Ex: 11">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit-account-habitual" id="edit-account-habitual-label">Consumo habitual de referência (cigarros/dia)</label>
+              <input type="number" id="edit-account-habitual" class="form-input" min="1" max="60" placeholder="Ex: 12">
             </div>
             
             <div class="form-group">
@@ -1261,6 +1283,46 @@
           <div style="display:flex; flex-direction:column; gap:10px; width:100%; margin-top:16px;">
             <button class="btn btn-secondary" id="btn-keep-meta" style="height:48px; font-size:13px; font-weight:600; padding:0 12px; line-height:1.2;">Manter em <span id="modal-keep-val">11</span></button>
             <button class="btn btn-primary" id="btn-reduce-meta" style="height:48px; font-size:13px; font-weight:600; padding:0 12px; line-height:1.2;">Reduzir para <span id="modal-reduce-val">10</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: AJUSTAR META E CONSUMO (ACESSÍVEL) -->
+      <div id="habbi-goal-adjust-modal" class="custom-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="habbi-goal-adjust-title">
+        <div class="modal-content" style="max-width:340px; padding:22px 20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h3 id="habbi-goal-adjust-title" style="margin:0; font-size:18px; font-weight:800;">Ajustar meta e consumo</h3>
+            <button type="button" class="wl-close-circle" onclick="closeGoalAdjustModal()" aria-label="Fechar">✕</button>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <label style="font-size:13.5px; font-weight:700; color:var(--text-primary); display:block; margin-bottom:4px;" id="habbi-adjust-today-lbl">Meta diária atual</label>
+              <span class="caption" style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:8px;" id="habbi-adjust-today-desc">Seu limite de cigarros planejado para hoje.</span>
+              <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
+                <button type="button" class="habbi-step-btn" onclick="stepAdjustGoalModalToday(-1)" aria-label="Diminuir meta de hoje">−</button>
+                <div style="min-width:70px; text-align:center;">
+                  <strong id="modal-adjust-today-val" style="font-size:26px; font-weight:800; color:var(--text-primary); display:block;">11</strong>
+                  <span class="caption" style="font-size:11px;" id="modal-adjust-today-unit">cigarros</span>
+                </div>
+                <button type="button" class="habbi-step-btn" onclick="stepAdjustGoalModalToday(1)" aria-label="Aumentar meta de hoje">+</button>
+              </div>
+            </div>
+            <div style="border-top:1px solid var(--border-color); padding-top:14px;">
+              <label style="font-size:13.5px; font-weight:700; color:var(--text-primary); display:block; margin-bottom:4px;" id="habbi-adjust-habitual-lbl">Consumo habitual de referência</label>
+              <span class="caption" style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:8px;" id="habbi-adjust-habitual-desc">Usado para calcular a sua economia diária acumulada.</span>
+              <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
+                <button type="button" class="habbi-step-btn" onclick="stepAdjustGoalModalHabitual(-1)" aria-label="Diminuir consumo habitual">−</button>
+                <div style="min-width:70px; text-align:center;">
+                  <strong id="modal-adjust-habitual-val" style="font-size:26px; font-weight:800; color:var(--text-primary); display:block;">12</strong>
+                  <span class="caption" style="font-size:11px;" id="modal-adjust-habitual-unit">cigarros</span>
+                </div>
+                <button type="button" class="habbi-step-btn" onclick="stepAdjustGoalModalHabitual(1)" aria-label="Aumentar consumo habitual">+</button>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button type="button" class="btn btn-secondary" onclick="closeGoalAdjustModal()" style="flex:1; height:44px; border-radius:999px;" id="btn-goal-adjust-cancel">Cancelar</button>
+              <button type="button" class="btn btn-primary" onclick="saveGoalAdjustModal()" style="flex:1; height:44px; border-radius:999px;" id="btn-goal-adjust-save">Salvar</button>
+            </div>
           </div>
         </div>
       </div>

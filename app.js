@@ -117,6 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
     totalUrgesOvercome: 0,
     todayMeta: 11,
     todayLogged: 0,
+    lastGoalPromptDateKey: null,
+    suggestedMetaCustomized: false,
     metaExceededModalShown: false,
     isGameActive: false,
 
@@ -250,10 +252,44 @@ document.addEventListener('DOMContentLoaded', () => {
       metaYears10plus: '10+ anos',
       metaPriceQuestion: 'Preço médio do maço/carteira (R$)',
       metaPriceDesc: 'Usado para calcular a sua economia diária.',
-      metaTitle: 'Sua meta diária',
+      metaTitle: 'Quantos cigarros você fuma por dia?',
       metaDesc: 'Defina uma meta realista para hoje.',
-      metaUnit: 'cigarros por dia',
+      metaUnit: 'cigarros por dia habitualmente',
       metaSubmit: 'Pronto!',
+      metaSuggestedTitle: 'Meta sugerida para hoje',
+      metaSuggestedDesc: 'Que tal começar com 1 cigarro a menos do seu consumo habitual?',
+      metaSuggestedBadge: 'Primeiro passo sugerido',
+      metaSuggestedHint: 'Você pode confirmar ou ajustar este valor antes de iniciar.',
+      metaSuggestedUnit: 'cigarros hoje',
+      metaHabitualSub: 'Seu consumo habitual de referência',
+      metaHabitualUnit: 'cigarros por dia habitualmente',
+
+      // Evolução de Meta Diária (Home)
+      goalPromptTitle: 'Meta de hoje',
+      goalPromptMetYesterday: 'Ontem você mandou bem!',
+      goalPromptOverYesterday: 'Ontem foi um dia desafiador, e tudo bem!',
+      goalPromptNormal: 'Novo dia, novo passo',
+      goalPromptZero: 'Meta sem fumar mantida!',
+      goalPromptZeroDesc: 'Você já conquistou a meta de 0 cigarros. Vamos continuar sem fumar hoje?',
+      goalPromptKeepBtn: 'Continuar com {0}',
+      goalPromptReduceBtn: 'Tentar {0}',
+      goalPromptZeroKeepBtn: 'Continuar sem fumar',
+      goalPromptLaterBtn: 'Decidir depois',
+      goalToastKept: 'Meta mantida em {0} cigarros hoje.',
+      goalToastReduced: 'Nova meta definida: {0} cigarros hoje! Um passo de cada vez.',
+      goalToastZero: 'Excelente! Meta de 0 cigarros mantida para hoje.',
+
+      // Ajuste de Meta nas Configurações e Perfil
+      settingsGoalAdjustLabel: 'Meta diária e consumo',
+      settingsGoalAdjustDesc: 'Altere sua meta diária ou consumo habitual',
+      goalModalTitle: 'Ajustar meta e consumo',
+      goalModalTodayLabel: 'Meta diária atual',
+      goalModalTodayDesc: 'Seu limite de cigarros planejado para hoje.',
+      goalModalHabitualLabel: 'Consumo habitual de referência',
+      goalModalHabitualDesc: 'Usado para calcular a sua economia diária acumulada.',
+      goalModalSave: 'Salvar',
+      goalModalCancel: 'Cancelar',
+      goalToastSaved: 'Meta e consumo atualizados com sucesso!',
 
       motivationsH1: 'O que te motiva a mudar?',
       motivationsDesc: 'Escolha quantas quiser.',
@@ -756,10 +792,44 @@ document.addEventListener('DOMContentLoaded', () => {
       metaYears10plus: '10+ years',
       metaPriceQuestion: 'Average pack price (R$)',
       metaPriceDesc: 'Used to calculate your daily savings.',
-      metaTitle: 'Your daily goal',
+      metaTitle: 'How many cigarettes do you smoke a day?',
       metaDesc: 'Set a realistic goal for today.',
-      metaUnit: 'cigarettes per day',
+      metaUnit: 'cigarettes per day habitually',
       metaSubmit: 'Done!',
+      metaSuggestedTitle: 'Suggested goal for today',
+      metaSuggestedDesc: 'How about starting with 1 cigarette less than your habitual intake?',
+      metaSuggestedBadge: 'Suggested first step',
+      metaSuggestedHint: 'You can confirm or adjust this target before starting.',
+      metaSuggestedUnit: 'cigarettes today',
+      metaHabitualSub: 'Your baseline reference consumption',
+      metaHabitualUnit: 'cigarettes per day habitually',
+
+      // Daily Goal Evolution (Home)
+      goalPromptTitle: "Today's goal",
+      goalPromptMetYesterday: 'You did great yesterday!',
+      goalPromptOverYesterday: 'Yesterday was challenging, and that\'s okay!',
+      goalPromptNormal: 'New day, new step',
+      goalPromptZero: 'Smoke-free goal active!',
+      goalPromptZeroDesc: 'You have reached 0 cigarettes goal. Keep smoke-free today?',
+      goalPromptKeepBtn: 'Keep at {0}',
+      goalPromptReduceBtn: 'Try {0}',
+      goalPromptZeroKeepBtn: 'Keep smoke-free',
+      goalPromptLaterBtn: 'Decide later',
+      goalToastKept: 'Goal maintained at {0} cigarettes today.',
+      goalToastReduced: 'New goal set: {0} cigarettes today! One step at a time.',
+      goalToastZero: 'Great! 0 cigarettes goal maintained for today.',
+
+      // Goal Adjust in Settings and Profile
+      settingsGoalAdjustLabel: 'Daily goal & baseline',
+      settingsGoalAdjustDesc: 'Change your daily goal or baseline consumption',
+      goalModalTitle: 'Adjust goal & baseline',
+      goalModalTodayLabel: 'Current daily goal',
+      goalModalTodayDesc: 'Target cigarette limit planned for today.',
+      goalModalHabitualLabel: 'Baseline reference consumption',
+      goalModalHabitualDesc: 'Used to calculate your daily cumulative savings.',
+      goalModalSave: 'Save',
+      goalModalCancel: 'Cancel',
+      goalToastSaved: 'Goal and baseline updated successfully!',
 
       motivationsH1: 'What motivates you to change?',
       motivationsDesc: 'Choose as many as you like.',
@@ -1262,10 +1332,44 @@ document.addEventListener('DOMContentLoaded', () => {
       metaYears10plus: '10+ años',
       metaPriceQuestion: 'Precio medio de la cajetilla (R$)',
       metaPriceDesc: 'Usado para calcular tu ahorro diario.',
-      metaTitle: 'Tu meta diaria',
+      metaTitle: '¿Cuántos cigarrillos fumas al día?',
       metaDesc: 'Define una meta realista para hoy.',
-      metaUnit: 'cigarrillos por día',
+      metaUnit: 'cigarrillos al día habitualmente',
       metaSubmit: '¡Listo!',
+      metaSuggestedTitle: 'Meta sugerida para hoy',
+      metaSuggestedDesc: '¿Qué tal empezar con 1 cigarrillo menos de tu consumo habitual?',
+      metaSuggestedBadge: 'Primer paso sugerido',
+      metaSuggestedHint: 'Puedes confirmar o ajustar este valor antes de iniciar.',
+      metaSuggestedUnit: 'cigarrillos hoy',
+      metaHabitualSub: 'Tu consumo habitual de referencia',
+      metaHabitualUnit: 'cigarrillos al día habitualmente',
+
+      // Evolución de Meta Diaria (Home)
+      goalPromptTitle: 'Meta de hoy',
+      goalPromptMetYesterday: '¡Ayer lo hiciste genial!',
+      goalPromptOverYesterday: '¡Ayer fue un día desafiante, y no pasa nada!',
+      goalPromptNormal: 'Nuevo día, nuevo paso',
+      goalPromptZero: '¡Meta sin fumar activa!',
+      goalPromptZeroDesc: 'Has alcanzado la meta de 0 cigarrillos. ¿Continuar sin fumar hoy?',
+      goalPromptKeepBtn: 'Continuar con {0}',
+      goalPromptReduceBtn: 'Intentar {0}',
+      goalPromptZeroKeepBtn: 'Continuar sin fumar',
+      goalPromptLaterBtn: 'Decidir después',
+      goalToastKept: 'Meta mantenida en {0} cigarrillos hoy.',
+      goalToastReduced: '¡Nueva meta definida: {0} cigarrillos hoy! Paso a paso.',
+      goalToastZero: '¡Excelente! Meta de 0 cigarrillos mantenida para hoy.',
+
+      // Ajuste de Meta en Configuración y Perfil
+      settingsGoalAdjustLabel: 'Meta diaria y consumo',
+      settingsGoalAdjustDesc: 'Cambia tu meta diaria o consumo habitual',
+      goalModalTitle: 'Ajustar meta y consumo',
+      goalModalTodayLabel: 'Meta diaria actual',
+      goalModalTodayDesc: 'Límite de cigarrillos planeado para hoy.',
+      goalModalHabitualLabel: 'Consumo habitual de referencia',
+      goalModalHabitualDesc: 'Usado para calcular tu ahorro diario acumulado.',
+      goalModalSave: 'Guardar',
+      goalModalCancel: 'Cancelar',
+      goalToastSaved: '¡Meta y consumo actualizados con éxito!',
 
       motivationsH1: '¿Qué te motiva a cambiar?',
       motivationsDesc: 'Elige tantas como quieras.',
@@ -1922,14 +2026,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const s7 = document.querySelector('.screen[data-screen="7"]');
     if (s7) {
       const h2 = s7.querySelector('.detail-header h2') || s7.querySelector('.wl-calc-top-title');
-      if (h2) h2.innerText = t.metaTitle || t.configTitle || 'Sua meta diária';
+      if (h2) h2.innerText = t.metaH1 || 'Quantos cigarros você fuma por dia?';
       const h1 = s7.querySelector('h1');
       if (h1) h1.innerText = t.metaH1 || 'Quantos cigarros você fuma por dia?';
       const calcUnit = s7.querySelector('.wl-calc-unit-label');
-      if (calcUnit) calcUnit.innerText = t.metaUnit || 'cigarros por dia';
-      const calcSub = s7.querySelector('.wl-calc-sub');
-      if (calcSub) calcSub.innerText = t.metaStartHere || (lang === 'EN' ? "Let's start here!" : (lang === 'ES' ? '¡Empecemos por aquí!' : 'Vamos começar por aqui!'));
-      const btnDone = document.getElementById('btn-calc-done');
+      if (calcUnit) calcUnit.innerText = t.metaHabitualUnit || 'cigarros por dia habitualmente';
+      const calcSub = s7.querySelector('.wl-calc-sub') || document.getElementById('wl-calc-sub-headline');
+      if (calcSub) calcSub.innerText = t.metaHabitualSub || 'Seu consumo habitual de referência';
+      const suggTitle = document.getElementById('habbi-suggested-goal-title');
+      if (suggTitle) suggTitle.innerText = t.metaSuggestedTitle || 'Meta sugerida para hoje';
+      const suggDesc = document.getElementById('habbi-suggested-goal-desc');
+      if (suggDesc) suggDesc.innerText = t.metaSuggestedDesc || 'Que tal começar com 1 cigarro a menos do seu consumo habitual?';
+      const suggBadge = document.getElementById('habbi-suggested-badge-text');
+      if (suggBadge) suggBadge.innerText = t.metaSuggestedBadge || 'Primeiro passo sugerido';
+      const suggHint = document.getElementById('habbi-suggested-hint');
+      if (suggHint) suggHint.innerText = t.metaSuggestedHint || 'Você pode confirmar ou ajustar este valor antes de iniciar.';
+      const suggUnit = document.getElementById('habbi-suggested-meta-unit');
+      if (suggUnit) suggUnit.innerText = t.metaSuggestedUnit || 'cigarros hoje';
+      const pillHabitualTitle = document.getElementById('wl-cigs-pill-title');
+      if (pillHabitualTitle) pillHabitualTitle.innerText = t.metaHabitualLabel || (lang === 'EN' ? 'Baseline consumption' : (lang === 'ES' ? 'Consumo habitual' : 'Consumo habitual'));
+      const btnDone = document.getElementById('btn-calc-done') || document.getElementById('btn-config-1-submit');
       if (btnDone) btnDone.innerText = t.configMetaDone || (lang === 'EN' ? 'Done!' : (lang === 'ES' ? '¡Listo!' : 'Pronto!'));
       const sliderCap = s7.querySelector('.slider-container .caption');
       if (sliderCap) sliderCap.innerText = t.metaSliderUnit || 'cigarros';
@@ -1950,6 +2066,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.getElementById('btn-config-1-submit');
       if (btn) btn.innerText = t.configSubmit || 'Continuar';
     }
+
+    const settingsGoalLbl = document.getElementById('settings-goal-label');
+    if (settingsGoalLbl) settingsGoalLbl.innerText = t.settingsGoalAdjustLabel || 'Meta diária e consumo';
+
+    const goalModalTitleEl = document.getElementById('habbi-goal-adjust-title');
+    if (goalModalTitleEl) goalModalTitleEl.innerText = t.goalModalTitle || 'Ajustar meta e consumo';
+    const goalModalTodayLblEl = document.getElementById('habbi-adjust-today-lbl');
+    if (goalModalTodayLblEl) goalModalTodayLblEl.innerText = t.goalModalTodayLabel || 'Meta diária atual';
+    const goalModalTodayDescEl = document.getElementById('habbi-adjust-today-desc');
+    if (goalModalTodayDescEl) goalModalTodayDescEl.innerText = t.goalModalTodayDesc || 'Seu limite de cigarros planejado para hoje.';
+    const goalModalHabitLblEl = document.getElementById('habbi-adjust-habitual-lbl');
+    if (goalModalHabitLblEl) goalModalHabitLblEl.innerText = t.goalModalHabitualLabel || 'Consumo habitual de referência';
+    const goalModalHabitDescEl = document.getElementById('habbi-adjust-habitual-desc');
+    if (goalModalHabitDescEl) goalModalHabitDescEl.innerText = t.goalModalHabitualDesc || 'Usado para calcular a sua economia diária acumulada.';
+    const goalModalCancelBtn = document.getElementById('btn-goal-adjust-cancel');
+    if (goalModalCancelBtn) goalModalCancelBtn.innerText = t.goalModalCancel || 'Cancelar';
+    const goalModalSaveBtn = document.getElementById('btn-goal-adjust-save');
+    if (goalModalSaveBtn) goalModalSaveBtn.innerText = t.goalModalSave || 'Salvar';
 
     // Screen 8: Motivações
     const s8 = document.querySelector('.screen[data-screen="8"]');
@@ -2547,13 +2681,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const h2 = s28.querySelector('.detail-header h2');
       if (h2) h2.innerText = t.accountTitle;
       const labels = s28.querySelectorAll('.form-label');
-      if (labels.length >= 5) {
+      if (labels.length >= 3) {
         labels[0].innerText = t.accountNameLabel || 'Nome';
         labels[1].innerText = t.accountEmailLabel || 'E-mail';
         labels[2].innerText = t.accountPassLabel || 'Nova Senha (opcional)';
-        labels[3].innerText = t.accountMetaLabel || 'Meta Diária (cigarros/dia)';
-        labels[4].innerText = t.accountPackPriceLabel || 'Preço do Maço (R$)';
       }
+      const editAccountMetaLbl = document.getElementById('edit-account-meta-label');
+      if (editAccountMetaLbl) editAccountMetaLbl.innerText = t.goalModalTodayLabel || 'Meta diária atual (cigarros/dia)';
+      const editAccountHabitualLbl = document.getElementById('edit-account-habitual-label');
+      if (editAccountHabitualLbl) editAccountHabitualLbl.innerText = t.goalModalHabitualLabel || 'Consumo habitual de referência (cigarros/dia)';
+      const packPriceLbl = s28.querySelector('label[for="edit-account-pack-price"]');
+      if (packPriceLbl) packPriceLbl.innerText = t.accountPackPriceLabel || 'Preço do Maço (R$)';
       const saveBtn = document.getElementById('btn-save-account-changes');
       if (saveBtn) saveBtn.innerText = t.accountSaveBtn || t.accountSave;
     }
@@ -2894,9 +3032,10 @@ document.addEventListener('DOMContentLoaded', () => {
       currentLang: lang,
       theme: overrides.theme === 'dark' ? 'dark' : 'light',
       dailyRecords: (overrides.dailyRecords && typeof overrides.dailyRecords === 'object') ? overrides.dailyRecords : {},
-      todayMeta: (typeof overrides.todayMeta === 'number' && overrides.todayMeta >= 1) ? overrides.todayMeta : 11,
+      todayMeta: (typeof overrides.todayMeta === 'number' && overrides.todayMeta >= 0) ? overrides.todayMeta : 11,
       habitualCigs: (typeof overrides.habitualCigs === 'number' && overrides.habitualCigs >= 1) ? overrides.habitualCigs : 12,
       habitualCigsCustomized: Boolean(overrides.habitualCigsCustomized),
+      lastGoalPromptDateKey: overrides.lastGoalPromptDateKey || null,
       packPrice: (typeof overrides.packPrice === 'number' && overrides.packPrice > 0) ? overrides.packPrice : 15.00,
       cigsPerPack: (typeof overrides.cigsPerPack === 'number' && overrides.cigsPerPack >= 1) ? overrides.cigsPerPack : 20,
       packFreqDays: (typeof overrides.packFreqDays === 'number' && overrides.packFreqDays >= 1) ? overrides.packFreqDays : 2,
@@ -3093,6 +3232,8 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.savingsGoal = { title: getDefaultGoalTitle(lang), target: 250 };
     userState.gameRecords = { memory: 0, sequence: 0, reflex: 0, math: 0 };
     userState.onboardingCompleted = false;
+    userState.lastGoalPromptDateKey = null;
+    userState.suggestedMetaCustomized = false;
     userState.tutorialCompleted = false;
     userState.hasConfiguredFirstGoal = false;
     userState.sacola100Celebrated = false;
@@ -3107,9 +3248,10 @@ document.addEventListener('DOMContentLoaded', () => {
       currentLang: userState.currentLang || 'PT',
       theme: userState.theme === 'dark' ? 'dark' : 'light',
       dailyRecords: userState.dailyRecords || {},
-      todayMeta: userState.todayMeta || 11,
+      todayMeta: (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11,
       habitualCigs: userState.habitualCigs || 12,
       habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
+      lastGoalPromptDateKey: userState.lastGoalPromptDateKey || null,
       packPrice: userState.packPrice || 15.00,
       cigsPerPack: userState.cigsPerPack || 20,
       packFreqDays: userState.packFreqDays || 2,
@@ -3162,6 +3304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     userState.gameRecords = clean.gameRecords;
     userState.onboardingCompleted = clean.onboardingCompleted;
+    userState.lastGoalPromptDateKey = clean.lastGoalPromptDateKey || null;
     userState.tutorialCompleted = clean.tutorialCompleted;
     userState.hasConfiguredFirstGoal = clean.hasConfiguredFirstGoal;
     userState.sacola100Celebrated = clean.sacola100Celebrated;
@@ -3361,9 +3504,10 @@ document.addEventListener('DOMContentLoaded', () => {
           currentLang: userState.currentLang || 'PT',
           theme: userState.theme === 'dark' ? 'dark' : 'light',
           isAuthenticated: Boolean(userState.isAuthenticated),
-          todayMeta: userState.todayMeta || 11,
+          todayMeta: (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11,
           habitualCigs: userState.habitualCigs || 12,
           habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
+          lastGoalPromptDateKey: userState.lastGoalPromptDateKey || null,
           packPrice: userState.packPrice || 15,
           cigsPerPack: userState.cigsPerPack || 20,
           packFreqDays: userState.packFreqDays || 2,
@@ -3703,13 +3847,18 @@ document.addEventListener('DOMContentLoaded', () => {
   window.habbiRestoreData = habbiRestoreData;
   window.habbiDownloadBackupFile = habbiDownloadBackupFile;
 
+  function getSafeTodayMeta() {
+    return (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
+  }
+  window.getSafeTodayMeta = getSafeTodayMeta;
+
   function getOrCreateDayRecord(dateKey) {
     const key = dateKey || getDateKey(new Date());
     if (!userState.dailyRecords[key]) {
       userState.dailyRecords[key] = {
         dateKey: key,
         cigs: 0,
-        meta: userState.todayMeta || 11,
+        meta: getSafeTodayMeta(),
         smokeFree: false,
         dayCompleted: false,
         urges: 0,
@@ -3722,7 +3871,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function recomputeDayAggregates(record) {
     if (!record) return;
-    if (!record.meta) record.meta = userState.todayMeta || 11;
+    if (typeof record.meta !== 'number' || record.meta < 0) record.meta = getSafeTodayMeta();
     const meta = record.meta;
     const events = Array.isArray(record.events) ? record.events : [];
     let cigs = 0;
@@ -3774,7 +3923,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (eventsCount === 0 && !record.smokeFree && !record.dayCompleted && record.cigs === 0 && record.urges === 0 && !record.mood) {
       return 'neutral';
     }
-    const meta = record.meta || userState.todayMeta || 11;
+    const meta = (typeof record.meta === 'number' && record.meta >= 0) ? record.meta : getSafeTodayMeta();
     if (record.cigs > meta) {
       return 'exceeded';
     }
@@ -3808,7 +3957,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function isDayGoalMet(dateKey) {
     const record = userState.dailyRecords[dateKey];
     if (!record) return false;
-    const meta = record.meta || userState.todayMeta || 11;
+    const meta = (typeof record.meta === 'number' && record.meta >= 0) ? record.meta : getSafeTodayMeta();
     if (record.cigs > meta) return false;
     const todayKey = getDateKey(new Date());
     if (dateKey < todayKey) return true;
@@ -3831,7 +3980,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!rec) return;
       recomputeDayAggregates(rec);
       const evs = Array.isArray(rec.events) ? rec.events : [];
-      if (evs.length === 0) {
+      if (evs.length === 0 && !rec.smokeFree && !rec.dayCompleted && (typeof rec.cigs !== 'number' || rec.cigs === 0) && key !== todayKey) {
         delete userState.dailyRecords[key];
         return;
       }
@@ -4005,9 +4154,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     ensureActiveProfileForWrite();
     const rec = getOrCreateDayRecord(targetKey);
-    // Preserva rec.meta histórico caso o dia já possua meta definida
-    if (!rec.meta || typeof rec.meta !== 'number' || rec.meta < 1) {
-      rec.meta = userState.todayMeta || 11;
+    // Preserva rec.meta histórico caso o dia já possua meta definida (permitindo meta 0)
+    if (typeof rec.meta !== 'number' || rec.meta < 0) {
+      rec.meta = getSafeTodayMeta();
     }
 
     const timeClock = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -4500,6 +4649,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Screen 10: Home
     if (screenNum === 10) {
       updateHomeScreen();
+      if (typeof window.checkDailyGoalPrompt === 'function') {
+        window.checkDailyGoalPrompt();
+      }
       if (typeof window.checkAndTriggerFirstTimeTutorial === 'function') {
         window.checkAndTriggerFirstTimeTutorial();
       }
@@ -4597,7 +4749,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (nameField) nameField.value = userState.name || '';
       if (emailField) emailField.value = userState.email || '';
       if (passField) passField.value = '';
-      if (metaField) metaField.value = userState.todayMeta || 11;
+      if (metaField) metaField.value = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
+      const habitualField = document.getElementById('edit-account-habitual');
+      if (habitualField) habitualField.value = userState.habitualCigs || 12;
       if (packPriceField) packPriceField.value = userState.packPrice ? userState.packPrice.toFixed(2) : '10.00';
     }
 
@@ -4632,7 +4786,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function computeSavingsMetrics() {
-    const habitual = Math.max(1, parseInt(userState.habitualCigs, 10) || parseInt(userState.todayMeta, 10) || 12);
+    const habitual = Math.max(1, parseInt(userState.habitualCigs, 10) || 12);
     const packPrice = Math.max(0.5, parseFloat(userState.packPrice) || 15);
     const cigsPerPack = Math.max(1, parseInt(userState.cigsPerPack, 10) || 20);
     const packFreqDays = Math.max(1, parseInt(userState.packFreqDays, 10) || 2);
@@ -5086,7 +5240,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.adjustSavingsHabitual = function(delta) {
-    const cur = Math.max(1, parseInt(userState.habitualCigs, 10) || parseInt(userState.todayMeta, 10) || 12);
+    const cur = Math.max(1, parseInt(userState.habitualCigs, 10) || 12);
     userState.habitualCigs = Math.max(1, Math.min(60, cur + (parseInt(delta, 10) || 0)));
     userState.habitualCigsCustomized = true;
     savePersistedState();
@@ -6133,28 +6287,48 @@ document.addEventListener('DOMContentLoaded', () => {
         <header class="wl-calc-top-bar">
           <div class="wl-calc-top-left">
             <button type="button" class="wl-calc-back" onclick="goToScreen(5)" aria-label="Voltar">\u2039</button>
-            <h2 class="wl-calc-top-title">Sua meta di\u00e1ria</h2>
+            <h2 class="wl-calc-top-title" id="wl-calc-header-title">Quantos cigarros voc\u00ea fuma por dia?</h2>
           </div>
         </header>
 
         <div class="wl-calc-main-column">
           <div class="wl-calc-body">
-          <!-- Meta diária como protagonista absoluta e centralizada -->
+          <!-- Consumo habitual de referência -->
           <div class="wl-calc-hero">
+            <span class="wl-calc-sub" id="wl-calc-sub-headline">Seu consumo habitual de refer\u00eancia</span>
             <div class="wl-calc-big-number">
-              <span id="cigarettes-per-day-val">11</span>
+              <span id="cigarettes-per-day-val">12</span>
             </div>
-            <div class="wl-calc-unit-label">cigarros por dia</div>
-            <span class="wl-calc-sub">Vamos come\u00e7ar por aqui!</span>
+            <div class="wl-calc-unit-label" id="wl-calc-unit-lbl">cigarros por dia habitualmente</div>
           </div>
 
-          <!-- Botões de seleção que abrem a aba inferior (bottom sheet) com opções -->
+          <!-- Card de Meta Inicial Sugerida (independente e ajustável) -->
+          <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
+            <div class="habbi-suggested-goal-header">
+              <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
+              <strong id="habbi-suggested-goal-title">Meta sugerida para hoje</strong>
+            </div>
+            <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">
+              Que tal come\u00e7ar com 1 cigarro a menos do seu consumo habitual?
+            </p>
+            <div class="habbi-suggested-stepper">
+              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">\u2212</button>
+              <div class="habbi-suggested-display">
+                <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
+                <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
+              </div>
+              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
+            </div>
+            <span class="habbi-suggested-hint" id="habbi-suggested-hint">Voc\u00ea pode confirmar ou ajustar este valor antes de iniciar.</span>
+          </div>
+
+          <!-- Bot\u00f5es de sele\u00e7\u00e3o que abrem a aba inferior (bottom sheet) com op\u00e7\u00f5es -->
           <div class="wl-calc-pills">
             <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-cigs" onclick="openCalcOptionSheet('cigs')">
               <div class="wl-calc-pill-row">
-                <span>Consumo di\u00e1rio</span>
+                <span id="wl-cigs-pill-title">Consumo habitual</span>
                 <span class="wl-calc-btn-right">
-                  <strong id="wl-cigs-pill-label">11 cigarros</strong>
+                  <strong id="wl-cigs-pill-label">12 cigarros</strong>
                   <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </span>
               </div>
@@ -6275,6 +6449,23 @@ document.addEventListener('DOMContentLoaded', () => {
             <span id="home-nosmoke-badge-text">N\u00e3o fumei hoje</span>
           </button>
           <div class="wl-home-overmeta-banner" id="home-overmeta-banner" style="display:none;" role="status"></div>
+        </div>
+
+        <!-- Card discreto de Evolução Diária da Meta (perguntado 1x por dia, sem bloquear) -->
+        <div class="habbi-goal-evolution-card" id="habbi-goal-evolution-card" style="display:none;" role="region" aria-label="Evolução da meta diária">
+          <div class="habbi-goal-card-top">
+            <div class="habbi-goal-card-badge-wrap">
+              <span class="habbi-goal-card-badge" id="habbi-goal-badge-txt">Meta de hoje</span>
+            </div>
+            <button type="button" class="habbi-goal-card-close" id="btn-goal-close" onclick="handleDailyGoalDecision('later')" aria-label="Fechar">\u2715</button>
+          </div>
+          <h3 class="habbi-goal-card-title" id="habbi-goal-card-title">Novo dia, novo passo</h3>
+          <p class="habbi-goal-card-desc" id="habbi-goal-card-desc">Como voc\u00ea prefere definir sua meta hoje?</p>
+          <div class="habbi-goal-card-actions" id="habbi-goal-card-actions">
+            <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">Continuar com 14</button>
+            <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">Tentar 13</button>
+          </div>
+          <button type="button" class="habbi-goal-later-link" id="btn-goal-later" onclick="handleDailyGoalDecision('later')">Decidir depois</button>
         </div>
 
         <div class="wl-cig-demo-stage wl-home-cig-stage" id="home-cig-stage">
@@ -7485,8 +7676,15 @@ document.addEventListener('DOMContentLoaded', () => {
       mascotImg.classList.add('is-reacting');
     }
 
-    if (metaCigs) metaCigs.innerText = userState.todayMeta;
+    const activeMeta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
+    if (metaCigs) metaCigs.innerText = activeMeta;
     if (metaReg) metaReg.innerText = userState.todayLogged;
+
+    // Atualiza botão nas Configurações se presente
+    const settingsGoalMetaVal = document.getElementById('settings-goal-meta-val');
+    if (settingsGoalMetaVal) {
+      settingsGoalMetaVal.innerText = `${activeMeta} cig/dia`;
+    }
 
     // Atualiza estado do botão secundário "Remover um cigarro" na Home
     const homeRemoveBtn = document.getElementById('btn-home-remove-cig');
@@ -7496,7 +7694,9 @@ document.addEventListener('DOMContentLoaded', () => {
       homeRemoveBtn.setAttribute('aria-disabled', String(!canRemoveToday));
     }
     
-    const pct = Math.min(100, Math.round((userState.todayLogged / Math.max(1, userState.todayMeta)) * 100));
+    const pct = activeMeta > 0
+      ? Math.min(100, Math.round((userState.todayLogged / activeMeta) * 100))
+      : (userState.todayLogged === 0 ? 0 : 100);
     if (metaPct) metaPct.innerText = `${pct}%`;
 
     // Atualiza o selo/botão "Não fumei hoje" na Tela Inicial
@@ -7524,7 +7724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //   * Escuro: preenche em 1 vez (meta + 6 em diante -> 100%)
     const homeCigFill = document.getElementById('home-cig-fill');
     const homeCigPinkFill = document.getElementById('home-cig-pink-fill');
-    const metaVal = Math.max(1, userState.todayMeta || 11);
+    const metaVal = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
     const loggedVal = Math.max(0, userState.todayLogged || 0);
     const overLimit = Math.max(0, loggedVal - metaVal);
 
@@ -7604,6 +7804,10 @@ document.addEventListener('DOMContentLoaded', () => {
       progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
       progressCircle.style.strokeDashoffset = offset;
     }
+
+    if (typeof window.checkDailyGoalPrompt === 'function') {
+      window.checkDailyGoalPrompt();
+    }
   }
 
   window.handleHomeNoSmokeToday = function() {
@@ -7620,7 +7824,7 @@ document.addEventListener('DOMContentLoaded', () => {
       rec.events = rec.events.filter(e => e.kind !== 'no-smoke' && e.kind !== 'day-complete');
     }
     const nextNum = (rec.cigs || 0) + 1;
-    const meta = userState.todayMeta || 11;
+    const meta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
 
     recordHabbiEvent({
       dateKey: todayKey,
@@ -9823,8 +10027,16 @@ document.addEventListener('DOMContentLoaded', () => {
           userState.packPrice = price;
         }
       }
+      userState.habitualCigsCustomized = true;
+      userState.lastGoalPromptDateKey = getDateKey(new Date());
       userState.metaExceededModalShown = false;
       userState.onboardingCompleted = true;
+
+      const todayKey = getDateKey(new Date());
+      const rec = getOrCreateDayRecord(todayKey);
+      rec.meta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : Math.max(0, userState.habitualCigs - 1);
+      userState.todayMeta = rec.meta;
+
       savePersistedState();
       refreshAllViews();
       // Leva direto para a Home (Screen 10) para o usuário conhecer e explorar o app primeiro
@@ -9883,8 +10095,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast('O nome não pode estar vazio.');
         return;
       }
-      if (isNaN(metaVal) || metaVal < 1) {
-        showToast('A meta diária deve ser pelo menos 1.');
+      if (isNaN(metaVal) || metaVal < 0) {
+        showToast('A meta diária não pode ser negativa.');
         return;
       }
       if (isNaN(packPriceVal) || packPriceVal <= 0) {
@@ -9898,6 +10110,20 @@ document.addEventListener('DOMContentLoaded', () => {
       userState.email = emailVal;
       userState.todayMeta = metaVal;
       userState.packPrice = packPriceVal;
+
+      const habitualInput = document.getElementById('edit-account-habitual');
+      if (habitualInput) {
+        const habVal = parseInt(habitualInput.value, 10);
+        if (!isNaN(habVal) && habVal >= 1) {
+          userState.habitualCigs = habVal;
+          userState.habitualCigsCustomized = true;
+        }
+      }
+
+      const todayKey = getDateKey(new Date());
+      const rec = getOrCreateDayRecord(todayKey);
+      rec.meta = metaVal;
+
       userState.isAuthenticated = true;
 
       const curSess = loadActiveSession();
@@ -9939,10 +10165,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.setCalcCigsValue = function(val) {
-    const cleanVal = Math.max(1, Math.min(40, parseInt(val, 10) || 1));
-    userState.todayMeta = cleanVal;
-    if (!userState.habitualCigsCustomized) {
-      userState.habitualCigs = cleanVal;
+    const cleanVal = Math.max(1, Math.min(60, parseInt(val, 10) || 1));
+    userState.habitualCigs = cleanVal;
+
+    // Se o usuário ainda não personalizou a meta sugerida, calcula habitual - 1 (mínimo 0)
+    if (!userState.suggestedMetaCustomized) {
+      userState.todayMeta = Math.max(0, cleanVal - 1);
+    } else {
+      userState.todayMeta = Math.max(0, Math.min(cleanVal, userState.todayMeta));
     }
 
     const cigarettesValBox = document.getElementById('cigarettes-per-day-val');
@@ -9953,6 +10183,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sheetDisplay = document.getElementById('wl-sheet-cigs-display');
     if (sheetDisplay) sheetDisplay.innerText = cleanVal;
+
+    const suggDisplay = document.getElementById('habbi-suggested-meta-val');
+    if (suggDisplay) suggDisplay.innerText = userState.todayMeta;
 
     const rangeInput = document.getElementById('cigarettes-slider');
     if (rangeInput && parseInt(rangeInput.value, 10) !== cleanVal) {
@@ -9966,8 +10199,19 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.adjustCalcCigsValue = function(delta) {
-    const current = parseInt(userState.todayMeta, 10) || 11;
+    const current = parseInt(userState.habitualCigs, 10) || 12;
     window.setCalcCigsValue(current + (parseInt(delta, 10) || 0));
+  };
+
+  window.adjustInitialSuggestedMeta = function(delta) {
+    userState.suggestedMetaCustomized = true;
+    const current = (typeof userState.todayMeta === 'number') ? userState.todayMeta : Math.max(0, (userState.habitualCigs || 12) - 1);
+    const habitual = Math.max(1, parseInt(userState.habitualCigs, 10) || 12);
+    const nextVal = Math.max(0, Math.min(habitual, current + (parseInt(delta, 10) || 0)));
+    userState.todayMeta = nextVal;
+
+    const suggDisplay = document.getElementById('habbi-suggested-meta-val');
+    if (suggDisplay) suggDisplay.innerText = nextVal;
   };
 
   window.selectCalcYearsOption = function(btnEl) {
@@ -10074,7 +10318,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Sincroniza os valores iniciais exibidos nos 3 botões da tela 7
-  window.setCalcCigsValue(userState.todayMeta || 11);
+  window.setCalcCigsValue(userState.habitualCigs || 12);
   window.setCalcPackPrice(userState.packPrice || 10);
 
   // Screen 8 & 9 Multi-select Chips toggle
@@ -10339,6 +10583,221 @@ document.addEventListener('DOMContentLoaded', () => {
       showScreen(dest);
     });
   }
+
+  // -------------------------------------------------------------
+  // LÓGICA DE EVOLUÇÃO GRADUAL DE METAS (DIÁRIA, LEVE E SEM COBRANÇA)
+  // -------------------------------------------------------------
+  function shouldShowDailyGoalPrompt() {
+    if (!userState.onboardingCompleted) return false;
+    const todayKey = getDateKey(new Date());
+    if (userState.lastGoalPromptDateKey && userState.lastGoalPromptDateKey >= todayKey) {
+      return false;
+    }
+    return true;
+  }
+
+  function renderDailyGoalPrompt() {
+    const card = document.getElementById('habbi-goal-evolution-card');
+    if (!card) return;
+
+    if (!shouldShowDailyGoalPrompt()) {
+      card.style.display = 'none';
+      return;
+    }
+
+    const todayKey = getDateKey(new Date());
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayKey = getDateKey(yesterdayDate);
+
+    const yesterdayRec = userState.dailyRecords[yesterdayKey];
+    const yesterdayCigs = yesterdayRec ? Math.max(0, parseInt(yesterdayRec.cigs, 10) || 0) : null;
+    const yesterdayMeta = (yesterdayRec && typeof yesterdayRec.meta === 'number' && yesterdayRec.meta >= 0)
+      ? yesterdayRec.meta
+      : ((typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11);
+
+    const currentMeta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0)
+      ? userState.todayMeta
+      : 11;
+
+    const hadYesterdayRecord = Boolean(yesterdayRec && (
+      (Array.isArray(yesterdayRec.events) && yesterdayRec.events.length > 0) ||
+      yesterdayRec.smokeFree ||
+      yesterdayRec.dayCompleted ||
+      (typeof yesterdayRec.cigs === 'number' && yesterdayRec.cigs > 0)
+    ));
+    const exceededYesterday = Boolean(hadYesterdayRecord && yesterdayCigs !== null && yesterdayCigs > yesterdayMeta);
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+    const badgeEl = document.getElementById('habbi-goal-badge-txt');
+    const titleEl = document.getElementById('habbi-goal-card-title');
+    const descEl = document.getElementById('habbi-goal-card-desc');
+    const actionsEl = document.getElementById('habbi-goal-card-actions');
+    const laterLink = document.getElementById('btn-goal-later');
+
+    if (badgeEl) {
+      badgeEl.innerText = t.goalPromptTitle || 'Meta de hoje';
+      badgeEl.classList.toggle('is-challenge', exceededYesterday);
+    }
+    if (laterLink) {
+      laterLink.innerText = t.goalPromptLaterBtn || 'Decidir depois';
+    }
+
+    if (currentMeta === 0) {
+      if (titleEl) titleEl.innerText = t.goalPromptZero || 'Meta sem fumar mantida!';
+      if (descEl) descEl.innerText = t.goalPromptZeroDesc || (activeLang === 'EN' ? 'You have reached 0 cigarettes goal. Keep smoke-free today?' : (activeLang === 'ES' ? 'Has alcanzado la meta de 0 cigarrillos. ¿Continuar sin fumar hoy?' : 'Você já conquistou a meta de 0 cigarros. Vamos continuar sem fumar hoje?'));
+      if (actionsEl) {
+        actionsEl.innerHTML = `
+          <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
+        `;
+      }
+    } else if (exceededYesterday) {
+      if (titleEl) titleEl.innerText = t.goalPromptOverYesterday || 'Ontem foi um dia desafiador, e tudo bem!';
+      const tplDesc = activeLang === 'EN'
+        ? 'Every day is a fresh start. Would you like to keep the same goal of {0} and try again today?'
+        : (activeLang === 'ES' ? 'Cada día es un nuevo comienzo. ¿Quieres mantener la meta de {0} e intentarlo hoy de nuevo?' : 'Cada dia é um novo recomeço. Deseja manter a meta de {0} para tentar novamente hoje?');
+      if (descEl) descEl.innerText = tplDesc.replace('{0}', String(currentMeta));
+      const keepBtnLabel = (t.goalPromptKeepBtn || 'Continuar com {0}').replace('{0}', String(currentMeta));
+      const reduceBtnLabel = (t.goalPromptReduceBtn || 'Tentar {0}').replace('{0}', String(Math.max(0, currentMeta - 1)));
+      if (actionsEl) {
+        actionsEl.innerHTML = `
+          <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
+          <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
+        `;
+      }
+    } else {
+      if (hadYesterdayRecord) {
+        if (titleEl) titleEl.innerText = t.goalPromptMetYesterday || 'Ontem você mandou bem!';
+      } else {
+        if (titleEl) titleEl.innerText = t.goalPromptNormal || 'Novo dia, novo passo';
+      }
+      const tplDesc = activeLang === 'EN'
+        ? 'Would you like to keep {0} cigarettes or try reducing 1 cigarette today?'
+        : (activeLang === 'ES' ? '¿Quieres mantener {0} cigarrillos o intentar reducir 1 cigarrillo hoy?' : 'Deseja continuar com {0} cigarros ou tentar reduzir mais 1 cigarro hoje?');
+      if (descEl) descEl.innerText = tplDesc.replace('{0}', String(currentMeta));
+      const keepBtnLabel = (t.goalPromptKeepBtn || 'Continuar com {0}').replace('{0}', String(currentMeta));
+      const reduceBtnLabel = (t.goalPromptReduceBtn || 'Tentar {0}').replace('{0}', String(Math.max(0, currentMeta - 1)));
+      if (actionsEl) {
+        actionsEl.innerHTML = `
+          <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
+          <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
+        `;
+      }
+    }
+
+    card.style.display = 'block';
+  }
+
+  function handleDailyGoalDecision(decision) {
+    const todayKey = getDateKey(new Date());
+    userState.lastGoalPromptDateKey = todayKey;
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+    const card = document.getElementById('habbi-goal-evolution-card');
+    if (card) card.style.display = 'none';
+
+    if (decision === 'keep') {
+      const todayRec = getOrCreateDayRecord(todayKey);
+      todayRec.meta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
+      const msg = userState.todayMeta === 0
+        ? (t.goalToastZero || 'Excelente! Meta de 0 cigarros mantida para hoje.')
+        : (t.goalToastKept || 'Meta mantida em {0} cigarros hoje.').replace('{0}', String(userState.todayMeta));
+      showToast(msg);
+      savePersistedState();
+      refreshAllViews();
+    } else if (decision === 'reduce') {
+      const cur = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
+      const nextMeta = Math.max(0, cur - 1);
+      userState.todayMeta = nextMeta;
+      const todayRec = getOrCreateDayRecord(todayKey);
+      todayRec.meta = nextMeta;
+      const msg = nextMeta === 0
+        ? (t.goalToastZero || 'Excelente! Meta de 0 cigarros mantida para hoje.')
+        : (t.goalToastReduced || 'Nova meta definida: {0} cigarros hoje! Um passo de cada vez.').replace('{0}', String(nextMeta));
+      showToast(msg);
+      savePersistedState();
+      refreshAllViews();
+    } else {
+      // 'later' -> adia a decisão sem penalidade nem alteração
+      savePersistedState();
+    }
+  }
+
+  window.shouldShowDailyGoalPrompt = shouldShowDailyGoalPrompt;
+  window.renderDailyGoalPrompt = renderDailyGoalPrompt;
+  window.checkDailyGoalPrompt = renderDailyGoalPrompt;
+  window.handleDailyGoalDecision = handleDailyGoalDecision;
+  window.getDateKey = getDateKey;
+  window.getSafeTodayMeta = getSafeTodayMeta;
+  window.getOrCreateDayRecord = getOrCreateDayRecord;
+  window.getDayStatus = getDayStatus;
+  window.isDayGoalMet = isDayGoalMet;
+  window.computeSavingsMetrics = computeSavingsMetrics;
+
+  // -------------------------------------------------------------
+  // MODAL DE AJUSTE DE META E CONSUMO (CONFIGURAÇÕES E PERFIL)
+  // -------------------------------------------------------------
+  let modalAdjustTodayMeta = 11;
+  let modalAdjustHabitualCigs = 12;
+
+  window.openGoalAdjustModal = function() {
+    modalAdjustTodayMeta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11;
+    modalAdjustHabitualCigs = (typeof userState.habitualCigs === 'number' && userState.habitualCigs >= 1) ? userState.habitualCigs : 12;
+
+    const todayValEl = document.getElementById('modal-adjust-today-val');
+    if (todayValEl) todayValEl.innerText = String(modalAdjustTodayMeta);
+
+    const habitualValEl = document.getElementById('modal-adjust-habitual-val');
+    if (habitualValEl) habitualValEl.innerText = String(modalAdjustHabitualCigs);
+
+    const modal = document.getElementById('habbi-goal-adjust-modal');
+    if (modal) {
+      modal.style.display = 'flex';
+      openAccessibleDialog(modal, window.closeGoalAdjustModal, 'habbi-goal-adjust-title');
+    }
+  };
+
+  window.closeGoalAdjustModal = function() {
+    const modal = document.getElementById('habbi-goal-adjust-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      closeAccessibleDialog(modal);
+    }
+  };
+
+  window.stepAdjustGoalModalToday = function(delta) {
+    modalAdjustTodayMeta = Math.max(0, Math.min(60, modalAdjustTodayMeta + (parseInt(delta, 10) || 0)));
+    const todayValEl = document.getElementById('modal-adjust-today-val');
+    if (todayValEl) todayValEl.innerText = String(modalAdjustTodayMeta);
+  };
+
+  window.stepAdjustGoalModalHabitual = function(delta) {
+    modalAdjustHabitualCigs = Math.max(1, Math.min(60, modalAdjustHabitualCigs + (parseInt(delta, 10) || 0)));
+    const habitualValEl = document.getElementById('modal-adjust-habitual-val');
+    if (habitualValEl) habitualValEl.innerText = String(modalAdjustHabitualCigs);
+  };
+
+  window.saveGoalAdjustModal = function() {
+    ensureActiveProfileForWrite();
+    userState.todayMeta = modalAdjustTodayMeta;
+    userState.habitualCigs = modalAdjustHabitualCigs;
+    userState.habitualCigsCustomized = true;
+
+    const todayKey = getDateKey(new Date());
+    const todayRec = getOrCreateDayRecord(todayKey);
+    todayRec.meta = modalAdjustTodayMeta;
+
+    window.closeGoalAdjustModal();
+    savePersistedState();
+    refreshAllViews();
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    showToast(t.goalToastSaved || 'Meta e consumo atualizados com sucesso!');
+  };
 
   // -------------------------------------------------------------
   // Goal Exceeded Modal Logic

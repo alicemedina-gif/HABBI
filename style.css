@@ -11190,5 +11190,290 @@ button.wl-conquista-bag-stage {
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   HABBI: GOAL EVOLUTION & SUGGESTED GOAL CARDS (100% FLAT, WCAG 2.2 AA)
+   ========================================================================== */
+
+/* 1. Card de Meta Inicial Sugerida (Tela 7) */
+.habbi-suggested-goal-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+  margin: 12px 0 10px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.habbi-suggested-goal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.habbi-suggested-goal-badge {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary);
+  background-color: rgba(120, 190, 67, 0.14);
+  padding: 3px 12px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.habbi-suggested-goal-header strong {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.habbi-suggested-goal-desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 10px;
+}
+
+.habbi-suggested-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 4px 0 8px;
+}
+
+.habbi-step-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-color);
+  background-color: var(--bg-color-alt);
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+.habbi-step-btn:hover {
+  background-color: var(--border-color);
+}
+
+.habbi-step-btn:active {
+  transform: scale(0.95);
+}
+
+.habbi-suggested-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+
+.habbi-suggested-num {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.habbi-suggested-unit {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.habbi-suggested-hint {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-top: 4px;
+}
+
+/* 2. Card de Evolução Diária de Meta na Home (Tela 10) */
+.habbi-goal-evolution-card {
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 16px;
+  margin: 10px 16px 12px;
+  box-sizing: border-box;
+  text-align: left;
+  position: relative;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.device-screen.dark-theme .habbi-goal-evolution-card {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.habbi-goal-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.habbi-goal-card-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.habbi-goal-card-badge {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--primary);
+  background-color: rgba(120, 190, 67, 0.14);
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.habbi-goal-card-badge.is-challenge {
+  color: var(--orange, #F59F00);
+  background-color: rgba(245, 159, 0, 0.14);
+}
+
+.habbi-goal-card-close {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 999px;
+  margin: -8px -8px -8px 0;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.habbi-goal-card-close:hover {
+  color: var(--text-primary);
+}
+
+.habbi-goal-card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.habbi-goal-card-desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+
+.habbi-goal-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.habbi-goal-act-btn {
+  flex: 1;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.1s ease;
+}
+
+.habbi-goal-act-btn:active {
+  transform: scale(0.97);
+}
+
+.habbi-goal-later-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 8px 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.habbi-goal-later-link:hover {
+  color: var(--text-primary);
+}
+
+/* Modos escuros & acessibilidade */
+.device-screen.dark-theme .habbi-step-btn {
+  background-color: #26262D;
+  border-color: #383842;
+  color: #F3F4F6;
+}
+
+.device-screen.dark-theme .habbi-step-btn:hover {
+  background-color: #32323A;
+}
+
+@media (max-width: 340px) {
+  .habbi-goal-card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .habbi-goal-act-btn {
+    width: 100%;
+  }
+  .habbi-suggested-stepper {
+    gap: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .habbi-step-btn,
+  .habbi-goal-act-btn {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 
 
