@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     authReturnScreen: 10,
     motivations: [],
     patterns: [],
+    yearsSmoking: 'Menos de 1',
     mood: null,
     sosUrge: 7,
     sosContext: 'Casa',
@@ -143,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Savings State
     habitualCigs: 12,
     habitualCigsCustomized: false,
-    packPrice: 15.00,
+    packPrice: 12.00,
     cigsPerPack: 20,
     packFreqDays: 2,
     packEvents: [],
@@ -254,15 +255,15 @@ document.addEventListener('DOMContentLoaded', () => {
       metaPriceDesc: 'Usado para calcular a sua economia diária.',
       metaTitle: 'Quantos cigarros você fuma por dia?',
       metaDesc: 'Defina uma meta realista para hoje.',
-      metaUnit: 'cigarros por dia habitualmente',
+      metaUnit: 'cigarros por dia',
       metaSubmit: 'Pronto!',
-      metaSuggestedTitle: 'Meta sugerida para hoje',
+      metaSuggestedTitle: 'Meta para hoje',
       metaSuggestedDesc: 'Que tal começar com 1 cigarro a menos do seu consumo habitual?',
       metaSuggestedBadge: 'Primeiro passo sugerido',
       metaSuggestedHint: 'Você pode confirmar ou ajustar este valor antes de iniciar.',
       metaSuggestedUnit: 'cigarros hoje',
       metaHabitualSub: 'Seu consumo habitual de referência',
-      metaHabitualUnit: 'cigarros por dia habitualmente',
+      metaHabitualUnit: 'cigarros por dia',
 
       // Evolução de Meta Diária (Home)
       goalPromptTitle: 'Meta de hoje',
@@ -398,11 +399,12 @@ document.addEventListener('DOMContentLoaded', () => {
       gameSeqTitle: 'Sequência',
       gameSeqSub: 'Repita a sequência',
       gameSeqInstruction: 'Memorize a sequência e repita na mesma ordem.',
-      gameSeqObserve: 'Observe a sequência...',
-      gameSeqYourTurn: 'Sua vez de repetir!',
-      gameSeqProgress: 'Sua vez! ({0}/{1})',
-      gameSeqSoftError: 'Tudo bem! Nova sequência começando...',
-      gameSeqSuccess: 'Perfeito! Próxima rodada...',
+      gameSeqObserve: 'Observe',
+      gameSeqYourTurn: 'Sua vez',
+      gameSeqProgress: 'Sua vez',
+      gameSeqSoftError: 'Tudo bem! Nova sequência...',
+      gameSeqSuccess: 'Perfeito!',
+      gameSeqRoundRecord: 'Rodada {0} • Recorde: {1}',
       gameSeqSoundOn: 'Som ativado',
       gameSeqSoundOff: 'Sem som',
       gameMathTitle: 'Matemática',
@@ -802,15 +804,15 @@ document.addEventListener('DOMContentLoaded', () => {
       metaPriceDesc: 'Used to calculate your daily savings.',
       metaTitle: 'How many cigarettes do you smoke a day?',
       metaDesc: 'Set a realistic goal for today.',
-      metaUnit: 'cigarettes per day habitually',
+      metaUnit: 'cigarettes per day',
       metaSubmit: 'Done!',
-      metaSuggestedTitle: 'Suggested goal for today',
+      metaSuggestedTitle: 'Goal for today',
       metaSuggestedDesc: 'How about starting with 1 cigarette less than your habitual intake?',
       metaSuggestedBadge: 'Suggested first step',
       metaSuggestedHint: 'You can confirm or adjust this target before starting.',
       metaSuggestedUnit: 'cigarettes today',
       metaHabitualSub: 'Your baseline reference consumption',
-      metaHabitualUnit: 'cigarettes per day habitually',
+      metaHabitualUnit: 'cigarettes per day',
 
       // Daily Goal Evolution (Home)
       goalPromptTitle: "Today's goal",
@@ -946,11 +948,12 @@ document.addEventListener('DOMContentLoaded', () => {
       gameSeqTitle: 'Sequence',
       gameSeqSub: 'Repeat the sequence',
       gameSeqInstruction: 'Memorize the sequence and repeat in the same order.',
-      gameSeqObserve: 'Watch the sequence...',
-      gameSeqYourTurn: 'Your turn to repeat!',
-      gameSeqProgress: 'Your turn! ({0}/{1})',
-      gameSeqSoftError: 'It’s okay! Starting fresh sequence...',
-      gameSeqSuccess: 'Great! Next round...',
+      gameSeqObserve: 'Watch',
+      gameSeqYourTurn: 'Your turn',
+      gameSeqProgress: 'Your turn',
+      gameSeqSoftError: 'It’s okay! New sequence...',
+      gameSeqSuccess: 'Great!',
+      gameSeqRoundRecord: 'Round {0} • Best: {1}',
       gameSeqSoundOn: 'Sound on',
       gameSeqSoundOff: 'Muted',
       gameMathTitle: 'Math',
@@ -1350,15 +1353,15 @@ document.addEventListener('DOMContentLoaded', () => {
       metaPriceDesc: 'Usado para calcular tu ahorro diario.',
       metaTitle: '¿Cuántos cigarrillos fumas al día?',
       metaDesc: 'Define una meta realista para hoy.',
-      metaUnit: 'cigarrillos al día habitualmente',
+      metaUnit: 'cigarrillos por día',
       metaSubmit: '¡Listo!',
-      metaSuggestedTitle: 'Meta sugerida para hoy',
+      metaSuggestedTitle: 'Meta para hoy',
       metaSuggestedDesc: '¿Qué tal empezar con 1 cigarrillo menos de tu consumo habitual?',
       metaSuggestedBadge: 'Primer paso sugerido',
       metaSuggestedHint: 'Puedes confirmar o ajustar este valor antes de iniciar.',
       metaSuggestedUnit: 'cigarrillos hoy',
       metaHabitualSub: 'Tu consumo habitual de referencia',
-      metaHabitualUnit: 'cigarrillos al día habitualmente',
+      metaHabitualUnit: 'cigarrillos por día',
 
       // Evolución de Meta Diaria (Home)
       goalPromptTitle: 'Meta de hoy',
@@ -1494,11 +1497,12 @@ document.addEventListener('DOMContentLoaded', () => {
       gameSeqTitle: 'Secuencia',
       gameSeqSub: 'Repite la secuencia',
       gameSeqInstruction: 'Memoriza la secuencia y repite en el mismo orden.',
-      gameSeqObserve: 'Observa la secuencia...',
-      gameSeqYourTurn: '¡Tu turno de repetir!',
-      gameSeqProgress: '¡Tu turno! ({0}/{1})',
-      gameSeqSoftError: '¡Todo bien! Comenzando nueva secuencia...',
-      gameSeqSuccess: '¡Perfecto! Siguiente ronda...',
+      gameSeqObserve: 'Observa',
+      gameSeqYourTurn: 'Tu turno',
+      gameSeqProgress: 'Tu turno',
+      gameSeqSoftError: '¡Todo bien! Nueva secuencia...',
+      gameSeqSuccess: '¡Perfecto!',
+      gameSeqRoundRecord: 'Ronda {0} • Récord: {1}',
       gameSeqSoundOn: 'Sonido activado',
       gameSeqSoundOff: 'Sin sonido',
       gameMathTitle: 'Matemática',
@@ -3059,8 +3063,9 @@ document.addEventListener('DOMContentLoaded', () => {
       todayMeta: (typeof overrides.todayMeta === 'number' && overrides.todayMeta >= 0) ? overrides.todayMeta : 11,
       habitualCigs: (typeof overrides.habitualCigs === 'number' && overrides.habitualCigs >= 1) ? overrides.habitualCigs : 12,
       habitualCigsCustomized: Boolean(overrides.habitualCigsCustomized),
+      yearsSmoking: overrides.yearsSmoking || 'Menos de 1',
       lastGoalPromptDateKey: overrides.lastGoalPromptDateKey || null,
-      packPrice: (typeof overrides.packPrice === 'number' && overrides.packPrice > 0) ? overrides.packPrice : 15.00,
+      packPrice: (typeof overrides.packPrice === 'number' && overrides.packPrice > 0) ? overrides.packPrice : 12.00,
       cigsPerPack: (typeof overrides.cigsPerPack === 'number' && overrides.cigsPerPack >= 1) ? overrides.cigsPerPack : 20,
       packFreqDays: (typeof overrides.packFreqDays === 'number' && overrides.packFreqDays >= 1) ? overrides.packFreqDays : 2,
       packEvents: Array.isArray(overrides.packEvents) ? overrides.packEvents : [],
@@ -3246,7 +3251,8 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.historyEvents = [];
     userState.habitualCigs = 12;
     userState.habitualCigsCustomized = false;
-    userState.packPrice = 15.00;
+    userState.yearsSmoking = 'Menos de 1';
+    userState.packPrice = 12.00;
     userState.cigsPerPack = 20;
     userState.packFreqDays = 2;
     userState.packEvents = [];
@@ -3275,8 +3281,9 @@ document.addEventListener('DOMContentLoaded', () => {
       todayMeta: (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11,
       habitualCigs: userState.habitualCigs || 12,
       habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
+      yearsSmoking: userState.yearsSmoking || 'Menos de 1',
       lastGoalPromptDateKey: userState.lastGoalPromptDateKey || null,
-      packPrice: userState.packPrice || 15.00,
+      packPrice: userState.packPrice || 12.00,
       cigsPerPack: userState.cigsPerPack || 20,
       packFreqDays: userState.packFreqDays || 2,
       packEvents: Array.isArray(userState.packEvents) ? userState.packEvents : [],
@@ -3312,6 +3319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.todayMeta = clean.todayMeta;
     userState.habitualCigs = clean.habitualCigs;
     userState.habitualCigsCustomized = clean.habitualCigsCustomized;
+    userState.yearsSmoking = clean.yearsSmoking || 'Menos de 1';
     userState.packPrice = clean.packPrice;
     userState.cigsPerPack = clean.cigsPerPack;
     userState.packFreqDays = clean.packFreqDays;
@@ -4678,6 +4686,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (typeof window.checkAndTriggerFirstTimeTutorial === 'function') {
         window.checkAndTriggerFirstTimeTutorial();
+      }
+    }
+
+    // Screen 7: Onboarding - Consumo habitual
+    if (screenNum === 7) {
+      if (typeof window.syncOnboardingFormToUserState === 'function') {
+        window.syncOnboardingFormToUserState();
       }
     }
 
@@ -6323,30 +6338,30 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="wl-calc-big-number">
               <span id="cigarettes-per-day-val">12</span>
             </div>
-            <div class="wl-calc-unit-label" id="wl-calc-unit-lbl">cigarros por dia habitualmente</div>
+            <div class="wl-calc-unit-label" id="wl-calc-unit-lbl"><span id="cigarettes-per-day-unit-label">cigarros por dia</span></div>
           </div>
 
           <!-- Card de Meta Inicial Sugerida (independente e ajustável) -->
           <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
             <div class="habbi-suggested-goal-header">
               <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
-              <strong id="habbi-suggested-goal-title">Meta sugerida para hoje</strong>
+              <strong id="habbi-suggested-goal-title">Meta para hoje</strong>
             </div>
             <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">
-              Que tal come\u00e7ar com 1 cigarro a menos do seu consumo habitual?
+              Que tal começar com 1 cigarro a menos do seu consumo habitual?
             </p>
             <div class="habbi-suggested-stepper">
-              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">\u2212</button>
+              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">−</button>
               <div class="habbi-suggested-display">
                 <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
                 <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
               </div>
               <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
             </div>
-            <span class="habbi-suggested-hint" id="habbi-suggested-hint">Voc\u00ea pode confirmar ou ajustar este valor antes de iniciar.</span>
+            <span class="habbi-suggested-hint" id="habbi-suggested-hint">Você pode confirmar ou ajustar este valor antes de iniciar.</span>
           </div>
 
-          <!-- Bot\u00f5es de sele\u00e7\u00e3o que abrem a aba inferior (bottom sheet) com op\u00e7\u00f5es -->
+          <!-- Botões de seleção que abrem a aba inferior (bottom sheet) com opções -->
           <div class="wl-calc-pills">
             <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-cigs" onclick="openCalcOptionSheet('cigs')">
               <div class="wl-calc-pill-row">
@@ -6370,9 +6385,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-price" onclick="openCalcOptionSheet('price')">
               <div class="wl-calc-pill-row">
-                <span>Pre\u00e7o do ma\u00e7o</span>
+                <span>Preço do maço</span>
                 <span class="wl-calc-btn-right">
-                  <strong id="wl-price-pill-label">R$ 10,00</strong>
+                  <strong id="wl-price-pill-label">R$ 12,00</strong>
                   <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </span>
               </div>
@@ -6780,7 +6795,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <div id="wl-conquista-carousel-header">
           <div class="wl-conquista-carousel-intro">
             <h2 class="wl-sav-title">Minha conquista</h2>
-            <p class="caption">Acompanhe sua economia e metas</p>
           </div>
         </div>
 
@@ -6952,7 +6966,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="wl-sav-cfg-stepper">
                   <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsPackPrice(-0.5)" aria-label="Diminuir preço do maço">−</button>
-                  <input type="number" id="wl-sav-cfg-price-input" class="wl-sav-price-input" min="1" max="150" step="0.50" value="15.00" oninput="onSavingsPriceInput(this.value)" aria-label="Preço do maço de cigarros">
+                  <input type="number" id="wl-sav-cfg-price-input" class="wl-sav-price-input" min="1" max="150" step="0.50" value="12.00" oninput="onSavingsPriceInput(this.value)" aria-label="Preço do maço de cigarros">
                   <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsPackPrice(0.5)" aria-label="Aumentar preço do maço">+</button>
                 </div>
               </div>
@@ -8550,14 +8564,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Minigame 2: Memória de Sequência (Estilo Genius / Simon Says)
-  // Quatro botões grandes de cores sólidas, sequência que cresce a cada acerto e reinício suave ao errar
+  // Minigame 2: Genius de Números (Memória de Sequência)
+  // Quatro botões grandes numerados de 1 a 4 com cores sólidas da paleta Habbi
   const SIMON_COLORS = [
-    { id: 'green',  colorClass: 'color-green',  labelPt: 'Verde',   labelEn: 'Green',  labelEs: 'Verde',    symbol: '▲', freq: 330, key: '1' },
-    { id: 'yellow', colorClass: 'color-yellow', labelPt: 'Amarelo', labelEn: 'Yellow', labelEs: 'Amarillo', symbol: '●', freq: 261, key: '2' },
-    { id: 'blue',   colorClass: 'color-blue',   labelPt: 'Azul',    labelEn: 'Blue',   labelEs: 'Azul',     symbol: '■', freq: 392, key: '3' },
-    { id: 'coral',  colorClass: 'color-coral',  labelPt: 'Coral',   labelEn: 'Coral',  labelEs: 'Coral',    symbol: '★', freq: 523, key: '4' }
+    { id: '1', alias: 'green',  num: '1', colorClass: 'color-green',  freq: 330, key: '1' },
+    { id: '2', alias: 'yellow', num: '2', colorClass: 'color-yellow', freq: 261, key: '2' },
+    { id: '3', alias: 'blue',   num: '3', colorClass: 'color-blue',   freq: 392, key: '3' },
+    { id: '4', alias: 'coral',  num: '4', colorClass: 'color-coral',  freq: 523, key: '4' }
   ];
+
+  function normalizeSimonKey(input) {
+    if (!input) return '1';
+    const s = String(input).toLowerCase();
+    if (s === 'green' || s === 'verde') return '1';
+    if (s === 'yellow' || s === 'amarelo' || s === 'amarillo') return '2';
+    if (s === 'blue' || s === 'azul') return '3';
+    if (s === 'coral') return '4';
+    if (['1', '2', '3', '4'].includes(s)) return s;
+    return '1';
+  }
+  window.normalizeSimonKey = normalizeSimonKey;
 
   let simonAudioCtx = null;
   let simonAudioMuted = (localStorage.getItem('habbi-simon-muted') === '1');
@@ -8577,7 +8603,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return simonAudioCtx;
   }
 
-  function playSimonTone(freq, durationMs = 260) {
+  function playSimonTone(freq, durationMs = 380) {
     if (simonAudioMuted) return;
     try {
       const ctx = getSimonAudioCtx();
@@ -8600,13 +8626,11 @@ document.addEventListener('DOMContentLoaded', () => {
     simonAudioMuted = !simonAudioMuted;
     localStorage.setItem('habbi-simon-muted', simonAudioMuted ? '1' : '0');
     const iconEl = document.getElementById('simon-sound-icon');
-    const labelEl = document.getElementById('simon-sound-label');
     const btnEl = document.getElementById('btn-seq-sound-toggle');
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
     const txt = simonAudioMuted ? (t.gameSeqSoundOff || 'Sem som') : (t.gameSeqSoundOn || 'Som ativado');
     if (iconEl) iconEl.innerText = simonAudioMuted ? '🔇' : '🔊';
-    if (labelEl) labelEl.innerText = txt;
     if (btnEl) btnEl.setAttribute('aria-label', txt);
     if (!simonAudioMuted) {
       playSimonTone(392, 120);
@@ -8650,8 +8674,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateSimonBadge() {
     const badgeEl = document.getElementById('game-sequence-badge');
     if (!badgeEl) return;
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
     const recSeq = getGameRecords().sequence;
-    badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • ${getGameRecordWord()}: ${recSeq}`;
+    const tpl = t.gameSeqRoundRecord || 'Rodada {0} • Recorde: {1}';
+    badgeEl.innerText = tpl.replace('{0}', String(sequenceGameState.round)).replace('{1}', String(recSeq));
   }
 
   function setSimonStatus(mode, text) {
@@ -8661,9 +8688,10 @@ document.addEventListener('DOMContentLoaded', () => {
     statusEl.innerText = text;
   }
 
-  function flashSimonButton(colorId, durationMs = 320, playSound = true) {
-    const btn = document.querySelector(`.habbi-simon-btn[data-color="${colorId}"]`);
-    const colObj = SIMON_COLORS.find(c => c.id === colorId);
+  function flashSimonButton(colorId, durationMs = 500, playSound = true) {
+    const norm = normalizeSimonKey(colorId);
+    const btn = document.querySelector(`.habbi-simon-btn[data-color="${norm}"]`) || document.getElementById(`simon-btn-${norm}`);
+    const colObj = SIMON_COLORS.find(c => c.id === norm || c.alias === norm);
     if (btn) {
       btn.classList.add('is-lit');
     }
@@ -8692,11 +8720,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
-    setSimonStatus('observing', t.gameSeqObserve || 'Observe a sequência...');
+    setSimonStatus('observing', t.gameSeqObserve || 'Observe');
 
-    const stepDuration = 420;
-    const stepGap = 200;
-    const initialDelay = 380;
+    // Velocidade de apresentação calma com pausas claras entre os números
+    const stepDuration = 700;
+    const stepGap = 450;
+    const initialDelay = 600;
 
     sequenceGameState.sequence.forEach((colorId, idx) => {
       const delay = initialDelay + (idx * (stepDuration + stepGap));
@@ -8707,7 +8736,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sequenceGameState.timeouts.push(tId);
     });
 
-    const totalTime = initialDelay + (sequenceGameState.sequence.length * (stepDuration + stepGap)) + 120;
+    const totalTime = initialDelay + (sequenceGameState.sequence.length * (stepDuration + stepGap)) + 150;
     const endTId = setTimeout(() => {
       if (!userState.isGameActive || sequenceGameState.phase !== 'observing') return;
       startSimonPlayerTurn();
@@ -8723,33 +8752,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
-    const progressTpl = t.gameSeqProgress || 'Sua vez! ({0}/{1})';
-    const txt = progressTpl.replace('{0}', '0').replace('{1}', String(sequenceGameState.sequence.length));
-    setSimonStatus('repeating', txt);
+    setSimonStatus('repeating', t.gameSeqYourTurn || 'Sua vez');
   }
 
-  function handleSimonButtonPress(colorId) {
+  function handleSimonButtonPress(rawColorId) {
     if (!userState.isGameActive) return;
     if (sequenceGameState.phase !== 'repeating') return;
 
-    flashSimonButton(colorId, 220, true);
+    const colorId = normalizeSimonKey(rawColorId);
+    flashSimonButton(colorId, 280, true);
 
-    const expectedColor = sequenceGameState.sequence[sequenceGameState.playerIndex];
+    const expectedColor = normalizeSimonKey(sequenceGameState.sequence[sequenceGameState.playerIndex]);
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
     if (colorId === expectedColor) {
       // Acerto!
       sequenceGameState.playerIndex++;
-      const progressTpl = t.gameSeqProgress || 'Sua vez! ({0}/{1})';
-      const txt = progressTpl.replace('{0}', String(sequenceGameState.playerIndex)).replace('{1}', String(sequenceGameState.sequence.length));
-      setSimonStatus('repeating', txt);
+      setSimonStatus('repeating', t.gameSeqYourTurn || 'Sua vez');
 
       if (sequenceGameState.playerIndex >= sequenceGameState.sequence.length) {
         // Rodada concluída com sucesso!
         sequenceGameState.phase = 'success';
         setSimonButtonsEnabled(false);
-        setSimonStatus('repeating', t.gameSeqSuccess || 'Perfeito! Próxima rodada...');
+        setSimonStatus('repeating', t.gameSeqSuccess || 'Perfeito!');
 
         sequenceGameState.completed++;
         sequenceGameState.round++;
@@ -8762,24 +8788,24 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(() => badgeEl.classList.remove('record-burst'), 600);
         }
 
-        // Aumenta a dificuldade adicionando mais uma cor à sequência
+        // Aumenta a dificuldade adicionando mais um número à sequência
         sequenceGameState.sequence.push(pickRandomSimonColor());
 
         const nextTId = setTimeout(() => {
           if (userState.isGameActive) {
             playSimonSequence();
           }
-        }, 700);
+        }, 850);
         sequenceGameState.timeouts.push(nextTId);
       }
     } else {
       // Erro suave sem tela de derrota ou interrupção
       sequenceGameState.phase = 'error';
       setSimonButtonsEnabled(false);
-      setSimonStatus('error', t.gameSeqSoftError || 'Tudo bem! Nova sequência começando...');
-      playSimonTone(196, 260); // som grave suave
+      setSimonStatus('error', t.gameSeqSoftError || 'Tudo bem! Nova sequência...');
+      playSimonTone(196, 320); // som grave suave
 
-      // Reinicia automaticamente uma nova sequência curta (2 cores)
+      // Reinicia automaticamente uma nova sequência curta (2 números)
       sequenceGameState.round = 1;
       sequenceGameState.sequence = [pickRandomSimonColor(), pickRandomSimonColor()];
       sequenceGameState.playerIndex = 0;
@@ -8789,7 +8815,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userState.isGameActive) {
           playSimonSequence();
         }
-      }, 950);
+      }, 1200);
       sequenceGameState.timeouts.push(resetTId);
     }
   }
@@ -8805,15 +8831,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!keepScore) {
       sequenceGameState.round = 1;
       sequenceGameState.completed = 0;
-      // Começar com uma sequência de 2 cores
+      // Começar com uma sequência de 2 números
       sequenceGameState.sequence = [pickRandomSimonColor(), pickRandomSimonColor()];
     }
 
     updateSimonBadge();
 
-    // Renderiza os 4 botões grandes e arredondados com cores sólidas da paleta do Habbi
+    // Renderiza os 4 botões grandes e arredondados com números 1 a 4
     boardWrapper.innerHTML = '';
-    const activeLang = (userState.currentLang || 'PT').toUpperCase();
 
     SIMON_COLORS.forEach(c => {
       const btn = document.createElement('button');
@@ -8821,12 +8846,9 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.className = `habbi-simon-btn ${c.colorClass} disabled`;
       btn.id = `simon-btn-${c.id}`;
       btn.dataset.color = c.id;
-      const label = activeLang === 'EN' ? c.labelEn : (activeLang === 'ES' ? c.labelEs : c.labelPt);
-      btn.setAttribute('aria-label', `${label} (${c.symbol})`);
-      btn.innerHTML = `
-        <span class="habbi-simon-btn-icon" aria-hidden="true">${c.symbol}</span>
-        <span class="habbi-simon-btn-label">${label}</span>
-      `;
+      btn.dataset.alias = c.alias;
+      btn.setAttribute('aria-label', `Número ${c.num}`);
+      btn.innerHTML = `<span class="habbi-simon-btn-num" aria-hidden="true">${c.num}</span>`;
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         handleSimonButtonPress(c.id);
@@ -8839,7 +8861,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (userState.isGameActive) {
         playSimonSequence();
       }
-    }, 350);
+    }, 450);
     sequenceGameState.timeouts.push(startTId);
   }
   window.startSequenceGame = startSequenceGame;
@@ -9123,13 +9145,12 @@ document.addEventListener('DOMContentLoaded', () => {
       boardEl.innerHTML = `
         <div class="habbi-simon-layout">
           <div class="habbi-simon-top-bar">
-            <div class="game-score-badge" id="game-sequence-badge">Sequências: 0 • Rodada 1</div>
+            <div class="game-score-badge" id="game-sequence-badge">Rodada 1 • Recorde: 0</div>
             <button type="button" class="habbi-simon-sound-btn" id="btn-seq-sound-toggle" onclick="toggleSimonSound()" aria-label="${soundLbl}">
               <span id="simon-sound-icon" aria-hidden="true">${isMuted ? '🔇' : '🔊'}</span>
-              <span id="simon-sound-label">${soundLbl}</span>
             </button>
           </div>
-          <div class="habbi-simon-status-box is-observing" id="habbi-simon-status" aria-live="polite">${escapeHtml(t.gameSeqObserve || 'Observe a sequência...')}</div>
+          <div class="habbi-simon-status-box is-observing" id="habbi-simon-status" aria-live="polite">${escapeHtml(t.gameSeqObserve || 'Observe')}</div>
           <div class="habbi-simon-grid" id="game-sequence-board" role="group" aria-label="${escapeHtml(t.gameSeqTitle || 'Sequência')}"></div>
         </div>
       `;
@@ -10134,6 +10155,9 @@ document.addEventListener('DOMContentLoaded', () => {
       window.applyAppLanguage(userState.currentLang || 'PT');
     }
     refreshAllViews(true);
+    if (typeof window.syncOnboardingFormToUserState === 'function') {
+      window.syncOnboardingFormToUserState();
+    }
     return targetProfileId;
   }
   window.switchToAccountProfile = switchToAccountProfile;
@@ -10160,6 +10184,9 @@ document.addEventListener('DOMContentLoaded', () => {
       window.applyAppLanguage(userState.currentLang || 'PT');
     }
     refreshAllViews(true);
+    if (typeof window.syncOnboardingFormToUserState === 'function') {
+      window.syncOnboardingFormToUserState();
+    }
     showScreen(10);
   };
 
@@ -10545,9 +10572,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Sincroniza os valores iniciais exibidos nos 3 botões da tela 7
-  window.setCalcCigsValue(userState.habitualCigs || 12);
-  window.setCalcPackPrice(userState.packPrice || 10);
+  // Sincroniza os valores iniciais da tela 7 a partir do perfil ativo
+  function syncOnboardingFormToUserState() {
+    const habitual = (typeof userState.habitualCigs === 'number' && userState.habitualCigs >= 1) ? userState.habitualCigs : 12;
+    const packPrice = (typeof userState.packPrice === 'number' && userState.packPrice > 0) ? userState.packPrice : 12.00;
+    const years = userState.yearsSmoking || 'Menos de 1';
+
+    window.setCalcCigsValue(habitual);
+    window.setCalcPackPrice(packPrice);
+
+    const setupYearsChips = document.querySelectorAll('#years-smoking-chips .chip');
+    setupYearsChips.forEach(c => {
+      const chipYears = c.getAttribute('data-years') || 'Menos de 1';
+      const isSelected = (chipYears === years || (!c.getAttribute('data-years') && years === 'Menos de 1'));
+      c.classList.toggle('selected', isSelected);
+      if (isSelected) {
+        const yearsPillLbl = document.getElementById('wl-years-pill-label');
+        if (yearsPillLbl) yearsPillLbl.innerText = c.getAttribute('data-label') || c.getAttribute('data-years') || '< 1 ano';
+      }
+    });
+  }
+  window.syncOnboardingFormToUserState = syncOnboardingFormToUserState;
+  syncOnboardingFormToUserState();
 
   // Screen 8 & 9 Multi-select Chips toggle
   const motivationsChips = document.querySelectorAll('#motivations-chips-grid .chip');
@@ -11234,6 +11280,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTheme('light', true);
     refreshAllViews(true);
+    if (typeof window.syncOnboardingFormToUserState === 'function') {
+      window.syncOnboardingFormToUserState();
+    }
     try {
       if (window.history && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname);
@@ -11286,6 +11335,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.closeDeleteProfileDataModal();
     refreshAllViews(true);
+    if (typeof window.syncOnboardingFormToUserState === 'function') {
+      window.syncOnboardingFormToUserState();
+    }
 
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
@@ -11328,6 +11380,9 @@ document.addEventListener('DOMContentLoaded', () => {
       window.applyAppLanguage('PT');
     }
     refreshAllViews(true);
+    if (typeof window.syncOnboardingFormToUserState === 'function') {
+      window.syncOnboardingFormToUserState();
+    }
 
     try {
       if (window.history && window.history.replaceState) {
@@ -11960,7 +12015,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Suporte a teclado acessível para o minigame de Sequência (teclas numéricas 1, 2, 3, 4)
   document.addEventListener('keydown', (e) => {
     if (!userState.isGameActive || !sequenceGameState || sequenceGameState.phase !== 'repeating') return;
-    const keyMap = { '1': 'green', '2': 'yellow', '3': 'blue', '4': 'coral' };
+    const keyMap = { '1': '1', '2': '2', '3': '3', '4': '4' };
     if (keyMap[e.key]) {
       e.preventDefault();
       handleSimonButtonPress(keyMap[e.key]);
