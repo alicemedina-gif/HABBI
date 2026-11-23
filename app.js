@@ -396,7 +396,15 @@ document.addEventListener('DOMContentLoaded', () => {
       gameMemTitle: 'Memória',
       gameMemSub: 'Encontre os pares',
       gameSeqTitle: 'Sequência',
-      gameSeqSub: 'Ordem numérica',
+      gameSeqSub: 'Repita a sequência',
+      gameSeqInstruction: 'Memorize a sequência e repita na mesma ordem.',
+      gameSeqObserve: 'Observe a sequência...',
+      gameSeqYourTurn: 'Sua vez de repetir!',
+      gameSeqProgress: 'Sua vez! ({0}/{1})',
+      gameSeqSoftError: 'Tudo bem! Nova sequência começando...',
+      gameSeqSuccess: 'Perfeito! Próxima rodada...',
+      gameSeqSoundOn: 'Som ativado',
+      gameSeqSoundOff: 'Sem som',
       gameMathTitle: 'Matemática',
       gameMathSub: 'Cálculo mental',
       gameTapTitle: 'Jogo do Tap',
@@ -936,7 +944,15 @@ document.addEventListener('DOMContentLoaded', () => {
       gameMemTitle: 'Memory',
       gameMemSub: 'Find pairs',
       gameSeqTitle: 'Sequence',
-      gameSeqSub: 'Number order',
+      gameSeqSub: 'Repeat the sequence',
+      gameSeqInstruction: 'Memorize the sequence and repeat in the same order.',
+      gameSeqObserve: 'Watch the sequence...',
+      gameSeqYourTurn: 'Your turn to repeat!',
+      gameSeqProgress: 'Your turn! ({0}/{1})',
+      gameSeqSoftError: 'It’s okay! Starting fresh sequence...',
+      gameSeqSuccess: 'Great! Next round...',
+      gameSeqSoundOn: 'Sound on',
+      gameSeqSoundOff: 'Muted',
       gameMathTitle: 'Math',
       gameMathSub: 'Mental math',
       gameTapTitle: 'Tap Game',
@@ -1476,7 +1492,15 @@ document.addEventListener('DOMContentLoaded', () => {
       gameMemTitle: 'Memoria',
       gameMemSub: 'Encuentra las parejas',
       gameSeqTitle: 'Secuencia',
-      gameSeqSub: 'Orden numérico',
+      gameSeqSub: 'Repite la secuencia',
+      gameSeqInstruction: 'Memoriza la secuencia y repite en el mismo orden.',
+      gameSeqObserve: 'Observa la secuencia...',
+      gameSeqYourTurn: '¡Tu turno de repetir!',
+      gameSeqProgress: '¡Tu turno! ({0}/{1})',
+      gameSeqSoftError: '¡Todo bien! Comenzando nueva secuencia...',
+      gameSeqSuccess: '¡Perfecto! Siguiente ronda...',
+      gameSeqSoundOn: 'Sonido activado',
+      gameSeqSoundOff: 'Sin sonido',
       gameMathTitle: 'Matemática',
       gameMathSub: 'Cálculo mental',
       gameTapTitle: 'Juego del Tap',
@@ -8526,107 +8550,299 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Minigame 2: Sequência Numérica Infinita com botões coloridos e destaque ao errar
+  // Minigame 2: Memória de Sequência (Estilo Genius / Simon Says)
+  // Quatro botões grandes de cores sólidas, sequência que cresce a cada acerto e reinício suave ao errar
+  const SIMON_COLORS = [
+    { id: 'green',  colorClass: 'color-green',  labelPt: 'Verde',   labelEn: 'Green',  labelEs: 'Verde',    symbol: '▲', freq: 330, key: '1' },
+    { id: 'yellow', colorClass: 'color-yellow', labelPt: 'Amarelo', labelEn: 'Yellow', labelEs: 'Amarillo', symbol: '●', freq: 261, key: '2' },
+    { id: 'blue',   colorClass: 'color-blue',   labelPt: 'Azul',    labelEn: 'Blue',   labelEs: 'Azul',     symbol: '■', freq: 392, key: '3' },
+    { id: 'coral',  colorClass: 'color-coral',  labelPt: 'Coral',   labelEn: 'Coral',  labelEs: 'Coral',    symbol: '★', freq: 523, key: '4' }
+  ];
+
+  let simonAudioCtx = null;
+  let simonAudioMuted = (localStorage.getItem('habbi-simon-muted') === '1');
+
+  function isSimonAudioMuted() {
+    return Boolean(simonAudioMuted);
+  }
+
+  function getSimonAudioCtx() {
+    if (!simonAudioCtx && (window.AudioContext || window.webkitAudioContext)) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      simonAudioCtx = new AudioCtx();
+    }
+    if (simonAudioCtx && simonAudioCtx.state === 'suspended') {
+      simonAudioCtx.resume().catch(() => {});
+    }
+    return simonAudioCtx;
+  }
+
+  function playSimonTone(freq, durationMs = 260) {
+    if (simonAudioMuted) return;
+    try {
+      const ctx = getSimonAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (durationMs / 1000));
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + (durationMs / 1000) + 0.04);
+    } catch (_e) {}
+  }
+
+  function toggleSimonSound() {
+    simonAudioMuted = !simonAudioMuted;
+    localStorage.setItem('habbi-simon-muted', simonAudioMuted ? '1' : '0');
+    const iconEl = document.getElementById('simon-sound-icon');
+    const labelEl = document.getElementById('simon-sound-label');
+    const btnEl = document.getElementById('btn-seq-sound-toggle');
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    const txt = simonAudioMuted ? (t.gameSeqSoundOff || 'Sem som') : (t.gameSeqSoundOn || 'Som ativado');
+    if (iconEl) iconEl.innerText = simonAudioMuted ? '🔇' : '🔊';
+    if (labelEl) labelEl.innerText = txt;
+    if (btnEl) btnEl.setAttribute('aria-label', txt);
+    if (!simonAudioMuted) {
+      playSimonTone(392, 120);
+    }
+  }
+  window.toggleSimonSound = toggleSimonSound;
+  window.isSimonAudioMuted = isSimonAudioMuted;
+  try {
+    Object.defineProperty(window, 'simonAudioMuted', {
+      get: () => simonAudioMuted,
+      set: (v) => {
+        simonAudioMuted = Boolean(v);
+        localStorage.setItem('habbi-simon-muted', simonAudioMuted ? '1' : '0');
+      },
+      configurable: true
+    });
+  } catch (_e) {}
+
   let sequenceGameState = {
     round: 1,
-    completed: 0
+    completed: 0,
+    sequence: [],
+    playerIndex: 0,
+    phase: 'idle', // 'idle' | 'observing' | 'repeating' | 'success' | 'error'
+    timeouts: []
   };
 
-  function startSequenceGame(keepScore) {
+  function clearSimonTimeouts() {
+    if (sequenceGameState.timeouts && sequenceGameState.timeouts.length > 0) {
+      sequenceGameState.timeouts.forEach(t => clearTimeout(t));
+      sequenceGameState.timeouts = [];
+    }
+  }
+  window.clearSimonTimeouts = clearSimonTimeouts;
+
+  function pickRandomSimonColor() {
+    const idx = Math.floor(Math.random() * SIMON_COLORS.length);
+    return SIMON_COLORS[idx].id;
+  }
+
+  function updateSimonBadge() {
+    const badgeEl = document.getElementById('game-sequence-badge');
+    if (!badgeEl) return;
+    const recSeq = getGameRecords().sequence;
+    badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • ${getGameRecordWord()}: ${recSeq}`;
+  }
+
+  function setSimonStatus(mode, text) {
+    const statusEl = document.getElementById('habbi-simon-status');
+    if (!statusEl) return;
+    statusEl.className = `habbi-simon-status-box is-${mode}`;
+    statusEl.innerText = text;
+  }
+
+  function flashSimonButton(colorId, durationMs = 320, playSound = true) {
+    const btn = document.querySelector(`.habbi-simon-btn[data-color="${colorId}"]`);
+    const colObj = SIMON_COLORS.find(c => c.id === colorId);
+    if (btn) {
+      btn.classList.add('is-lit');
+    }
+    if (playSound && colObj) {
+      playSimonTone(colObj.freq, durationMs);
+    }
+    const tId = setTimeout(() => {
+      if (btn) btn.classList.remove('is-lit');
+    }, durationMs);
+    sequenceGameState.timeouts.push(tId);
+  }
+
+  function setSimonButtonsEnabled(enabled) {
+    const btns = document.querySelectorAll('.habbi-simon-btn');
+    btns.forEach(b => {
+      b.classList.toggle('disabled', !enabled);
+      b.setAttribute('aria-disabled', String(!enabled));
+    });
+  }
+
+  function playSimonSequence() {
+    if (!userState.isGameActive) return;
+    clearSimonTimeouts();
+    sequenceGameState.phase = 'observing';
+    setSimonButtonsEnabled(false);
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    setSimonStatus('observing', t.gameSeqObserve || 'Observe a sequência...');
+
+    const stepDuration = 420;
+    const stepGap = 200;
+    const initialDelay = 380;
+
+    sequenceGameState.sequence.forEach((colorId, idx) => {
+      const delay = initialDelay + (idx * (stepDuration + stepGap));
+      const tId = setTimeout(() => {
+        if (!userState.isGameActive || sequenceGameState.phase !== 'observing') return;
+        flashSimonButton(colorId, stepDuration, true);
+      }, delay);
+      sequenceGameState.timeouts.push(tId);
+    });
+
+    const totalTime = initialDelay + (sequenceGameState.sequence.length * (stepDuration + stepGap)) + 120;
+    const endTId = setTimeout(() => {
+      if (!userState.isGameActive || sequenceGameState.phase !== 'observing') return;
+      startSimonPlayerTurn();
+    }, totalTime);
+    sequenceGameState.timeouts.push(endTId);
+  }
+
+  function startSimonPlayerTurn() {
+    if (!userState.isGameActive) return;
+    sequenceGameState.phase = 'repeating';
+    sequenceGameState.playerIndex = 0;
+    setSimonButtonsEnabled(true);
+
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    const progressTpl = t.gameSeqProgress || 'Sua vez! ({0}/{1})';
+    const txt = progressTpl.replace('{0}', '0').replace('{1}', String(sequenceGameState.sequence.length));
+    setSimonStatus('repeating', txt);
+  }
+
+  function handleSimonButtonPress(colorId) {
+    if (!userState.isGameActive) return;
+    if (sequenceGameState.phase !== 'repeating') return;
+
+    flashSimonButton(colorId, 220, true);
+
+    const expectedColor = sequenceGameState.sequence[sequenceGameState.playerIndex];
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+    if (colorId === expectedColor) {
+      // Acerto!
+      sequenceGameState.playerIndex++;
+      const progressTpl = t.gameSeqProgress || 'Sua vez! ({0}/{1})';
+      const txt = progressTpl.replace('{0}', String(sequenceGameState.playerIndex)).replace('{1}', String(sequenceGameState.sequence.length));
+      setSimonStatus('repeating', txt);
+
+      if (sequenceGameState.playerIndex >= sequenceGameState.sequence.length) {
+        // Rodada concluída com sucesso!
+        sequenceGameState.phase = 'success';
+        setSimonButtonsEnabled(false);
+        setSimonStatus('repeating', t.gameSeqSuccess || 'Perfeito! Próxima rodada...');
+
+        sequenceGameState.completed++;
+        sequenceGameState.round++;
+        const isNew = saveGameRecord('sequence', sequenceGameState.completed);
+        updateSimonBadge();
+
+        const badgeEl = document.getElementById('game-sequence-badge');
+        if (badgeEl && isNew && sequenceGameState.completed > 1) {
+          badgeEl.classList.add('record-burst');
+          setTimeout(() => badgeEl.classList.remove('record-burst'), 600);
+        }
+
+        // Aumenta a dificuldade adicionando mais uma cor à sequência
+        sequenceGameState.sequence.push(pickRandomSimonColor());
+
+        const nextTId = setTimeout(() => {
+          if (userState.isGameActive) {
+            playSimonSequence();
+          }
+        }, 700);
+        sequenceGameState.timeouts.push(nextTId);
+      }
+    } else {
+      // Erro suave sem tela de derrota ou interrupção
+      sequenceGameState.phase = 'error';
+      setSimonButtonsEnabled(false);
+      setSimonStatus('error', t.gameSeqSoftError || 'Tudo bem! Nova sequência começando...');
+      playSimonTone(196, 260); // som grave suave
+
+      // Reinicia automaticamente uma nova sequência curta (2 cores)
+      sequenceGameState.round = 1;
+      sequenceGameState.sequence = [pickRandomSimonColor(), pickRandomSimonColor()];
+      sequenceGameState.playerIndex = 0;
+      updateSimonBadge();
+
+      const resetTId = setTimeout(() => {
+        if (userState.isGameActive) {
+          playSimonSequence();
+        }
+      }, 950);
+      sequenceGameState.timeouts.push(resetTId);
+    }
+  }
+  window.handleSimonButtonPress = handleSimonButtonPress;
+  window.sequenceGameState = sequenceGameState;
+
+  function startSequenceGame(keepScore = false) {
     const boardWrapper = document.getElementById('game-sequence-board');
     if (!boardWrapper) return;
+
+    clearSimonTimeouts();
+
     if (!keepScore) {
       sequenceGameState.round = 1;
       sequenceGameState.completed = 0;
+      // Começar com uma sequência de 2 cores
+      sequenceGameState.sequence = [pickRandomSimonColor(), pickRandomSimonColor()];
     }
 
-    const badgeEl = document.getElementById('game-sequence-badge');
-    if (badgeEl) {
-      const recSeq = getGameRecords().sequence;
-      badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • ${getGameRecordWord()}: ${recSeq}`;
-    }
+    updateSimonBadge();
 
+    // Renderiza os 4 botões grandes e arredondados com cores sólidas da paleta do Habbi
     boardWrapper.innerHTML = '';
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
 
-    // Dificuldade progressiva: 6 números no início, aumentando até 9
-    let count = 6;
-    if (sequenceGameState.round >= 2) count = 7;
-    if (sequenceGameState.round >= 3) count = 8;
-    if (sequenceGameState.round >= 4) count = 9;
-
-    const numbers = [];
-    for (let i = 1; i <= count; i++) numbers.push(i);
-    numbers.sort(() => Math.random() - 0.5);
-
-    let currentTarget = 1;
-    const targetDisplay = document.getElementById('game-sequence-target');
-    if (targetDisplay) targetDisplay.innerText = currentTarget;
-
-    const btnMap = {};
-
-    numbers.forEach((num) => {
+    SIMON_COLORS.forEach(c => {
       const btn = document.createElement('button');
       btn.type = 'button';
-      // Botões coloridos com as classes color-0 a color-8
-      const colorClass = `color-${(num - 1) % 9}`;
-      btn.className = `sequence-btn ${colorClass}`;
-      btn.innerText = num;
-      btn.dataset.num = num;
-      btnMap[num] = btn;
-
-      btn.addEventListener('click', () => {
-        if (num === currentTarget) {
-          // Clique correto: esmaecer e desativar botão
-          btn.style.opacity = '0.22';
-          btn.style.transform = 'scale(0.92)';
-          btn.style.pointerEvents = 'none';
-          currentTarget++;
-
-          if (currentTarget > count) {
-            // Completou a sequência com sucesso
-            sequenceGameState.completed++;
-            sequenceGameState.round++;
-            const isNew = saveGameRecord('sequence', sequenceGameState.completed);
-            const curRec = getGameRecords().sequence;
-            if (badgeEl) {
-              badgeEl.innerText = `${formatGameScore('gameScoreSeq', sequenceGameState.completed, sequenceGameState.round)} • ${getGameRecordWord()}: ${curRec}`;
-              if (isNew && sequenceGameState.completed > 1) {
-                badgeEl.classList.add('record-burst');
-                setTimeout(() => badgeEl.classList.remove('record-burst'), 600);
-              }
-            }
-            if (targetDisplay) targetDisplay.innerText = '✓';
-            setTimeout(() => {
-              if (userState.isGameActive) {
-                startSequenceGame(true);
-              }
-            }, 350);
-          } else {
-            if (targetDisplay) targetDisplay.innerText = currentTarget;
-          }
-        } else {
-          // Errou: destacar brevemente o próximo número correto sem travar o jogo
-          btn.style.transform = 'scale(0.9)';
-          setTimeout(() => {
-            btn.style.transform = '';
-          }, 200);
-
-          const nextCorrectBtn = btnMap[currentTarget];
-          if (nextCorrectBtn) {
-            nextCorrectBtn.classList.remove('sequence-hint-pulse');
-            // Força reflow para reiniciar animação se necessário
-            void nextCorrectBtn.offsetWidth;
-            nextCorrectBtn.classList.add('sequence-hint-pulse');
-            setTimeout(() => {
-              nextCorrectBtn.classList.remove('sequence-hint-pulse');
-            }, 850);
-          }
-        }
+      btn.className = `habbi-simon-btn ${c.colorClass} disabled`;
+      btn.id = `simon-btn-${c.id}`;
+      btn.dataset.color = c.id;
+      const label = activeLang === 'EN' ? c.labelEn : (activeLang === 'ES' ? c.labelEs : c.labelPt);
+      btn.setAttribute('aria-label', `${label} (${c.symbol})`);
+      btn.innerHTML = `
+        <span class="habbi-simon-btn-icon" aria-hidden="true">${c.symbol}</span>
+        <span class="habbi-simon-btn-label">${label}</span>
+      `;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleSimonButtonPress(c.id);
       });
-
       boardWrapper.appendChild(btn);
     });
+
+    // Inicia a reprodução da sequência
+    const startTId = setTimeout(() => {
+      if (userState.isGameActive) {
+        playSimonSequence();
+      }
+    }, 350);
+    sequenceGameState.timeouts.push(startTId);
   }
+  window.startSequenceGame = startSequenceGame;
 
   // Minigame 3: Jogo do Reflexo com Folhas Ilustradas do Habbi (Infinito)
   let reflexGameState = {
@@ -8899,13 +9115,22 @@ document.addEventListener('DOMContentLoaded', () => {
       boardEl.innerHTML = '<div id="game-memory-board" class="memory-grid"></div>';
       startMemoryGame();
     } else if (gameType === 'sequence') {
-      instructionsEl.innerText = 'Toque nos números em ordem crescente.';
+      const activeLang = (userState.currentLang || 'PT').toUpperCase();
+      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      instructionsEl.innerText = t.gameSeqInstruction || 'Memorize a sequência e repita na mesma ordem.';
+      const isMuted = isSimonAudioMuted();
+      const soundLbl = isMuted ? (t.gameSeqSoundOff || 'Sem som') : (t.gameSeqSoundOn || 'Som ativado');
       boardEl.innerHTML = `
-        <div class="sequence-layout">
-          <div class="game-score-badge" id="game-sequence-badge">Sequências: 0 • Rodada 1</div>
-          <div class="sequence-target-num">Próximo número:</div>
-          <div class="sequence-target-display" id="game-sequence-target">1</div>
-          <div class="sequence-grid" id="game-sequence-board"></div>
+        <div class="habbi-simon-layout">
+          <div class="habbi-simon-top-bar">
+            <div class="game-score-badge" id="game-sequence-badge">Sequências: 0 • Rodada 1</div>
+            <button type="button" class="habbi-simon-sound-btn" id="btn-seq-sound-toggle" onclick="toggleSimonSound()" aria-label="${soundLbl}">
+              <span id="simon-sound-icon" aria-hidden="true">${isMuted ? '🔇' : '🔊'}</span>
+              <span id="simon-sound-label">${soundLbl}</span>
+            </button>
+          </div>
+          <div class="habbi-simon-status-box is-observing" id="habbi-simon-status" aria-live="polite">${escapeHtml(t.gameSeqObserve || 'Observe a sequência...')}</div>
+          <div class="habbi-simon-grid" id="game-sequence-board" role="group" aria-label="${escapeHtml(t.gameSeqTitle || 'Sequência')}"></div>
         </div>
       `;
       startSequenceGame();
@@ -8922,6 +9147,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function resetMinigamesUI() {
     userState.isGameActive = false;
+    if (typeof clearSimonTimeouts === 'function') {
+      clearSimonTimeouts();
+    }
     if (typeof reflexGameState !== 'undefined' && reflexGameState && reflexGameState.idleTimer) {
       clearTimeout(reflexGameState.idleTimer);
       reflexGameState.idleTimer = null;
@@ -11727,6 +11955,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     const host = document.querySelector('.device-screen');
     if (el && host && el.parentElement !== host) host.appendChild(el);
+  });
+
+  // Suporte a teclado acessível para o minigame de Sequência (teclas numéricas 1, 2, 3, 4)
+  document.addEventListener('keydown', (e) => {
+    if (!userState.isGameActive || !sequenceGameState || sequenceGameState.phase !== 'repeating') return;
+    const keyMap = { '1': 'green', '2': 'yellow', '3': 'blue', '4': 'coral' };
+    if (keyMap[e.key]) {
+      e.preventDefault();
+      handleSimonButtonPress(keyMap[e.key]);
+    }
   });
 
   // Initial runs
