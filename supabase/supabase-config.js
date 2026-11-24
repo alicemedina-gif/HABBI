@@ -9,7 +9,7 @@
  */
 (function initHabbiSupabaseConfig() {
   const DEFAULT_RAW_URL = 'https://nkzzgdaiozlaeqnlaydk.supabase.co/rest/v1/';
-  const DEFAULT_KEY = 'sb_publishable_3-zEkBJ6DUkBmyOzEQwwLA_TuS1RZCx';
+  const DEFAULT_KEY = 'sb_publishable_C0FqDkGCUzJiazT5iqrlTQ_pzX2g-5O';
 
   function getSavedUrl() {
     try {

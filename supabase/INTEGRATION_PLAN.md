@@ -18,9 +18,9 @@
 
 ## 2. Observação Importante sobre a Project URL
 
-- URL informada: `https://vnpxqfepowwtbdiqjusz.supabase.co/rest/v1/`
-- **Project URL correta para o SDK JS:** `https://vnpxqfepowwtbdiqjusz.supabase.co` (sem `/rest/v1/`, pois o `@supabase/supabase-js` acrescenta `/auth/v1` e `/rest/v1` automaticamente).
-- Chave pública configurada em `supabase/supabase-config.js`: `sb_publishable_3-zEkBJ6DUkBmyOzEQwwLA_TuS1RZCx` (nenhuma secret key ou `service_role` no frontend).
+- URL informada: `https://nkzzgdaiozlaeqnlaydk.supabase.co/rest/v1/`
+- **Project URL correta para o SDK JS:** `https://nkzzgdaiozlaeqnlaydk.supabase.co` (sem `/rest/v1/`, pois o `@supabase/supabase-js` acrescenta `/auth/v1` e `/rest/v1` automaticamente).
+- Chave pública configurada em `supabase/supabase-config.js`: `sb_publishable_C0FqDkGCUzJiazT5iqrlTQ_pzX2g-5O` (nenhuma secret key ou `service_role` no frontend).
 
 ---
 
