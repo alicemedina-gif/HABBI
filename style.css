@@ -11041,6 +11041,21 @@ textarea:focus-visible,
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
+.habbi-flat-modal-card:focus,
+.habbi-flat-modal-card:focus-visible,
+.device-screen .habbi-flat-modal-card:focus,
+.device-screen .habbi-flat-modal-card:focus-visible,
+.device-screen.dark-theme .habbi-flat-modal-card:focus,
+.device-screen.dark-theme .habbi-flat-modal-card:focus-visible {
+  outline: none !important;
+}
+
+@media (max-width: 340px) {
+  #habbi-goal-adjust-title {
+    font-size: 15px !important;
+  }
+}
+
 .habbi-flat-modal-card h3 {
   margin: 0 0 8px;
   font-size: 18px;

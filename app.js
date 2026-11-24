@@ -642,12 +642,12 @@ document.addEventListener('DOMContentLoaded', () => {
       aboutContact: 'Contato:',
       homeRemoveCigAria: 'Desfazer último cigarro registrado',
       homeRemoveCigToast: '1 cigarro removido',
-      goalModalTitle: 'Definir objetivo',
+      conquistaGoalModalTitle: 'Definir objetivo',
       goalModalSub: 'Defina para onde vai o fruto da sua vitória:',
       goalModalNameLabel: 'O que você quer conquistar?',
       goalModalNamePlaceholder: 'Ex: Viagem, tênis novo, curso...',
       goalModalAmountLabel: 'Quanto custa? (R$)',
-      goalModalSave: 'Salvar objetivo',
+      conquistaGoalModalSave: 'Salvar objetivo',
       savingsSheetTitle: 'Parâmetros de economia',
       savingsCfgHabitual: 'Consumo habitual',
       savingsCfgHabitualDesc: 'Cigarros fumados por dia antes',
@@ -1196,12 +1196,12 @@ document.addEventListener('DOMContentLoaded', () => {
       aboutContact: 'Contact:',
       homeRemoveCigAria: 'Undo last logged cigarette',
       homeRemoveCigToast: '1 cigarette removed',
-      goalModalTitle: 'Set goal',
+      conquistaGoalModalTitle: 'Set goal',
       goalModalSub: 'Choose where the reward of your victory goes:',
       goalModalNameLabel: 'What do you want to achieve?',
       goalModalNamePlaceholder: 'E.g.: Trip, new shoes, course...',
       goalModalAmountLabel: 'Estimated price (R$)',
-      goalModalSave: 'Save goal',
+      conquistaGoalModalSave: 'Save goal',
       savingsSheetTitle: 'Savings parameters',
       savingsCfgHabitual: 'Habitual intake',
       savingsCfgHabitualDesc: 'Cigarettes smoked daily previously',
@@ -1750,12 +1750,12 @@ document.addEventListener('DOMContentLoaded', () => {
       aboutContact: 'Contacto:',
       homeRemoveCigAria: 'Deshacer último cigarrillo registrado',
       homeRemoveCigToast: '1 cigarrillo eliminado',
-      goalModalTitle: 'Definir objetivo',
+      conquistaGoalModalTitle: 'Definir objetivo',
       goalModalSub: 'Define hacia dónde irá el fruto de tu victoria:',
       goalModalNameLabel: '¿Qué quieres conquistar?',
       goalModalNamePlaceholder: 'Ej: Viaje, zapatillas nuevas, curso...',
       goalModalAmountLabel: 'Precio estimado (R$)',
-      goalModalSave: 'Guardar objetivo',
+      conquistaGoalModalSave: 'Guardar objetivo',
       savingsSheetTitle: 'Parámetros de ahorro',
       savingsCfgHabitual: 'Consumo habitual',
       savingsCfgHabitualDesc: 'Cigarrillos fumados por día antes',
@@ -2784,7 +2784,7 @@ document.addEventListener('DOMContentLoaded', () => {
         subBtns[1].innerText = t.conquistaHistory || 'Histórico';
       }
       const goalModalTitle = document.getElementById('wl-goal-modal-title');
-      if (goalModalTitle) goalModalTitle.innerText = t.goalModalTitle || 'Definir objetivo';
+      if (goalModalTitle) goalModalTitle.innerText = t.conquistaGoalModalTitle || 'Definir objetivo';
       const goalModalSub = document.querySelector('.wl-goal-modal-sub');
       if (goalModalSub) goalModalSub.innerText = t.goalModalSub || 'Defina para onde vai o fruto da sua vitória:';
       const goalNameLbl = document.querySelector('label[for="wl-goal-custom-name"]');
@@ -2794,7 +2794,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const goalAmtLbl = document.querySelector('label[for="wl-goal-custom-amount"]');
       if (goalAmtLbl) goalAmtLbl.innerText = t.goalModalAmountLabel || 'Quanto custa? (R$)';
       const goalSaveBtn = document.querySelector('#wl-goal-modal-overlay .wl-dark-pill-btn');
-      if (goalSaveBtn) goalSaveBtn.innerText = t.goalModalSave || 'Salvar objetivo';
+      if (goalSaveBtn) goalSaveBtn.innerText = t.conquistaGoalModalSave || 'Salvar objetivo';
 
       const sheetTitle = document.getElementById('wl-sav-sheet-title');
       if (sheetTitle) sheetTitle.innerText = t.savingsSheetTitle || 'Parâmetros de economia';
@@ -4473,6 +4473,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', onKeydown, true);
 
     const focusInitial = () => {
+      const card = dialogRoot.querySelector('.habbi-flat-modal-card');
+      if (card) {
+        if (!card.hasAttribute('tabindex')) card.setAttribute('tabindex', '-1');
+        card.focus();
+        return;
+      }
       const focusables = getFocusableElements(dialogRoot);
       if (focusables.length > 0) {
         focusables[0].focus();
@@ -11100,6 +11106,11 @@ document.addEventListener('DOMContentLoaded', () => {
     savePersistedState();
     refreshAllViews();
 
+    const settingsGoalMetaVal = document.getElementById('settings-goal-meta-val');
+    if (settingsGoalMetaVal) {
+      settingsGoalMetaVal.innerText = `${modalAdjustTodayMeta} cig/dia`;
+    }
+
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
     showToast(t.goalToastSaved || 'Meta e consumo atualizados com sucesso!');
@@ -11180,6 +11191,42 @@ document.addEventListener('DOMContentLoaded', () => {
       if (deviceScreen) {
         const isDark = deviceScreen.classList.contains('dark-theme');
         setTheme(isDark ? 'light' : 'dark');
+      }
+    });
+  }
+
+  const settingsGoalBtn = document.getElementById('settings-goal-btn');
+  if (settingsGoalBtn) {
+    settingsGoalBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeof window.openGoalAdjustModal === 'function') {
+        window.openGoalAdjustModal();
+      }
+    });
+    settingsGoalBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (typeof window.openGoalAdjustModal === 'function') {
+          window.openGoalAdjustModal();
+        }
+      }
+    });
+  }
+
+  const settingsBackupBtn = document.getElementById('settings-backup-btn');
+  if (settingsBackupBtn) {
+    settingsBackupBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (typeof window.openBackupAndDataModal === 'function') {
+        window.openBackupAndDataModal();
+      }
+    });
+    settingsBackupBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (typeof window.openBackupAndDataModal === 'function') {
+          window.openBackupAndDataModal();
+        }
       }
     });
   }
