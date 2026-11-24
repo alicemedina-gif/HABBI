@@ -41,6 +41,7 @@
               </button>
               <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start" onclick="window.goToScreen(3)">INICIAR</button>
             </div>
+            <button type="button" class="wl-splash-login-link" id="btn-splash-login" onclick="if(window.clearSplashRoulette)window.clearSplashRoulette(); goToScreen(23);">Já tenho conta · Entrar</button>
           </div>
         </section>
 
@@ -131,19 +132,15 @@
           </div>
           <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
             <div class="habbi-suggested-goal-header">
-              <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
-              <strong id="habbi-suggested-goal-title">Meta para hoje</strong>
+              <strong id="habbi-suggested-goal-title">Sua primeira meta</strong>
             </div>
-            <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">Que tal começar com 1 cigarro a menos do seu consumo habitual?</p>
             <div class="habbi-suggested-stepper">
               <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">−</button>
               <div class="habbi-suggested-display">
                 <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
-                <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
               </div>
               <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
             </div>
-            <span class="habbi-suggested-hint" id="habbi-suggested-hint">Você pode confirmar ou ajustar este valor antes de iniciar.</span>
           </div>
           <div class="divider"></div>
           <h2 class="mb-12">Há quantos anos você fuma?</h2>

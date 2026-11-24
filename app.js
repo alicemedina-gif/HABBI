@@ -257,10 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
       metaDesc: 'Defina uma meta realista para hoje.',
       metaUnit: 'cigarros por dia',
       metaSubmit: 'Pronto!',
-      metaSuggestedTitle: 'Meta para hoje',
-      metaSuggestedDesc: 'Que tal começar com 1 cigarro a menos do seu consumo habitual?',
-      metaSuggestedBadge: 'Primeiro passo sugerido',
-      metaSuggestedHint: 'Você pode confirmar ou ajustar este valor antes de iniciar.',
+      metaSuggestedTitle: 'Sua primeira meta',
+      metaSuggestedDesc: '',
+      metaSuggestedBadge: '',
+      metaSuggestedHint: '',
       metaSuggestedUnit: 'cigarros hoje',
       metaHabitualSub: 'Seu consumo habitual de referência',
       metaHabitualUnit: 'cigarros por dia',
@@ -536,7 +536,9 @@ document.addEventListener('DOMContentLoaded', () => {
       toastEventRemoved: 'Registro removido',
       toastEventRestored: 'Registro restaurado',
       toastCigAdded: 'Cigarro registrado',
-      overMetaEmpathy: '+{0} acima da meta — tudo bem, recomece no próximo',
+      overMetaEmpathy: '{0} cigarros acima da meta',
+      overMetaSingular: '1 cigarro acima da meta',
+      overMetaPlural: '{0} cigarros acima da meta',
       leaveGameTitle: 'Sair da partida atual?',
       leaveGameDesc: 'Você tem um minijogo em andamento. Se trocar de aba agora, esta partida será encerrada.',
       leaveGameStay: 'Continuar jogando',
@@ -806,10 +808,10 @@ document.addEventListener('DOMContentLoaded', () => {
       metaDesc: 'Set a realistic goal for today.',
       metaUnit: 'cigarettes per day',
       metaSubmit: 'Done!',
-      metaSuggestedTitle: 'Goal for today',
-      metaSuggestedDesc: 'How about starting with 1 cigarette less than your habitual intake?',
-      metaSuggestedBadge: 'Suggested first step',
-      metaSuggestedHint: 'You can confirm or adjust this target before starting.',
+      metaSuggestedTitle: 'Your first goal',
+      metaSuggestedDesc: '',
+      metaSuggestedBadge: '',
+      metaSuggestedHint: '',
       metaSuggestedUnit: 'cigarettes today',
       metaHabitualSub: 'Your baseline reference consumption',
       metaHabitualUnit: 'cigarettes per day',
@@ -1085,7 +1087,9 @@ document.addEventListener('DOMContentLoaded', () => {
       toastEventRemoved: 'Log removed',
       toastEventRestored: 'Log restored',
       toastCigAdded: 'Cigarette logged',
-      overMetaEmpathy: '+{0} over goal — it\'s okay, start fresh on the next one',
+      overMetaEmpathy: '{0} cigarettes over goal',
+      overMetaSingular: '1 cigarette over goal',
+      overMetaPlural: '{0} cigarettes over goal',
       leaveGameTitle: 'Leave current game?',
       leaveGameDesc: 'You have a minigame in progress. Switching tabs now will end this round.',
       leaveGameStay: 'Keep playing',
@@ -1355,10 +1359,10 @@ document.addEventListener('DOMContentLoaded', () => {
       metaDesc: 'Define una meta realista para hoy.',
       metaUnit: 'cigarrillos por día',
       metaSubmit: '¡Listo!',
-      metaSuggestedTitle: 'Meta para hoy',
-      metaSuggestedDesc: '¿Qué tal empezar con 1 cigarrillo menos de tu consumo habitual?',
-      metaSuggestedBadge: 'Primer paso sugerido',
-      metaSuggestedHint: 'Puedes confirmar o ajustar este valor antes de iniciar.',
+      metaSuggestedTitle: 'Tu primera meta',
+      metaSuggestedDesc: '',
+      metaSuggestedBadge: '',
+      metaSuggestedHint: '',
       metaSuggestedUnit: 'cigarrillos hoy',
       metaHabitualSub: 'Tu consumo habitual de referencia',
       metaHabitualUnit: 'cigarrillos por día',
@@ -1634,7 +1638,9 @@ document.addEventListener('DOMContentLoaded', () => {
       toastEventRemoved: 'Registro eliminado',
       toastEventRestored: 'Registro restaurado',
       toastCigAdded: 'Cigarrillo registrado',
-      overMetaEmpathy: '+{0} sobre la meta — está bien, vuelve a empezar en el próximo',
+      overMetaEmpathy: '{0} cigarros sobre la meta',
+      overMetaSingular: '1 cigarro sobre la meta',
+      overMetaPlural: '{0} cigarros sobre la meta',
       leaveGameTitle: '¿Salir de la partida actual?',
       leaveGameDesc: 'Tienes un minijuego en curso. Si cambias de pestaña ahora, esta partida terminará.',
       leaveGameStay: 'Seguir jugando',
@@ -2069,7 +2075,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const calcSub = s7.querySelector('.wl-calc-sub') || document.getElementById('wl-calc-sub-headline');
       if (calcSub) calcSub.innerText = t.metaHabitualSub || 'Seu consumo habitual de referência';
       const suggTitle = document.getElementById('habbi-suggested-goal-title');
-      if (suggTitle) suggTitle.innerText = t.metaSuggestedTitle || 'Meta sugerida para hoje';
+      if (suggTitle) suggTitle.innerText = t.metaSuggestedTitle || 'Sua primeira meta';
       const suggDesc = document.getElementById('habbi-suggested-goal-desc');
       if (suggDesc) suggDesc.innerText = t.metaSuggestedDesc || 'Que tal começar com 1 cigarro a menos do seu consumo habitual?';
       const suggBadge = document.getElementById('habbi-suggested-badge-text');
@@ -6347,24 +6353,18 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="wl-calc-sub" id="wl-calc-sub-headline" style="display:none;">Seu consumo habitual de refer\u00eancia</span>
             </div>
 
-            <!-- Card de Meta Inicial Sugerida (independente e ajustável) -->
+            <!-- Card de Meta Inicial Sugerida (simplificado e acolhedor) -->
             <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
               <div class="habbi-suggested-goal-header">
-                <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
-                <strong id="habbi-suggested-goal-title">Meta para hoje</strong>
+                <strong id="habbi-suggested-goal-title">Sua primeira meta</strong>
               </div>
-              <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">
-                Que tal começar com 1 cigarro a menos do seu consumo habitual?
-              </p>
               <div class="habbi-suggested-stepper">
                 <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">−</button>
                 <div class="habbi-suggested-display">
                   <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
-                  <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
                 </div>
                 <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
               </div>
-              <span class="habbi-suggested-hint" id="habbi-suggested-hint">Você pode confirmar ou ajustar este valor antes de iniciar.</span>
             </div>
 
             <!-- Botões de seleção que abrem a aba inferior (bottom sheet) com opções -->
@@ -7652,6 +7652,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update Home screen widgets
   function updateHomeScreen() {
+    window.updateHomeScreen = updateHomeScreen;
     const metaCigs = document.getElementById('home-meta-cigs');
     const metaReg = document.getElementById('home-meta-registered');
     const metaPct = document.getElementById('home-meta-pct');
@@ -7787,15 +7788,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Micro-mensagem empática acima da meta (Decisão 1A — tom acolhedor e não punitivo)
+    // Micro-indicador discreto, neutro e acolhedor acima da meta
     const overMetaBanner = document.getElementById('home-overmeta-banner');
     if (overMetaBanner) {
       if (overLimit > 0) {
-        const tpl = (curI18n && curI18n.overMetaEmpathy)
-          ? curI18n.overMetaEmpathy
-          : '+{0} acima da meta — tudo bem, recomece no próximo';
-        overMetaBanner.textContent = tpl.replace('{0}', String(overLimit));
-        overMetaBanner.style.display = 'block';
+        let msg = '';
+        if (curI18n) {
+          if (overLimit === 1) {
+            msg = curI18n.overMetaSingular || (curLang === 'EN' ? '1 cigarette over goal' : (curLang === 'ES' ? '1 cigarro sobre la meta' : '1 cigarro acima da meta'));
+          } else {
+            const tpl = curI18n.overMetaPlural || curI18n.overMetaEmpathy || (curLang === 'EN' ? '{0} cigarettes over goal' : (curLang === 'ES' ? '{0} cigarros sobre la meta' : '{0} cigarros acima da meta'));
+            msg = tpl.replace('{0}', String(overLimit));
+          }
+        } else {
+          msg = overLimit === 1 ? '1 cigarro acima da meta' : `${overLimit} cigarros acima da meta`;
+        }
+        overMetaBanner.textContent = msg;
+        overMetaBanner.style.display = 'inline-flex';
       } else {
         overMetaBanner.textContent = '';
         overMetaBanner.style.display = 'none';
