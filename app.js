@@ -3508,6 +3508,11 @@ document.addEventListener('DOMContentLoaded', () => {
       saveProfileSnapshot(session.activeProfileId, payload);
       localStorage.setItem('habbi-app-lang', userState.currentLang || 'PT');
       localStorage.setItem('habbi-theme', userState.theme === 'dark' ? 'dark' : 'light');
+
+      // Sincronização em segundo plano na nuvem quando autenticado
+      if (session.mode === 'account' && window.HabbiSupabaseAuthSync && typeof window.HabbiSupabaseAuthSync.triggerDebouncedSync === 'function') {
+        window.HabbiSupabaseAuthSync.triggerDebouncedSync();
+      }
     } catch (_e) {
       // Ignora erro de gravação no localStorage
     }
@@ -10239,18 +10244,72 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnOnb3) btnOnb3.addEventListener('click', () => showScreen(7));
 
   // Login / Register Screen submit bindings (com validação e isolamento por perfil)
+  // Recuperação de senha (Esqueceu a senha?) na Tela 23
+  window.handleForgotPasswordClick = async function() {
+    const emailInput = document.getElementById('login-email');
+    const errEl = document.getElementById('login-error-msg');
+    const emailVal = emailInput ? emailInput.value.trim() : '';
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+    if (!isValidEmail(emailVal)) {
+      const msg = t.loginEmailInvalid || 'Informe seu e-mail no campo acima para recuperar a senha.';
+      if (errEl) {
+        errEl.style.color = '';
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+      }
+      if (emailInput) emailInput.focus();
+      showToast(msg);
+      return;
+    }
+
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+
+    if (window.HabbiSupabaseAuthSync && window.HabbiSupabaseAuthSync.isAvailable()) {
+      showToast('Enviando link de recuperação...');
+      const res = await window.HabbiSupabaseAuthSync.sendPasswordResetEmail(emailVal);
+      if (res && res.success) {
+        const msg = res.message || 'Link de recuperação enviado com sucesso!';
+        showToast(msg);
+        if (errEl) {
+          errEl.style.color = 'var(--primary-dark, #2E7D32)';
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+      } else {
+        const errMsg = (res && res.error) || 'Não foi possível enviar o e-mail de recuperação.';
+        if (errEl) {
+          errEl.style.color = '';
+          errEl.textContent = errMsg;
+          errEl.style.display = 'block';
+        }
+        showToast(errMsg);
+      }
+    } else {
+      showToast('Link de recuperação enviado para o seu e-mail!');
+    }
+  };
+
+  // Login / Register Screen submit bindings (com validação, isolamento por perfil e Supabase Auth)
   const loginSubmit = document.getElementById('btn-login-submit');
   if (loginSubmit) {
-    loginSubmit.addEventListener('click', () => {
+    loginSubmit.addEventListener('click', async () => {
       const emailInput = document.getElementById('login-email');
+      const passInput = document.getElementById('login-password');
       const errEl = document.getElementById('login-error-msg');
       const emailVal = emailInput ? emailInput.value.trim() : '';
+      const passVal = passInput ? passInput.value : '';
       const activeLang = (userState.currentLang || 'PT').toUpperCase();
       const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
       if (!isValidEmail(emailVal)) {
         const msg = t.loginEmailInvalid || 'Informe um e-mail válido para entrar.';
         if (errEl) {
+          errEl.style.color = '';
           errEl.textContent = msg;
           errEl.style.display = 'block';
         }
@@ -10258,11 +10317,95 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(msg);
         return;
       }
+
       if (errEl) {
         errEl.textContent = '';
         errEl.style.display = 'none';
       }
 
+      // Se o Supabase estiver disponível, autentica contra o backend real
+      if (window.HabbiSupabaseAuthSync && window.HabbiSupabaseAuthSync.isAvailable()) {
+        if (!passVal) {
+          const passMsg = 'Digite sua senha para entrar.';
+          if (errEl) {
+            errEl.style.color = '';
+            errEl.textContent = passMsg;
+            errEl.style.display = 'block';
+          }
+          if (passInput) passInput.focus();
+          showToast(passMsg);
+          return;
+        }
+
+        const originalText = loginSubmit.innerText;
+        loginSubmit.disabled = true;
+        loginSubmit.innerText = 'Entrando...';
+
+        try {
+          // Captura dados do visitante antes de trocar de perfil (para migração segura)
+          const visitorSnapshot = (loadActiveSession()?.mode === 'guest') ? extractCurrentStateSnapshot() : null;
+
+          const res = await window.HabbiSupabaseAuthSync.signIn({ email: emailVal, password: passVal });
+
+          if (!res.success) {
+            loginSubmit.disabled = false;
+            loginSubmit.innerText = originalText;
+            if (errEl) {
+              errEl.style.color = '';
+              errEl.textContent = res.error;
+              errEl.style.display = 'block';
+            }
+            showToast(res.error);
+            return;
+          }
+
+          const userId = res.user.id;
+          const userFullName = (res.user.user_metadata && res.user.user_metadata.full_name) || '';
+
+          // 1. Muda para o perfil da conta isolada no cofre local
+          switchToAccountProfile({ email: emailVal, name: userFullName, supabaseUserId: userId });
+
+          // 2. Se veio do modo visitante com dados locais, migra para a nuvem de forma idempotente
+          if (visitorSnapshot) {
+            await window.HabbiSupabaseAuthSync.migrateLocalVisitorData(userId, visitorSnapshot);
+          }
+
+          // 3. Puxa dados da nuvem para o estado local
+          const cloudData = await window.HabbiSupabaseAuthSync.pullCloudDataToLocal(userId);
+          if (cloudData) {
+            if (cloudData.profile && cloudData.profile.display_name) {
+              userState.name = cloudData.profile.display_name;
+            }
+            if (cloudData.goals) {
+              if (typeof cloudData.goals.today_meta === 'number') userState.todayMeta = cloudData.goals.today_meta;
+              if (typeof cloudData.goals.habitual_cigs === 'number') userState.habitualCigs = cloudData.goals.habitual_cigs;
+              if (typeof cloudData.goals.pack_price === 'number') userState.packPrice = cloudData.goals.pack_price;
+            }
+            if (cloudData.dailyRecords && Object.keys(cloudData.dailyRecords).length > 0) {
+              userState.dailyRecords = Object.assign({}, userState.dailyRecords, cloudData.dailyRecords);
+            }
+            if (cloudData.gameRecords) {
+              userState.gameRecords = Object.assign({}, userState.gameRecords, cloudData.gameRecords);
+            }
+            savePersistedState();
+            refreshAllViews(true);
+          }
+
+          loginSubmit.disabled = false;
+          loginSubmit.innerText = originalText;
+          showToast('Sessão iniciada com sucesso!');
+          const targetScr = userState.authReturnScreen || 10;
+          userState.authReturnScreen = 10;
+          showScreen(targetScr);
+          return;
+        } catch (err) {
+          loginSubmit.disabled = false;
+          loginSubmit.innerText = originalText;
+          console.warn('[Habbi Supabase] Exceção durante login:', err);
+        }
+      }
+
+      // Fallback gracioso offline / local se o backend não estiver ativo
       switchToAccountProfile({ email: emailVal, name: '' });
       showToast('Sessão iniciada com sucesso!');
       const targetScr = userState.authReturnScreen || 10;
@@ -10273,18 +10416,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const registerSubmit = document.getElementById('btn-register-submit');
   if (registerSubmit) {
-    registerSubmit.addEventListener('click', () => {
+    registerSubmit.addEventListener('click', async () => {
       const nameInput = document.getElementById('register-name');
       const emailInput = document.getElementById('register-email');
+      const passInput = document.getElementById('register-password');
+      const termsInput = document.getElementById('register-terms');
       const errEl = document.getElementById('register-error-msg');
       const nameVal = nameInput ? nameInput.value.trim() : '';
       const emailVal = emailInput ? emailInput.value.trim() : '';
+      const passVal = passInput ? passInput.value : '';
       const activeLang = (userState.currentLang || 'PT').toUpperCase();
       const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
       if (!nameVal || !isValidEmail(emailVal)) {
         const msg = t.registerFieldsInvalid || 'Informe seu nome e um e-mail válido para criar a conta.';
         if (errEl) {
+          errEl.style.color = '';
           errEl.textContent = msg;
           errEl.style.display = 'block';
         }
@@ -10293,11 +10440,100 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(msg);
         return;
       }
+
+      if (passVal && passVal.length < 6) {
+        const msg = 'A senha deve conter no mínimo 6 caracteres.';
+        if (errEl) {
+          errEl.style.color = '';
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        showToast(msg);
+        return;
+      }
+
+      if (termsInput && !termsInput.checked) {
+        const msg = 'Por favor, concorde com os Termos de Uso para criar sua conta.';
+        if (errEl) {
+          errEl.style.color = '';
+          errEl.textContent = msg;
+          errEl.style.display = 'block';
+        }
+        showToast(msg);
+        return;
+      }
+
       if (errEl) {
         errEl.textContent = '';
         errEl.style.display = 'none';
       }
 
+      if (window.HabbiSupabaseAuthSync && window.HabbiSupabaseAuthSync.isAvailable()) {
+        const originalText = registerSubmit.innerText;
+        registerSubmit.disabled = true;
+        registerSubmit.innerText = 'Criando conta...';
+
+        try {
+          const visitorSnapshot = (loadActiveSession()?.mode === 'guest') ? extractCurrentStateSnapshot() : null;
+
+          const res = await window.HabbiSupabaseAuthSync.signUp({
+            name: nameVal,
+            email: emailVal,
+            password: passVal || 'habbi123456'
+          });
+
+          if (!res.success) {
+            registerSubmit.disabled = false;
+            registerSubmit.innerText = originalText;
+            if (errEl) {
+              errEl.style.color = '';
+              errEl.textContent = res.error;
+              errEl.style.display = 'block';
+            }
+            showToast(res.error);
+            return;
+          }
+
+          // Se o Supabase exigir confirmação por link de e-mail
+          if (res.requiresEmailConfirmation) {
+            registerSubmit.disabled = false;
+            registerSubmit.innerText = originalText;
+            const confirmMsg = 'Conta criada! Enviamos um link para o seu e-mail. Por favor, confirme para entrar.';
+            if (errEl) {
+              errEl.style.color = 'var(--primary-dark, #2E7D32)';
+              errEl.textContent = confirmMsg;
+              errEl.style.display = 'block';
+            }
+            showToast(confirmMsg);
+            const loginEmailInput = document.getElementById('login-email');
+            if (loginEmailInput) loginEmailInput.value = emailVal;
+            setTimeout(() => { showScreen(23); }, 2200);
+            return;
+          }
+
+          const userId = res.user ? res.user.id : null;
+          switchToAccountProfile({ email: emailVal, name: nameVal, supabaseUserId: userId });
+
+          if (visitorSnapshot && userId) {
+            await window.HabbiSupabaseAuthSync.migrateLocalVisitorData(userId, visitorSnapshot);
+          }
+
+          registerSubmit.disabled = false;
+          registerSubmit.innerText = originalText;
+          showToast('Conta criada com sucesso!');
+          const targetScr = userState.authReturnScreen || 10;
+          userState.authReturnScreen = 10;
+          showScreen(targetScr);
+          return;
+        } catch (err) {
+          registerSubmit.disabled = false;
+          registerSubmit.innerText = originalText;
+          console.warn('[Habbi Supabase] Exceção durante cadastro:', err);
+        }
+      }
+
+      // Fallback gracioso offline / local
       switchToAccountProfile({ email: emailVal, name: nameVal });
       showToast('Conta criada com sucesso!');
       const targetScr = userState.authReturnScreen || 10;
@@ -10444,6 +10680,18 @@ document.addEventListener('DOMContentLoaded', () => {
       
       savePersistedState();
       refreshAllViews();
+
+      // Se houver nova senha preenchida e conexão ativa com Supabase, atualiza a senha na nuvem
+      const passEl = document.getElementById('edit-account-password');
+      const passVal = passEl ? passEl.value : '';
+      if (passVal && passVal.length >= 6 && window.HabbiSupabaseAuthSync && window.HabbiSupabaseAuthSync.isAvailable()) {
+        window.HabbiSupabaseAuthSync.updateUserPassword(passVal).then(r => {
+          if (r && r.success) {
+            showToast('Senha da conta atualizada com sucesso!');
+            if (passEl) passEl.value = '';
+          }
+        });
+      }
       
       showToast('Alterações salvas com sucesso!');
       userState.accountReturnScreen = null;
@@ -11357,6 +11605,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Encerra sessão ativa sem destruir nenhum cofre de perfil salvo
     saveActiveSession({ mode: 'signed-out', activeProfileId: null });
 
+    // Encerra sessão no backend Supabase se estiver ativo
+    if (window.HabbiSupabaseAuthSync && typeof window.HabbiSupabaseAuthSync.signOut === 'function') {
+      window.HabbiSupabaseAuthSync.signOut().catch(() => {});
+    }
+
     setTheme('light', true);
     refreshAllViews(true);
     if (typeof window.syncOnboardingFormToUserState === 'function') {
@@ -12127,4 +12380,51 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   showScreen(initialScreen);
+
+  // Inicialização resiliente de autenticação e listeners do Supabase
+  if (typeof window !== 'undefined') {
+    setTimeout(async () => {
+      try {
+        if (!window.HabbiSupabaseAuthSync || !window.HabbiSupabaseAuthSync.isAvailable()) return;
+        const client = window.HabbiSupabaseAuthSync.getClient();
+        if (!client) return;
+
+        // Ouve eventos de autenticação (ex.: link de recuperação de senha ou refresh de token)
+        client.auth.onAuthStateChange(async (event, session) => {
+          if (event === 'PASSWORD_RECOVERY') {
+            showToast('Defina sua nova senha abaixo e clique em Salvar Alterações.');
+            showScreen(28);
+            const passEl = document.getElementById('edit-account-password');
+            if (passEl) setTimeout(() => passEl.focus(), 300);
+          } else if (event === 'SIGNED_IN' && session && session.user) {
+            const curSess = loadActiveSession();
+            if (!curSess || curSess.mode !== 'account') {
+              const uEmail = session.user.email || '';
+              const uName = session.user.user_metadata?.full_name || '';
+              switchToAccountProfile({ email: uEmail, name: uName, supabaseUserId: session.user.id });
+              const cloudData = await window.HabbiSupabaseAuthSync.pullCloudDataToLocal(session.user.id);
+              if (cloudData) {
+                if (cloudData.profile && cloudData.profile.display_name) userState.name = cloudData.profile.display_name;
+                if (cloudData.goals) {
+                  if (typeof cloudData.goals.today_meta === 'number') userState.todayMeta = cloudData.goals.today_meta;
+                  if (typeof cloudData.goals.habitual_cigs === 'number') userState.habitualCigs = cloudData.goals.habitual_cigs;
+                  if (typeof cloudData.goals.pack_price === 'number') userState.packPrice = cloudData.goals.pack_price;
+                }
+                if (cloudData.dailyRecords && Object.keys(cloudData.dailyRecords).length > 0) {
+                  userState.dailyRecords = Object.assign({}, userState.dailyRecords, cloudData.dailyRecords);
+                }
+                if (cloudData.gameRecords) {
+                  userState.gameRecords = Object.assign({}, userState.gameRecords, cloudData.gameRecords);
+                }
+                savePersistedState();
+                refreshAllViews(true);
+              }
+            }
+          }
+        });
+      } catch (err) {
+        console.warn('[Habbi Supabase] Erro ao registrar listener de sessão:', err);
+      }
+    }, 450);
+  }
 });

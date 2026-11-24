@@ -1,39 +1,98 @@
 /**
  * Habbi — Configuração do Cliente Supabase (Frontend)
  *
- * IMPORTANTE:
- * - Usa EXCLUSIVAMENTE a Project URL raiz (sem "/rest/v1/") e a Publishable Key.
+ * Princípios de Engenharia:
+ * - Usa EXCLUSIVAMENTE a Project URL raiz (sem "/rest/v1/") e a Publishable / Anon Key.
  * - NUNCA incluir secret keys ou service_role neste arquivo ou em qualquer arquivo do frontend.
- * - Ainda NÃO conectado ao index.html nesta etapa de preparação/revisão.
+ * - Fallback offline-first: se o SDK não estiver carregado ou a rede falhar, retorna null sem quebrar o app.
+ * - Suporta override dinâmico via localStorage para flexibilidade sem necessidade de rebuild.
  */
 (function initHabbiSupabaseConfig() {
-  // Project URL normalizada (o SDK @supabase/supabase-js monta /auth/v1 e /rest/v1 automaticamente)
-  const RAW_URL = 'https://vnpxqfepowwtbdiqjusz.supabase.co/rest/v1/';
-  const SUPABASE_URL = RAW_URL.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
-  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_3-zEkBJ6DUkBmyOzEQwwLA_TuS1RZCx';
+  const DEFAULT_RAW_URL = 'https://vnpxqfepowwtbdiqjusz.supabase.co/rest/v1/';
+  const DEFAULT_KEY = 'sb_publishable_3-zEkBJ6DUkBmyOzEQwwLA_TuS1RZCx';
+
+  function getSavedUrl() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const val = localStorage.getItem('habbi-supabase-url');
+        if (val && typeof val === 'string' && val.trim()) return val.trim();
+      }
+    } catch (_e) {}
+    return DEFAULT_RAW_URL;
+  }
+
+  function getSavedKey() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const val = localStorage.getItem('habbi-supabase-anon-key');
+        if (val && typeof val === 'string' && val.trim()) return val.trim();
+      }
+    } catch (_e) {}
+    return DEFAULT_KEY;
+  }
+
+  function normalizeUrl(raw) {
+    return String(raw || '').replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+  }
 
   let clientInstance = null;
 
   function getHabbiSupabaseClient() {
     if (clientInstance) return clientInstance;
-    // Fallback offline-first: se o SDK não carregou (sem internet), retorna null sem quebrar o app
+    // Fallback offline-first: se o SDK @supabase/supabase-js não foi carregado
     if (typeof window === 'undefined' || !window.supabase || typeof window.supabase.createClient !== 'function') {
       return null;
     }
-    clientInstance = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-        storageKey: 'habbi-supabase-auth'
-      }
-    });
+
+    const cleanUrl = normalizeUrl(getSavedUrl());
+    const publishableKey = getSavedKey();
+
+    if (!cleanUrl || !publishableKey) {
+      return null;
+    }
+
+    try {
+      clientInstance = window.supabase.createClient(cleanUrl, publishableKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          storageKey: 'habbi-supabase-auth'
+        }
+      });
+    } catch (err) {
+      console.warn('[Habbi Supabase] Falha ao instanciar cliente:', err);
+      clientInstance = null;
+    }
     return clientInstance;
   }
 
+  // Permite configurar ou atualizar credenciais de forma limpa pelo console ou UI
+  window.setHabbiSupabaseCredentials = function(newUrl, newKey) {
+    try {
+      if (newUrl) localStorage.setItem('habbi-supabase-url', newUrl);
+      if (newKey) localStorage.setItem('habbi-supabase-anon-key', newKey);
+      clientInstance = null;
+      return getHabbiSupabaseClient();
+    } catch (_e) {
+      return null;
+    }
+  };
+
+  window.clearHabbiSupabaseCredentialsOverride = function() {
+    try {
+      localStorage.removeItem('habbi-supabase-url');
+      localStorage.removeItem('habbi-supabase-anon-key');
+      clientInstance = null;
+      return getHabbiSupabaseClient();
+    } catch (_e) {
+      return null;
+    }
+  };
+
   window.HABBI_SUPABASE_CONFIG = Object.freeze({
-    url: SUPABASE_URL,
-    publishableKey: SUPABASE_PUBLISHABLE_KEY
+    get url() { return normalizeUrl(getSavedUrl()); },
+    get publishableKey() { return getSavedKey(); }
   });
   window.getHabbiSupabaseClient = getHabbiSupabaseClient;
 })();

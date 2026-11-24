@@ -877,7 +877,7 @@
               <input type="checkbox" id="login-remember" style="accent-color:var(--primary); width:18px; height:18px; border-radius:4px; cursor:pointer;">
               Lembrar de mim
             </label>
-            <a href="#" onclick="alert('Link de recuperação de senha enviado para o seu e-mail!'); return false;" style="font-size:14px; color:var(--primary); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
+            <a href="#" onclick="handleForgotPasswordClick(); return false;" id="link-forgot-password" style="font-size:14px; color:var(--primary); text-decoration:none; font-weight:600;">Esqueceu a senha?</a>
           </div>
           
           <div id="login-error-msg" class="habbi-form-error" role="alert" aria-live="polite" style="display:none;"></div>
@@ -1350,6 +1350,10 @@
     </div><!-- device-screen -->
   </div><!-- device-container -->
 </main>
+<!-- Supabase JS Client v2 com fallback resiliente para offline -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase/supabase-config.js"></script>
+<script src="supabase/supabase-sync.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
