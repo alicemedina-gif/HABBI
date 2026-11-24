@@ -2058,7 +2058,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const h1 = s7.querySelector('h1');
       if (h1) h1.innerText = t.metaH1 || 'Quantos cigarros você fuma por dia?';
       const calcUnit = s7.querySelector('.wl-calc-unit-label');
-      if (calcUnit) calcUnit.innerText = t.metaHabitualUnit || 'cigarros por dia habitualmente';
+      if (calcUnit) {
+        const spanEl = calcUnit.querySelector('#cigarettes-per-day-unit-label');
+        if (spanEl) {
+          spanEl.innerText = t.metaHabitualUnit || 'cigarros por dia';
+        } else {
+          calcUnit.innerText = t.metaHabitualUnit || 'cigarros por dia';
+        }
+      }
       const calcSub = s7.querySelector('.wl-calc-sub') || document.getElementById('wl-calc-sub-headline');
       if (calcSub) calcSub.innerText = t.metaHabitualSub || 'Seu consumo habitual de referência';
       const suggTitle = document.getElementById('habbi-suggested-goal-title');
@@ -6324,74 +6331,74 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <header class="wl-calc-top-bar">
-          <div class="wl-calc-top-left">
-            <button type="button" class="wl-calc-back" onclick="goToScreen(5)" aria-label="Voltar">\u2039</button>
-            <h2 class="wl-calc-top-title" id="wl-calc-header-title">Quantos cigarros voc\u00ea fuma por dia?</h2>
-          </div>
+          <button type="button" class="wl-calc-back" onclick="goToScreen(5)" aria-label="Voltar">\u2039</button>
         </header>
 
         <div class="wl-calc-main-column">
           <div class="wl-calc-body">
-          <!-- Consumo habitual de referência -->
-          <div class="wl-calc-hero">
-            <span class="wl-calc-sub" id="wl-calc-sub-headline">Seu consumo habitual de refer\u00eancia</span>
-            <div class="wl-calc-big-number">
-              <span id="cigarettes-per-day-val">12</span>
+            <h1 class="wl-calc-top-title wl-calc-main-title" id="wl-calc-header-title">Quantos cigarros voc\u00ea fuma por dia?</h1>
+
+            <!-- Consumo habitual de referência -->
+            <div class="wl-calc-hero">
+              <div class="wl-calc-big-number">
+                <span id="cigarettes-per-day-val">12</span>
+              </div>
+              <div class="wl-calc-unit-label" id="wl-calc-unit-lbl"><span id="cigarettes-per-day-unit-label">cigarros por dia</span></div>
+              <span class="wl-calc-sub" id="wl-calc-sub-headline" style="display:none;">Seu consumo habitual de refer\u00eancia</span>
             </div>
-            <div class="wl-calc-unit-label" id="wl-calc-unit-lbl"><span id="cigarettes-per-day-unit-label">cigarros por dia</span></div>
-          </div>
 
-          <!-- Card de Meta Inicial Sugerida (independente e ajustável) -->
-          <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
-            <div class="habbi-suggested-goal-header">
-              <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
-              <strong id="habbi-suggested-goal-title">Meta para hoje</strong>
+            <!-- Card de Meta Inicial Sugerida (independente e ajustável) -->
+            <div class="habbi-suggested-goal-card" id="habbi-suggested-goal-card">
+              <div class="habbi-suggested-goal-header">
+                <span class="habbi-suggested-goal-badge" id="habbi-suggested-badge-text">Primeiro passo sugerido</span>
+                <strong id="habbi-suggested-goal-title">Meta para hoje</strong>
+              </div>
+              <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">
+                Que tal começar com 1 cigarro a menos do seu consumo habitual?
+              </p>
+              <div class="habbi-suggested-stepper">
+                <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">−</button>
+                <div class="habbi-suggested-display">
+                  <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
+                  <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
+                </div>
+                <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
+              </div>
+              <span class="habbi-suggested-hint" id="habbi-suggested-hint">Você pode confirmar ou ajustar este valor antes de iniciar.</span>
             </div>
-            <p class="habbi-suggested-goal-desc" id="habbi-suggested-goal-desc">
-              Que tal começar com 1 cigarro a menos do seu consumo habitual?
-            </p>
-            <div class="habbi-suggested-stepper">
-              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-minus" onclick="adjustInitialSuggestedMeta(-1)" aria-label="Diminuir meta sugerida em 1">−</button>
-              <div class="habbi-suggested-display">
-                <span class="habbi-suggested-num" id="habbi-suggested-meta-val">11</span>
-                <span class="habbi-suggested-unit" id="habbi-suggested-meta-unit">cigarros hoje</span>
-              </div>
-              <button type="button" class="habbi-step-btn" id="btn-suggested-meta-plus" onclick="adjustInitialSuggestedMeta(1)" aria-label="Aumentar meta sugerida em 1">+</button>
+
+            <!-- Botões de seleção que abrem a aba inferior (bottom sheet) com opções -->
+            <div class="wl-calc-pills">
+              <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-cigs" onclick="openCalcOptionSheet('cigs')">
+                <div class="wl-calc-pill-row">
+                  <span id="wl-cigs-pill-title">Consumo habitual</span>
+                  <span class="wl-calc-btn-right">
+                    <strong id="wl-cigs-pill-label">12 cigarros</strong>
+                    <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </span>
+                </div>
+              </button>
+
+              <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-years" onclick="openCalcOptionSheet('years')">
+                <div class="wl-calc-pill-row">
+                  <span>Tempo de consumo</span>
+                  <span class="wl-calc-btn-right">
+                    <strong id="wl-years-pill-label">&lt; 1 ano</strong>
+                    <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </span>
+                </div>
+              </button>
+
+              <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-price" onclick="openCalcOptionSheet('price')">
+                <div class="wl-calc-pill-row">
+                  <span>Preço do maço</span>
+                  <span class="wl-calc-btn-right">
+                    <strong id="wl-price-pill-label">R$ 12,00</strong>
+                    <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </span>
+                </div>
+              </button>
             </div>
-            <span class="habbi-suggested-hint" id="habbi-suggested-hint">Você pode confirmar ou ajustar este valor antes de iniciar.</span>
-          </div>
-
-          <!-- Botões de seleção que abrem a aba inferior (bottom sheet) com opções -->
-          <div class="wl-calc-pills">
-            <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-cigs" onclick="openCalcOptionSheet('cigs')">
-              <div class="wl-calc-pill-row">
-                <span id="wl-cigs-pill-title">Consumo habitual</span>
-                <span class="wl-calc-btn-right">
-                  <strong id="wl-cigs-pill-label">12 cigarros</strong>
-                  <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </span>
-              </div>
-            </button>
-
-            <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-years" onclick="openCalcOptionSheet('years')">
-              <div class="wl-calc-pill-row">
-                <span>Tempo de consumo</span>
-                <span class="wl-calc-btn-right">
-                  <strong id="wl-years-pill-label">&lt; 1 ano</strong>
-                  <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </span>
-              </div>
-            </button>
-
-            <button type="button" class="wl-calc-pill-card wl-calc-option-btn" id="btn-open-calc-price" onclick="openCalcOptionSheet('price')">
-              <div class="wl-calc-pill-row">
-                <span>Preço do maço</span>
-                <span class="wl-calc-btn-right">
-                  <strong id="wl-price-pill-label">R$ 12,00</strong>
-                  <svg class="wl-calc-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </span>
-              </div>
-            </button>
           </div>
           </div>
 
@@ -9133,12 +9140,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (gameType === 'memory') {
+      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
       instructionsEl.innerText = 'Encontre os pares dos gatinhos Habbi.';
       boardEl.innerHTML = '<div id="game-memory-board" class="memory-grid"></div>';
       startMemoryGame();
     } else if (gameType === 'sequence') {
       const activeLang = (userState.currentLang || 'PT').toUpperCase();
       const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = 'none';
       instructionsEl.innerText = t.gameSeqInstruction || 'Memorize a sequência e repita na mesma ordem.';
       const isMuted = isSimonAudioMuted();
       const soundLbl = isMuted ? (t.gameSeqSoundOff || 'Sem som') : (t.gameSeqSoundOn || 'Som ativado');
@@ -9156,10 +9165,12 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       startSequenceGame();
     } else if (gameType === 'reflex') {
+      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
       instructionsEl.innerText = 'Toque nas folhas do Habbi conforme aparecem.';
       boardEl.innerHTML = '<div id="game-reflex-board" class="reflex-board"></div>';
       startReflexGame();
     } else if (gameType === 'math') {
+      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
       instructionsEl.innerText = 'Resolva os cálculos e mantenha o foco.';
       boardEl.innerHTML = '<div id="game-math-board" style="width: 100%;"></div>';
       startMathGame();
@@ -9168,6 +9179,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function resetMinigamesUI() {
     userState.isGameActive = false;
+    const instructionsEl = document.getElementById('game-instructions');
+    if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
     if (typeof clearSimonTimeouts === 'function') {
       clearSimonTimeouts();
     }

@@ -2209,9 +2209,10 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 330px;
+  max-width: 280px;
   margin: 0 auto;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .habbi-simon-top-bar {
@@ -2219,8 +2220,10 @@ textarea:focus-visible,
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 8px;
-  padding: 0 4px;
+  max-width: 280px;
+  margin-bottom: 10px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .habbi-simon-sound-btn {
@@ -2230,6 +2233,7 @@ textarea:focus-visible,
   width: 40px;
   height: 40px;
   padding: 0;
+  margin: 0;
   font-size: 16px;
   color: var(--text-secondary, #4B5563);
   cursor: pointer;
@@ -2239,6 +2243,16 @@ textarea:focus-visible,
   min-height: 40px;
   touch-action: manipulation;
   transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.habbi-simon-sound-btn #simon-sound-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
 }
 
 .habbi-simon-sound-btn:hover {
@@ -2248,6 +2262,7 @@ textarea:focus-visible,
 
 .habbi-simon-status-box {
   width: 100%;
+  max-width: 280px;
   padding: 10px 14px;
   border-radius: var(--border-radius-md, 14px);
   background-color: var(--card-bg, #FFFFFF);
@@ -2258,12 +2273,12 @@ textarea:focus-visible,
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-primary, #111827);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  box-sizing: border-box;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -2290,10 +2305,11 @@ textarea:focus-visible,
 .sequence-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 14px;
   width: 100%;
   max-width: 280px;
-  margin: 0 auto 12px auto;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .habbi-simon-btn {
@@ -2303,10 +2319,8 @@ textarea:focus-visible,
   border-radius: 24px;
   border: 3.5px solid transparent;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
@@ -2314,6 +2328,9 @@ textarea:focus-visible,
   transition: transform 0.12s ease, filter 0.15s ease, opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   position: relative;
   outline: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -2352,6 +2369,14 @@ textarea:focus-visible,
   pointer-events: none;
   font-family: var(--font-family);
   letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 /* Estado Iluminado / Ativo */
@@ -2404,18 +2429,26 @@ textarea:focus-visible,
 
 /* Telas compactas (320px) */
 @media (max-width: 340px) {
+  .habbi-simon-layout,
+  .sequence-layout,
+  .habbi-simon-top-bar,
+  .habbi-simon-status-box,
   .habbi-simon-grid,
   .sequence-grid {
-    max-width: 240px;
+    max-width: 248px;
     gap: 10px;
+  }
+  .habbi-simon-status-box {
+    margin-bottom: 10px;
+    font-size: 13px;
   }
   .habbi-simon-btn {
     border-radius: 18px;
-    min-width: 84px;
-    min-height: 84px;
+    min-width: 82px;
+    min-height: 82px;
   }
   .habbi-simon-btn-num {
-    font-size: 34px;
+    font-size: 36px;
   }
 }
 
@@ -7421,39 +7454,46 @@ textarea:focus-visible,
   justify-content: flex-start;
   width: 100%;
   flex-shrink: 0;
-  margin-bottom: 4px;
+  min-height: 44px;
+  margin-bottom: 2px;
 }
 
-.wl-calc-top-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
+.wl-calc-main-title,
 .wl-calc-top-title {
-  margin: 0 !important;
-  font-size: 21px !important;
+  display: block;
+  width: 100%;
+  max-width: 310px;
+  margin: 0 auto 8px auto !important;
+  font-size: 22px !important;
   font-weight: 800 !important;
+  line-height: 1.25 !important;
   letter-spacing: -0.02em !important;
-  color: #111827 !important;
+  text-align: center !important;
+  text-wrap: balance;
+  color: var(--text-primary, #111827) !important;
+  box-sizing: border-box;
 }
 
 .wl-calc-back {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   border: 1.5px solid var(--border-color);
-  background-color: #FFFFFF;
-  color: #111827;
-  font-size: 24px;
+  background-color: var(--card-bg, #FFFFFF);
+  color: var(--text-primary, #111827);
+  font-size: 26px;
   font-weight: 800;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   transition: transform 0.15s ease, background-color 0.15s ease;
   flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
 }
 
 .wl-calc-back:active {
@@ -7471,21 +7511,22 @@ textarea:focus-visible,
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 0 8px 16px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* Bloco central (meta + campos) perfeitamente centralizado na tela */
 .wl-calc-body {
-  flex: 1;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   padding: 0;
-  margin: auto 0;
+  margin: 0 auto;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .wl-calc-hero {
@@ -7494,8 +7535,8 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 3px;
-  margin: 0;
+  gap: 2px;
+  margin: 0 auto 4px auto;
   width: 100%;
 }
 
@@ -7504,9 +7545,9 @@ textarea:focus-visible,
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 104px;
-  font-weight: 900;
-  line-height: 0.9;
+  font-size: 92px;
+  font-weight: 800;
+  line-height: 1;
   letter-spacing: -0.04em;
   margin: 0 auto;
   color: #43A027;
@@ -7516,18 +7557,21 @@ textarea:focus-visible,
 #cigarettes-per-day-val {
   color: #43A027;
   display: inline-block;
-  line-height: 0.9;
-  font-weight: 900;
+  line-height: 1;
+  font-weight: 800;
   text-align: center;
+  transform: none !important;
+  margin: 0;
+  padding: 0;
 }
 
 /* "cigarros por dia" logo abaixo do número grande centralizado */
 .wl-calc-unit-label {
-  font-size: 17px;
-  font-weight: 800;
-  color: #1E293B;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-secondary, #64748B);
   letter-spacing: -0.01em;
-  margin-top: 3px;
+  margin-top: 2px;
   text-align: center;
   width: 100%;
 }
@@ -7550,6 +7594,7 @@ textarea:focus-visible,
   width: 100%;
   max-width: 350px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .wl-calc-pill-card,
@@ -7560,10 +7605,13 @@ textarea:focus-visible,
   border-radius: 18px;
   min-height: 52px;
   height: 54px;
-  padding: 0 14px 0 18px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 0;
   width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
   transition: transform 0.12s ease, background-color 0.15s ease;
 }
 
@@ -7585,28 +7633,55 @@ textarea:focus-visible,
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.wl-calc-pill-row > span:first-child {
+  flex: 1;
+  text-align: left;
   font-size: 15px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--text-primary, #1E293B);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .wl-calc-btn-right {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
+  flex-shrink: 0;
+  min-width: 130px;
 }
 
 .wl-calc-pill-row strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  text-align: center;
   background-color: #FFFFFF;
   color: #1E293B;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 800;
-  padding: 6px 12px;
+  line-height: 1;
+  padding: 7px 10px;
   border-radius: 999px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  box-sizing: border-box;
 }
 
 .wl-calc-chevron {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  flex-shrink: 0;
   color: #64748B;
 }
 
@@ -7614,7 +7689,7 @@ textarea:focus-visible,
 .wl-calc-footer {
   width: 100%;
   margin-top: auto;
-  padding-top: 8px;
+  padding-top: 6px;
 }
 
 .wl-calc-submit-btn {
@@ -7625,6 +7700,11 @@ textarea:focus-visible,
   border-radius: 999px !important;
   background-color: #1E293B !important;
   color: #FFFFFF !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
 }
 
 /* Garantir que folhas e patinhas nunca interceptem cliques nem textos */
@@ -9737,7 +9817,8 @@ textarea:focus-visible,
 }
 
 /* 3. TELAS 7, 8, 9: CALCULADORA DE METAS, CUSTO E DATA */
-.device-screen.dark-theme .wl-calc-top-title {
+.device-screen.dark-theme .wl-calc-top-title,
+.device-screen.dark-theme .wl-calc-main-title {
   color: var(--text-primary) !important;
 }
 .device-screen.dark-theme .wl-calc-back {
@@ -10478,15 +10559,15 @@ textarea:focus-visible,
 .screen[data-screen="15"].tools-mode #wl-minijogos-tools-header,
 .screen[data-screen="29"].tools-mode #wl-conquista-tools-header {
   display: flex !important;
-  padding: 16px 20px 0;
+  padding: 14px 24px 0;
 }
 
 .screen[data-screen="15"] #minijogos-menu-list {
-  padding: 0 20px 24px;
+  padding: 0 24px 24px;
 }
 
 .screen[data-screen="15"] #game-execution-panel {
-  padding: 8px 20px 20px;
+  padding: 6px 24px 20px;
   box-sizing: border-box;
 }
 
