@@ -23,7 +23,7 @@
       passwordTooShort: 'A senha deve conter no mínimo 6 caracteres.',
       emailNotConfirmed: 'Por favor, confirme seu e-mail pelo link que enviamos antes de entrar.',
       emailRequired: 'Informe um e-mail válido.',
-      networkError: 'Sem conexão no momento. Seus dados continuam salvos com segurança neste dispositivo.',
+      networkError: 'Não foi possível conectar ao servidor do Supabase. Verifique se o projeto está ativo no painel do Supabase.',
       resetEmailSent: 'Enviamos um link de recuperação para seu e-mail! Verifique sua caixa de entrada e spam.',
       signupSuccess: 'Conta criada com sucesso! Bem-vindo(a) ao Habbi.',
       loginSuccess: 'Sessão iniciada com sucesso!',

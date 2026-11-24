@@ -2972,10 +2972,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (idx === -1) idx = 0;
     const nextLang = langOrder[(idx + 1) % langOrder.length];
     window.applyAppLanguage(nextLang);
-    const t = HABBI_I18N[nextLang];
-    if (typeof showToast === 'function' && t) {
-      showToast(t.toastLangChanged);
-    }
   };
 
   // ==========================================================================
@@ -4119,9 +4115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     savePersistedState();
     syncUserProfileUI();
     highlightActiveAvatarCard();
-    const isEn = userState.currentLang === 'EN';
-    const isEs = userState.currentLang === 'ES';
-    showToast(isEn ? 'Avatar updated!' : (isEs ? '¡Avatar actualizado!' : 'Avatar atualizado!'));
     setTimeout(() => {
       showScreen(21);
     }, 280);
@@ -4389,7 +4382,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.classList.add('show');
     const duration = typeof options.duration === 'number'
       ? options.duration
-      : (hasUndo ? 4500 : 2600);
+      : (hasUndo ? 2800 : 1500);
     activeToastTimer = setTimeout(() => {
       hideToast();
     }, duration);
@@ -7632,8 +7625,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    const t = HABBI_I18N[(userState.currentLang || 'PT').toUpperCase()] || HABBI_I18N.PT;
-    showToast(t.toastSaved || 'Registrado com sucesso');
     window.closeQuickRegisterModal({ saved: true });
   };
 
@@ -7666,7 +7657,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.selectMascotPose = function(poseKey) {
     userState.lastMascotState = poseKey;
     updateHomeScreen();
-    showToast('Gatinho selecionado na tela inicial!');
     showScreen(10);
   };
 
@@ -7926,10 +7916,6 @@ document.addEventListener('DOMContentLoaded', () => {
       homeAddBtn.classList.add('is-pressed');
       setTimeout(() => homeAddBtn.classList.remove('is-pressed'), 260);
     }
-
-    const activeLang = (userState.currentLang || 'PT').toUpperCase();
-    const tAdd = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
-    showToast(`${tAdd.toastCigAdded || 'Cigarro registrado'} (${nextNum}/${meta})`);
   };
 
   window.handleHomeRemoveCigarette = function() {
@@ -7968,10 +7954,6 @@ document.addEventListener('DOMContentLoaded', () => {
       homeRemoveBtn.classList.add('is-pressed');
       setTimeout(() => homeRemoveBtn.classList.remove('is-pressed'), 220);
     }
-
-    const activeLang = (userState.currentLang || 'PT').toUpperCase();
-    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
-    showToast(t.homeRemoveCigToast || '1 cigarro removido');
   };
 
   // SOS intelligent intervention decision
@@ -8019,9 +8001,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (userState.breathingSoundEnabled) {
       playGentleChime(528);
-      showToast('Som da respiração ativado');
-    } else {
-      showToast('Som desativado');
     }
   };
 
@@ -10314,7 +10293,6 @@ document.addEventListener('DOMContentLoaded', () => {
           errEl.style.display = 'block';
         }
         if (emailInput) emailInput.focus();
-        showToast(msg);
         return;
       }
 
@@ -10333,7 +10311,6 @@ document.addEventListener('DOMContentLoaded', () => {
             errEl.style.display = 'block';
           }
           if (passInput) passInput.focus();
-          showToast(passMsg);
           return;
         }
 
@@ -10355,7 +10332,6 @@ document.addEventListener('DOMContentLoaded', () => {
               errEl.textContent = res.error;
               errEl.style.display = 'block';
             }
-            showToast(res.error);
             return;
           }
 
@@ -10437,7 +10413,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!nameVal && nameInput) nameInput.focus();
         else if (emailInput) emailInput.focus();
-        showToast(msg);
         return;
       }
 
@@ -10449,7 +10424,6 @@ document.addEventListener('DOMContentLoaded', () => {
           errEl.style.display = 'block';
         }
         if (passInput) passInput.focus();
-        showToast(msg);
         return;
       }
 
@@ -10460,7 +10434,6 @@ document.addEventListener('DOMContentLoaded', () => {
           errEl.textContent = msg;
           errEl.style.display = 'block';
         }
-        showToast(msg);
         return;
       }
 
@@ -10491,7 +10464,6 @@ document.addEventListener('DOMContentLoaded', () => {
               errEl.textContent = res.error;
               errEl.style.display = 'block';
             }
-            showToast(res.error);
             return;
           }
 
@@ -11496,41 +11468,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   };
 
-  function syncLocalTestEnvControls(locOverride) {
-    const isLocal = window.isHabbiLocalOrTestEnv(locOverride);
+  function syncLocalTestEnvControls(_locOverride) {
     const settingsSlot = document.getElementById('settings-local-test-slot');
     const profileSlot = document.getElementById('profile-local-test-slot');
-    const activeLang = (userState.currentLang || 'PT').toUpperCase();
-    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
-    const btnLabel = t.settingsRestartTest || 'Reiniciar experiência de teste';
-    const envBadge = t.localTestEnvBadge || 'Ambiente de teste local';
-
-    if (!isLocal) {
-      if (settingsSlot) settingsSlot.innerHTML = '';
-      if (profileSlot) profileSlot.innerHTML = '';
-      return;
-    }
-
-    const mountLocalTestControl = (slotEl, btnId) => {
-      if (!slotEl || document.getElementById(btnId)) return;
-      const wrap = document.createElement('div');
-      wrap.className = 'habbi-local-test-wrap';
-      const badge = document.createElement('span');
-      badge.className = 'habbi-local-test-badge';
-      badge.textContent = envBadge;
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.id = btnId;
-      btn.className = 'habbi-local-test-btn';
-      btn.textContent = btnLabel;
-      btn.addEventListener('click', () => window.restartTestExperience());
-      wrap.appendChild(badge);
-      wrap.appendChild(btn);
-      slotEl.appendChild(wrap);
-    };
-
-    mountLocalTestControl(settingsSlot, 'settings-restart-test-btn');
-    mountLocalTestControl(profileSlot, 'profile-restart-test-btn');
+    if (settingsSlot) settingsSlot.innerHTML = '';
+    if (profileSlot) profileSlot.innerHTML = '';
   }
   window.syncLocalTestEnvControls = syncLocalTestEnvControls;
 
@@ -11749,9 +11691,6 @@ document.addEventListener('DOMContentLoaded', () => {
       window.resetOnb1Demo();
     }
     showScreen(1);
-    if (typeof showToast === 'function') {
-      showToast('Iniciando tour do Habbi');
-    }
   };
 
   window.simulateSocialLogin = function(provider) {
@@ -12309,15 +12248,6 @@ document.addEventListener('DOMContentLoaded', () => {
       showScreen(10);
     }
     hideTutorialSwipeHint();
-
-    const activeLang = (userState.currentLang || 'PT').toUpperCase();
-    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : window.HABBI_I18N.PT;
-
-    if (skipped) {
-      showToast(t.tutToastSkip || 'Tutorial pulado. Você pode revê-lo no Perfil.');
-    } else {
-      showToast(t.tutToastDone || 'Tudo pronto para usar o Habbi!');
-    }
   }
 
   function checkAndTriggerFirstTimeTutorial() {
