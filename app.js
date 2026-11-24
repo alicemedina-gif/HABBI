@@ -396,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
       minijogosToolsSub: 'Exercícios e distração',
       gameMemTitle: 'Memória',
       gameMemSub: 'Encontre os pares',
+      gameMemInstruction: 'Encontre os pares dos gatinhos Habbi.',
       gameSeqTitle: 'Sequência',
       gameSeqSub: 'Repita a sequência',
       gameSeqInstruction: 'Memorize a sequência e repita na mesma ordem.',
@@ -409,8 +410,10 @@ document.addEventListener('DOMContentLoaded', () => {
       gameSeqSoundOff: 'Sem som',
       gameMathTitle: 'Matemática',
       gameMathSub: 'Cálculo mental',
+      gameMathInstruction: 'Resolva os cálculos e mantenha o foco.',
       gameTapTitle: 'Jogo do Tap',
       gameTapSub: 'Folhas ágeis',
+      gameReflexInstruction: 'Toque nas folhas do Habbi conforme aparecem.',
       gameQuitBtn: 'Sair do jogo',
       gameScorePairs: 'Pares: {0} • Rodada {1}',
       gameScoreSeq: 'Sequências: {0} • Rodada {1}',
@@ -947,6 +950,7 @@ document.addEventListener('DOMContentLoaded', () => {
       minijogosToolsSub: 'Exercises and distraction',
       gameMemTitle: 'Memory',
       gameMemSub: 'Find pairs',
+      gameMemInstruction: 'Find the matching Habbi kitten pairs.',
       gameSeqTitle: 'Sequence',
       gameSeqSub: 'Repeat the sequence',
       gameSeqInstruction: 'Memorize the sequence and repeat in the same order.',
@@ -960,8 +964,10 @@ document.addEventListener('DOMContentLoaded', () => {
       gameSeqSoundOff: 'Muted',
       gameMathTitle: 'Math',
       gameMathSub: 'Mental math',
+      gameMathInstruction: 'Solve the calculations and stay focused.',
       gameTapTitle: 'Tap Game',
       gameTapSub: 'Quick leaves',
+      gameReflexInstruction: 'Tap the Habbi leaves as they appear.',
       gameQuitBtn: 'Quit game',
       gameScorePairs: 'Pairs: {0} • Round {1}',
       gameScoreSeq: 'Sequences: {0} • Round {1}',
@@ -1498,6 +1504,7 @@ document.addEventListener('DOMContentLoaded', () => {
       minijogosToolsSub: 'Ejercicios y distracción',
       gameMemTitle: 'Memoria',
       gameMemSub: 'Encuentra las parejas',
+      gameMemInstruction: 'Encuentra las parejas de gatitos Habbi.',
       gameSeqTitle: 'Secuencia',
       gameSeqSub: 'Repite la secuencia',
       gameSeqInstruction: 'Memoriza la secuencia y repite en el mismo orden.',
@@ -1511,8 +1518,10 @@ document.addEventListener('DOMContentLoaded', () => {
       gameSeqSoundOff: 'Sin sonido',
       gameMathTitle: 'Matemática',
       gameMathSub: 'Cálculo mental',
+      gameMathInstruction: 'Resuelve las operaciones y mantén el enfoque.',
       gameTapTitle: 'Juego del Tap',
       gameTapSub: 'Hojas ágiles',
+      gameReflexInstruction: 'Toca las hojas de Habbi cuando aparezcan.',
       gameQuitBtn: 'Salir del juego',
       gameScorePairs: 'Parejas: {0} • Ronda {1}',
       gameScoreSeq: 'Secuencias: {0} • Ronda {1}',
@@ -8930,17 +8939,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = document.createElement('div');
       target.className = 'reflex-leaf-target';
 
-      // Dimensões do alvo e limites da área jogável (folha ampliada sem moldura)
-      const targetWidth = 100;
-      const targetHeight = 78;
-      const boardWidth = board.clientWidth || 340;
-      const boardHeight = board.clientHeight || 440;
+      // Dimensões do alvo e limites da área jogável (consistente com tabuleiro de 280px)
+      const targetWidth = 76;
+      const targetHeight = 62;
+      const boardWidth = board.clientWidth || 280;
+      const boardHeight = board.clientHeight || 310;
 
-      const maxX = Math.max(16, boardWidth - targetWidth - 16);
-      const maxY = Math.max(50, boardHeight - targetHeight - 16);
+      const maxX = Math.max(12, boardWidth - targetWidth - 12);
+      const maxY = Math.max(46, boardHeight - targetHeight - 12);
 
-      const posX = Math.floor(Math.random() * (maxX - 16)) + 16;
-      const posY = Math.floor(Math.random() * (maxY - 50)) + 50; // Evita sobrepor o score badge
+      const posX = Math.floor(Math.random() * (maxX - 12)) + 12;
+      const posY = Math.floor(Math.random() * (maxY - 46)) + 46; // Evita sobrepor o score badge
 
       target.style.left = `${posX}px`;
       target.style.top = `${posY}px`;
@@ -9148,16 +9157,19 @@ document.addEventListener('DOMContentLoaded', () => {
       bgSilEl.style.display = 'block';
     }
 
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+
+    if (instructionsEl && instructionsEl.parentElement) {
+      instructionsEl.parentElement.style.display = 'block';
+    }
+
     if (gameType === 'memory') {
-      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
-      instructionsEl.innerText = 'Encontre os pares dos gatinhos Habbi.';
+      if (instructionsEl) instructionsEl.innerText = t.gameMemInstruction || 'Encontre os pares dos gatinhos Habbi.';
       boardEl.innerHTML = '<div id="game-memory-board" class="memory-grid"></div>';
       startMemoryGame();
     } else if (gameType === 'sequence') {
-      const activeLang = (userState.currentLang || 'PT').toUpperCase();
-      const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
-      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = 'none';
-      instructionsEl.innerText = t.gameSeqInstruction || 'Memorize a sequência e repita na mesma ordem.';
+      if (instructionsEl) instructionsEl.innerText = t.gameSeqInstruction || 'Memorize a sequência e repita na mesma ordem.';
       const isMuted = isSimonAudioMuted();
       const soundLbl = isMuted ? (t.gameSeqSoundOff || 'Sem som') : (t.gameSeqSoundOn || 'Som ativado');
       boardEl.innerHTML = `
@@ -9174,13 +9186,11 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       startSequenceGame();
     } else if (gameType === 'reflex') {
-      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
-      instructionsEl.innerText = 'Toque nas folhas do Habbi conforme aparecem.';
+      if (instructionsEl) instructionsEl.innerText = t.gameReflexInstruction || 'Toque nas folhas do Habbi conforme aparecem.';
       boardEl.innerHTML = '<div id="game-reflex-board" class="reflex-board"></div>';
       startReflexGame();
     } else if (gameType === 'math') {
-      if (instructionsEl && instructionsEl.parentElement) instructionsEl.parentElement.style.display = '';
-      instructionsEl.innerText = 'Resolva os cálculos e mantenha o foco.';
+      if (instructionsEl) instructionsEl.innerText = t.gameMathInstruction || 'Resolva os cálculos e mantenha o foco.';
       boardEl.innerHTML = '<div id="game-math-board" style="width: 100%;"></div>';
       startMathGame();
     }

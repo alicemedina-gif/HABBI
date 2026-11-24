@@ -2109,54 +2109,49 @@ textarea:focus-visible,
   border-color: var(--primary);
 }
 
-/* Minigames Memory */
+/* Minigames Memory (Consistente com largura de 280px) */
 .memory-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  max-width: 330px;
-  margin: 0 auto 16px;
-}
-
-/* Minigames Memory */
-.memory-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  width: 100%;
-  max-width: 350px;
-  margin: 0 auto 12px;
+  max-width: 280px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .memory-grid.grid-4x2 {
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: 10px;
+  max-width: 280px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .memory-tile {
-  height: 98px;
-  background-color: #FFFFFF;
-  border: 2px solid #E2E8F0;
-  border-radius: 20px;
+  height: 72px;
+  background-color: var(--card-bg, #FFFFFF);
+  border: 1.5px solid var(--border-color, #E2E8F0);
+  border-radius: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
   user-select: none;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-  padding: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 6px;
+  box-sizing: border-box;
 }
 
 .memory-grid.grid-4x2 .memory-tile {
-  height: 114px;
-  border-radius: 22px;
+  height: 72px;
+  border-radius: 16px;
 }
 
 .memory-tile:active {
-  transform: scale(0.94);
+  transform: scale(0.95);
 }
 
 .memory-tile.flipped {
@@ -2170,35 +2165,50 @@ textarea:focus-visible,
   cursor: default;
 }
 
+.device-screen.dark-theme .memory-tile {
+  background-color: #1E1E24;
+  border-color: #2D2D34;
+}
+
+.device-screen.dark-theme .memory-tile.flipped {
+  background-color: #18283E;
+  border-color: #74C0FC;
+}
+
+.device-screen.dark-theme .memory-tile.matched {
+  background-color: #172D1E;
+  border-color: #69DB7C;
+}
+
 .memory-tile-img {
   width: 100%;
   height: 100%;
-  max-width: 84px;
-  max-height: 84px;
+  max-width: 58px;
+  max-height: 58px;
   object-fit: contain;
   pointer-events: none;
   display: block;
 }
 
 .memory-grid.grid-4x2 .memory-tile-img {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 58px;
+  max-height: 58px;
 }
 
 .memory-back-icon {
-  width: 48px;
-  height: 48px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
   filter: grayscale(1);
-  opacity: 0.40;
+  opacity: 0.35;
   pointer-events: none;
   display: block;
   transition: transform 0.15s ease;
 }
 
 .memory-grid.grid-4x2 .memory-back-icon {
-  width: 58px;
-  height: 58px;
+  width: 34px;
+  height: 34px;
 }
 
 /* Minigames Sequência (Memória de Sequência - Estilo Simon / Genius) */
@@ -2434,12 +2444,19 @@ textarea:focus-visible,
   .habbi-simon-top-bar,
   .habbi-simon-status-box,
   .habbi-simon-grid,
+  .sequence-grid,
+  .memory-grid,
+  .memory-grid.grid-4x2,
+  .math-game-layout,
+  .reflex-board {
+    max-width: 248px !important;
+  }
+  .habbi-simon-grid,
   .sequence-grid {
-    max-width: 248px;
     gap: 10px;
   }
   .habbi-simon-status-box {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 13px;
   }
   .habbi-simon-btn {
@@ -2449,6 +2466,52 @@ textarea:focus-visible,
   }
   .habbi-simon-btn-num {
     font-size: 36px;
+  }
+  .memory-grid {
+    gap: 8px !important;
+  }
+  .memory-tile {
+    height: 60px !important;
+    border-radius: 12px !important;
+    padding: 4px !important;
+  }
+  .memory-grid.grid-4x2 .memory-tile {
+    height: 60px !important;
+    border-radius: 12px !important;
+  }
+  .memory-tile-img {
+    max-width: 48px !important;
+    max-height: 48px !important;
+  }
+  .memory-back-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  .reflex-board {
+    height: 270px !important;
+    min-height: 250px !important;
+    border-radius: 16px !important;
+  }
+  .reflex-leaf-target {
+    width: 66px !important;
+    height: 54px !important;
+  }
+  .reflex-leaf-img {
+    width: 60px !important;
+    height: 48px !important;
+  }
+  .math-game-layout {
+    gap: 8px !important;
+  }
+  .math-question-card {
+    font-size: 26px !important;
+    min-height: 38px !important;
+  }
+  .math-option-btn {
+    height: 44px !important;
+    min-height: 44px !important;
+    font-size: 18px !important;
+    border-radius: 14px !important;
   }
 }
 
@@ -2466,24 +2529,30 @@ textarea:focus-visible,
   }
 }
 
-/* Minigames Reflex Board */
+/* Minigames Reflex Board (Consistente com largura de 280px) */
 .reflex-board {
   position: relative;
   width: 100%;
-  min-height: 430px;
-  height: 460px;
-  max-width: 360px;
-  background-color: #F8FAFC;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 24px;
+  height: 310px;
+  min-height: 290px;
+  max-width: 280px;
+  background-color: var(--card-bg, #FFFFFF);
+  border: 1.5px solid var(--border-color, #E2E8F0);
+  border-radius: 20px;
   overflow: hidden;
-  margin: 0 auto 12px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.device-screen.dark-theme .reflex-board {
+  background-color: #1E1E24;
+  border-color: #2D2D34;
 }
 
 .reflex-leaf-target {
   position: absolute;
-  width: 100px;
-  height: 78px;
+  width: 76px;
+  height: 62px;
   background: transparent;
   border: none;
   border-radius: 0;
@@ -2502,133 +2571,221 @@ textarea:focus-visible,
 }
 
 .reflex-leaf-img {
-  width: 94px;
-  height: 72px;
+  width: 70px;
+  height: 56px;
   object-fit: contain;
   pointer-events: none;
   display: block;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
 }
 
-/* Minigames Math */
+/* Minigames Math (Consistente com largura de 280px) */
 .math-game-layout {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 330px;
-  gap: 16px;
-  padding: 6px 0;
+  max-width: 280px;
+  gap: 10px;
+  padding: 0;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .math-question-card {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 800;
-  color: #1E293B;
+  color: var(--text-primary, #1E293B);
   letter-spacing: -0.02em;
   text-align: center;
-  min-height: 50px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0;
 }
 
 .math-correction-banner {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 800;
   color: #059669;
   background-color: #ECFDF5;
   border: 1.5px solid #A7F3D0;
-  padding: 8px 20px;
-  border-radius: 14px;
+  padding: 6px 16px;
+  border-radius: 12px;
   animation: fadeIn 0.2s ease;
+}
+
+.device-screen.dark-theme .math-correction-banner {
+  background-color: #172D1E;
+  border-color: #2B8A3E;
+  color: #B2F2BB;
 }
 
 .math-options-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
 }
 
 .math-option-btn {
   width: 100%;
-  height: 56px;
+  height: 48px;
+  min-height: 48px;
   border-radius: 16px;
-  border: 2px solid #E2E8F0;
-  background-color: #FFFFFF;
-  font-size: 22px;
+  border: 1.5px solid var(--border-color, #E2E8F0);
+  background-color: var(--card-bg, #FFFFFF);
+  font-size: 20px;
   font-weight: 800;
-  color: #1E293B;
+  color: var(--text-primary, #1E293B);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.math-option-btn:hover {
+  background-color: var(--bg-color-alt);
 }
 
 .math-option-btn:active {
   transform: scale(0.97);
 }
 
+.device-screen.dark-theme .math-option-btn {
+  background-color: #1E1E24;
+  border-color: #2D2D34;
+  color: #F3F4F6;
+}
+
+.device-screen.dark-theme .math-option-btn:hover {
+  background-color: #26262D;
+}
+
 .game-score-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
   font-weight: 700;
-  color: #64748B;
-  background-color: #F1F5F9;
+  color: var(--text-secondary, #64748B);
+  background-color: var(--bg-color-alt, #F1F5F9);
+  border: 1px solid var(--border-color, #E2E8F0);
   padding: 4px 14px;
   border-radius: 999px;
   margin-bottom: 6px;
+  box-sizing: border-box;
 }
 
-/* Minigames Banner & Quit Bar */
-.game-instructions-banner {
-  display: inline-block;
-  background-color: #F1F5F9;
-  color: #475569;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12.5px;
-  font-weight: 700;
-  text-align: center;
+.device-screen.dark-theme .game-score-badge {
+  background-color: #26262D;
+  border-color: #36363E;
+  color: #9CA3AF;
+}
+
+/* Estrutura de Execução dos Minijogos */
+.game-execution-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.game-board-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: auto 0;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* Minigames Instrução Discreta e Alinhada à Esquerda (24px) */
+.game-instruction-wrap {
+  width: 100%;
+  padding: 0;
+  margin: 0 0 10px 0;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+}
+
+.game-instructions-banner,
+.game-instruction-text {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--text-secondary) !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  display: block !important;
+  border-radius: 0 !important;
 }
 
 .game-quit-bar {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: auto;
-  padding-top: 10px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  align-items: center;
+  margin: 12px auto 0;
+  padding: 0 0 calc(8px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  z-index: 2;
 }
 
 .btn-quit-game-styled {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  height: 42px;
-  padding: 0 18px;
-  background-color: #FFFFFF;
-  border: 1.5px solid #E2E8F0;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 20px;
+  background-color: var(--card-bg, #FFFFFF);
+  border: 1.5px solid var(--border-color, #E2E8F0);
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 700;
-  color: #64748B;
+  color: var(--text-secondary, #64748B);
   cursor: pointer;
   transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
 .btn-quit-game-styled:hover {
-  background-color: #F8FAFC;
-  color: #334155;
-  border-color: #CBD5E1;
+  background-color: var(--bg-color-alt);
+  color: var(--text-primary);
+  border-color: var(--border-color);
 }
 
 .btn-quit-game-styled:active {
   transform: scale(0.96);
+}
+
+.device-screen.dark-theme .btn-quit-game-styled {
+  background-color: #1E1E24;
+  border-color: #2D2D34;
+  color: #9CA3AF;
+}
+
+.device-screen.dark-theme .btn-quit-game-styled:hover {
+  background-color: #26262D;
+  color: #F3F4F6;
 }
 
 /* Minigames Focus Board */
