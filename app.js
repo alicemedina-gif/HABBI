@@ -7041,6 +7041,8 @@ document.addEventListener('DOMContentLoaded', () => {
       celModal.setAttribute('aria-labelledby', 'wl-cel-title');
       celModal.style.display = 'none';
       celModal.innerHTML = `
+        <button type="button" class="wl-close-circle wl-cel-screen-close" id="wl-cel-screen-close" onclick="window.closeCelebrationModal()" aria-label="Fechar" style="position: absolute; top: 18px; right: 18px; z-index: 50;">✕</button>
+
         <div class="wl-cel-msg-card" id="wl-cel-msg-card">
           <button type="button" class="wl-close-circle wl-cel-close-btn" id="wl-cel-close-btn" onclick="window.closeCelebrationModal()" aria-label="Fechar">✕</button>
           <span class="wl-cel-highfive-badge" id="wl-cel-highfive-badge">Parabéns!</span>
@@ -7073,8 +7075,18 @@ document.addEventListener('DOMContentLoaded', () => {
           // Clique na patinha repete animação festiva
           e.stopPropagation();
           pawStageEl.classList.remove('is-highfiving');
+          const pawImg = document.getElementById('wl-cel-img');
+          const pawPop = pawStageEl.querySelector('.wl-cel-slap-pop');
+          const pawRing = pawStageEl.querySelector('.wl-cel-highfive-ring');
+          if (pawImg) pawImg.style.animation = 'none';
+          if (pawPop) pawPop.style.animation = 'none';
+          if (pawRing) pawRing.style.animation = 'none';
           void pawStageEl.offsetWidth;
+          if (pawImg) void pawImg.offsetWidth;
           pawStageEl.classList.add('is-highfiving');
+          if (pawImg) pawImg.style.animation = '';
+          if (pawPop) pawPop.style.animation = '';
+          if (pawRing) pawRing.style.animation = '';
         });
       }
       window.closeCelebrationModal = function() {
@@ -7636,20 +7648,42 @@ document.addEventListener('DOMContentLoaded', () => {
       imgEl.setAttribute('src', imgSrc);
       if (window.removeWhiteBgFromAllMascots) window.removeWhiteBgFromAllMascots();
     }
-    if (cardEl) {
-      cardEl.style.opacity = '1';
-      cardEl.style.pointerEvents = 'auto';
-    }
     modal.style.display = 'flex';
     modal.classList.remove('is-playing');
     if (pawStageEl) {
       pawStageEl.classList.remove('is-highfiving');
+      const popEl = pawStageEl.querySelector('.wl-cel-slap-pop');
+      const ringEl = pawStageEl.querySelector('.wl-cel-highfive-ring');
+      if (imgEl) imgEl.style.animation = 'none';
+      if (popEl) popEl.style.animation = 'none';
+      if (ringEl) ringEl.style.animation = 'none';
+    }
+    if (cardEl) {
+      cardEl.style.animation = 'none';
+      cardEl.style.opacity = '0';
+      cardEl.style.pointerEvents = 'none';
     }
     void modal.offsetWidth;
+    if (imgEl) void imgEl.offsetWidth;
     modal.classList.add('is-playing');
     if (pawStageEl) {
       pawStageEl.classList.add('is-highfiving');
+      const popEl = pawStageEl.querySelector('.wl-cel-slap-pop');
+      const ringEl = pawStageEl.querySelector('.wl-cel-highfive-ring');
+      if (imgEl) imgEl.style.animation = '';
+      if (popEl) popEl.style.animation = '';
+      if (ringEl) ringEl.style.animation = '';
     }
+    if (cardEl) {
+      cardEl.style.animation = '';
+    }
+    // Fallback garantido: após o término do 'Bate aqui!' da patinha (700ms), o card fica 100% visível e clicável
+    setTimeout(() => {
+      if (cardEl) {
+        cardEl.style.opacity = '1';
+        cardEl.style.pointerEvents = 'auto';
+      }
+    }, 720);
     openAccessibleDialog(modal, window.closeCelebrationModal, 'wl-cel-title');
   };
 

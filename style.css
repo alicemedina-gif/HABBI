@@ -6475,10 +6475,10 @@ textarea:focus-visible,
   display: flex;
   flex-direction: column;
   align-items: center;
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  transform: translateY(18px) scale(0.93);
+  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .wl-cel-close-btn {
@@ -6489,14 +6489,14 @@ textarea:focus-visible,
 }
 
 .wl-celebration-modal.is-playing .wl-cel-msg-card {
-  animation: wlCelMsgAppearAfterPaw 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation: wlCelMsgAppearAfterPaw 0.44s cubic-bezier(0.34, 1.56, 0.64, 1) 0.65s forwards;
 }
 
 @keyframes wlCelMsgAppearAfterPaw {
   0% {
-    opacity: 0.95;
-    transform: translateY(8px) scale(0.98);
-    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(18px) scale(0.93);
+    pointer-events: none;
   }
   100% {
     opacity: 1;
@@ -11579,21 +11579,14 @@ button.wl-conquista-bag-stage {
 
 /* Movimento reduzido (prefers-reduced-motion: reduce) */
 @media (prefers-reduced-motion: reduce) {
-  #wl-celebration-modal,
-  #wl-celebration-modal *,
+  .home-v2-mascot {
+    animation: none !important;
+  }
   .main-carousel-track,
   .wl-home-add-btn.is-pressed,
   .wl-cig-meter-wrap.is-bumping {
     animation: none !important;
     transition: none !important;
-  }
-  #wl-celebration-modal .wl-cel-msg-card {
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: auto !important;
-  }
-  #wl-celebration-modal .wl-cel-free-paw-stage img {
-    transform: translateY(20%) scale(0.9) !important;
   }
 }
 
