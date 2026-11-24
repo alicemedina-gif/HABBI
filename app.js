@@ -4344,8 +4344,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = String(message || '').trim();
     if (!text) return;
     const toast = document.getElementById('toast-notice');
-    const msgEl = toast ? toast.querySelector('.toast-message') : null;
-    const undoBtn = document.getElementById('toast-undo-btn');
     const srStatus = document.getElementById('habbi-sr-status');
 
     if (activeToastTimer) {
@@ -4358,34 +4356,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => { srStatus.textContent = text; }, 20);
     }
 
-    if (!toast || !msgEl) return;
-    msgEl.textContent = text;
-
-    const hasUndo = Boolean(options && typeof options.onUndo === 'function');
-    if (undoBtn) {
-      if (hasUndo) {
-        activeToastUndoHandler = options.onUndo;
-        undoBtn.textContent = options.undoLabel || 'Desfazer';
-        undoBtn.style.display = 'inline-flex';
-        undoBtn.onclick = () => {
-          const fn = activeToastUndoHandler;
-          hideToast();
-          if (typeof fn === 'function') fn();
-        };
-      } else {
-        activeToastUndoHandler = null;
-        undoBtn.style.display = 'none';
-        undoBtn.onclick = null;
-      }
+    // "tire todos os pop ups": nenhum toast visual é exibido na tela
+    if (toast) {
+      toast.classList.remove('show');
     }
-
-    toast.classList.add('show');
-    const duration = typeof options.duration === 'number'
-      ? options.duration
-      : (hasUndo ? 2800 : 1500);
-    activeToastTimer = setTimeout(() => {
-      hideToast();
-    }, duration);
   }
   window.showToast = showToast;
   window.hideToast = hideToast;
@@ -7068,10 +7042,11 @@ document.addEventListener('DOMContentLoaded', () => {
       celModal.style.display = 'none';
       celModal.innerHTML = `
         <div class="wl-cel-msg-card" id="wl-cel-msg-card">
+          <button type="button" class="wl-close-circle wl-cel-close-btn" id="wl-cel-close-btn" onclick="window.closeCelebrationModal()" aria-label="Fechar">✕</button>
           <span class="wl-cel-highfive-badge" id="wl-cel-highfive-badge">Parabéns!</span>
           <h2 class="wl-cel-title" id="wl-cel-title">Não fumei hoje!</h2>
           <span class="wl-cel-tag" id="wl-cel-tag">Mais um dia cuidando de você.</span>
-          <button type="button" class="wl-dark-pill-btn wl-cel-btn" id="wl-cel-btn">Continuar</button>
+          <button type="button" class="wl-dark-pill-btn wl-cel-btn" id="wl-cel-btn" onclick="window.closeCelebrationModal()">Continuar</button>
         </div>
 
         <div class="wl-cel-free-paw-stage" id="wl-cel-paw-stage" title="Toque na patinha para bater aqui de novo!">
@@ -7084,9 +7059,19 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
       deviceScreen.appendChild(celModal);
+
+      // Clique no fundo translúcido fecha o modal de celebração
+      celModal.addEventListener('click', (e) => {
+        if (e.target === celModal) {
+          window.closeCelebrationModal();
+        }
+      });
+
       const pawStageEl = document.getElementById('wl-cel-paw-stage');
       if (pawStageEl) {
-        pawStageEl.addEventListener('click', () => {
+        pawStageEl.addEventListener('click', (e) => {
+          // Clique na patinha repete animação festiva
+          e.stopPropagation();
           pawStageEl.classList.remove('is-highfiving');
           void pawStageEl.offsetWidth;
           pawStageEl.classList.add('is-highfiving');
@@ -7098,13 +7083,22 @@ document.addEventListener('DOMContentLoaded', () => {
         closeAccessibleDialog(celModal);
         const targetScr = userState.returnScreenAfterRegister || currentScreen || 10;
         userState.returnScreenAfterRegister = 10;
-        if (currentScreen !== targetScr) {
+        if (typeof showScreen === 'function') {
           showScreen(targetScr);
+        }
+        if (typeof refreshAllViews === 'function') {
+          refreshAllViews();
         }
       };
       const celBtn = document.getElementById('wl-cel-btn');
       if (celBtn) {
         celBtn.addEventListener('click', () => {
+          window.closeCelebrationModal();
+        });
+      }
+      const celCloseBtn = document.getElementById('wl-cel-close-btn');
+      if (celCloseBtn) {
+        celCloseBtn.addEventListener('click', () => {
           window.closeCelebrationModal();
         });
       }
@@ -7635,11 +7629,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleEl = document.getElementById('wl-cel-title');
     const imgEl = document.getElementById('wl-cel-img');
     const pawStageEl = document.getElementById('wl-cel-paw-stage');
+    const cardEl = document.getElementById('wl-cel-msg-card');
     if (tagEl && tagText) tagEl.innerText = tagText;
     if (titleEl && titleText) titleEl.innerText = titleText;
     if (imgEl && imgSrc) {
       imgEl.setAttribute('src', imgSrc);
       if (window.removeWhiteBgFromAllMascots) window.removeWhiteBgFromAllMascots();
+    }
+    if (cardEl) {
+      cardEl.style.opacity = '1';
+      cardEl.style.pointerEvents = 'auto';
     }
     modal.style.display = 'flex';
     modal.classList.remove('is-playing');
