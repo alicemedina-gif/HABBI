@@ -11757,331 +11757,157 @@ button.wl-conquista-bag-stage {
   display: none !important;
 }
 
-/* =============================================================
-   2. ABA DISCRETA DE META DIÁRIA NA HOME (TELA 10)
-   Formato de aba / pill recolhida, expande levemente ao toque
-   ============================================================= */
-.habbi-goal-tab,
-.habbi-goal-evolution-card {
+/* ============================================================================
+   2. MODAL DE DECISÃO DE META DIÁRIA (1º ACESSO DO DIA - SOBRE A HOME)
+   Overlay centralizado sobre a Home, sem deslocar nenhum elemento da tela.
+   Zero gradientes, zero blur, cores sólidas via tokens CSS, 100% acessível (WCAG 2.2 AA).
+   ============================================================================ */
+.habbi-daily-goal-modal-card {
+  max-width: 320px;
+  width: 100%;
   background-color: var(--card-bg, #FFFFFF);
-  border: 1.5px solid #C8E8B9;
-  border-radius: 999px;
-  padding: 4px 8px 4px 10px;
-  margin: 3px 16px 6px;
+  border: 1px solid var(--border-color, #E5E7EB);
+  border-radius: var(--border-radius-lg, 20px);
+  padding: 24px 20px 20px;
   box-sizing: border-box;
-  text-align: left;
-  position: relative;
-  flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  transition: border-radius 0.2s ease, padding 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-.device-screen.dark-theme .habbi-goal-tab,
-.device-screen.dark-theme .habbi-goal-evolution-card {
-  background-color: #161D15 !important;
-  border-color: rgba(108, 203, 79, 0.35) !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+.device-screen.dark-theme .habbi-daily-goal-modal-card {
+  background-color: #1E1E24 !important;
+  border-color: #2D2D36 !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
 }
 
-.habbi-goal-tab.is-expanded,
-.habbi-goal-evolution-card.is-expanded {
-  border-radius: 16px;
-  padding: 8px 12px 9px 12px;
-  background-color: var(--card-bg, #FFFFFF);
-  border-color: #BCE5A6;
-  box-shadow: 0 3px 8px rgba(108, 203, 79, 0.1);
-}
-
-.device-screen.dark-theme .habbi-goal-tab.is-expanded,
-.device-screen.dark-theme .habbi-goal-evolution-card.is-expanded {
-  background-color: #1A2218 !important;
-  border-color: rgba(108, 203, 79, 0.45) !important;
-}
-
-/* Linha de Resumo (Pill Recolhido) */
-.habbi-goal-tab-summary,
-.habbi-goal-card-top {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  cursor: pointer;
-  user-select: none;
-  min-height: 24px;
-}
-
-.habbi-goal-tab-badge,
-.habbi-goal-card-badge {
-  font-size: 10px;
+.habbi-daily-goal-badge {
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   color: #1E6B20;
   background-color: #E3F7D8;
   border: 1px solid #BCE5A6;
-  padding: 2px 8px;
+  padding: 4px 14px;
   border-radius: 999px;
   display: inline-block;
-  line-height: 1.25;
-  white-space: nowrap;
-  flex-shrink: 0;
+  margin-bottom: 12px;
 }
 
-.habbi-goal-tab-badge.is-challenge,
-.habbi-goal-card-badge.is-challenge {
-  color: #9A5B00;
-  background-color: #FFF3D6;
-  border-color: #FFE08A;
-}
-
-.device-screen.dark-theme .habbi-goal-tab-badge,
-.device-screen.dark-theme .habbi-goal-card-badge {
+.device-screen.dark-theme .habbi-daily-goal-badge {
   background-color: rgba(108, 203, 79, 0.18) !important;
   border-color: rgba(108, 203, 79, 0.45) !important;
   color: #86EFAC !important;
 }
 
-.device-screen.dark-theme .habbi-goal-tab-badge.is-challenge,
-.device-screen.dark-theme .habbi-goal-card-badge.is-challenge {
-  background-color: rgba(245, 159, 0, 0.18) !important;
-  border-color: rgba(245, 159, 0, 0.38) !important;
-  color: #FFD485 !important;
-}
-
-.habbi-goal-tab-title,
-.habbi-goal-card-title {
-  font-size: 12px;
-  font-weight: 700;
+.habbi-daily-goal-question {
+  font-size: 17px;
+  font-weight: 800;
   color: var(--text-primary);
-  margin: 0;
-  line-height: 1.3;
-  letter-spacing: -0.1px;
-  flex: 1;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
+  margin: 0 0 20px;
 }
 
-.device-screen.dark-theme .habbi-goal-tab-title,
-.device-screen.dark-theme .habbi-goal-card-title {
+.device-screen.dark-theme .habbi-daily-goal-question {
   color: #F3F4F6 !important;
 }
 
-.habbi-goal-tab-chevron {
-  font-size: 11px;
-  color: #1E6B20;
-  transition: transform 0.2s ease;
-  display: inline-block;
-  line-height: 1;
-  flex-shrink: 0;
-  padding: 0 2px;
-}
-
-.device-screen.dark-theme .habbi-goal-tab-chevron {
-  color: #86EFAC !important;
-}
-
-.habbi-goal-tab.is-expanded .habbi-goal-tab-chevron,
-.habbi-goal-evolution-card.is-expanded .habbi-goal-tab-chevron {
-  transform: rotate(180deg);
-}
-
-.habbi-goal-tab-close,
-.habbi-goal-card-close {
-  width: 22px;
-  height: 22px;
-  min-width: 22px;
-  min-height: 22px;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 999px;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  transition: color 0.15s ease, background-color 0.15s ease;
-  flex-shrink: 0;
-}
-
-/* Touch target acessível de 44px */
-.habbi-goal-tab-close::after,
-.habbi-goal-card-close::after {
-  content: '';
-  position: absolute;
-  top: -11px;
-  right: 0;
-  bottom: -11px;
-  left: -11px;
-}
-
-.habbi-goal-tab-close:hover,
-.habbi-goal-card-close:hover {
-  color: var(--text-primary);
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.device-screen.dark-theme .habbi-goal-tab-close:hover,
-.device-screen.dark-theme .habbi-goal-card-close:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #F3F4F6 !important;
-}
-
-.habbi-goal-card-desc {
-  display: none !important;
-}
-
-/* Corpo Expansível (Ações) */
-.habbi-goal-tab-body,
-.habbi-goal-card-bottom {
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px solid #E8F5E1;
-}
-
-.device-screen.dark-theme .habbi-goal-tab-body,
-.device-screen.dark-theme .habbi-goal-card-bottom {
-  border-top-color: rgba(108, 203, 79, 0.18);
-}
-
-.habbi-goal-tab.is-expanded .habbi-goal-tab-body,
-.habbi-goal-evolution-card.is-expanded .habbi-goal-card-bottom,
-.habbi-goal-tab.is-expanded .habbi-goal-card-bottom {
-  display: flex !important;
-}
-
-.habbi-goal-tab-actions,
-.habbi-goal-card-actions {
+.habbi-daily-goal-actions {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
-.habbi-goal-pill-btn,
-.habbi-goal-act-btn {
-  width: auto;
-  flex: initial;
-  height: 26px;
-  min-height: 26px;
+.habbi-daily-goal-btn {
+  width: 100%;
+  height: 44px;
+  min-height: 44px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 11px;
-  cursor: pointer;
-  white-space: nowrap;
   box-shadow: none;
-  transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.15s ease;
 }
 
-.habbi-goal-pill-btn:active,
-.habbi-goal-act-btn:active {
-  transform: scale(0.96);
+.habbi-daily-goal-btn:active {
+  transform: scale(0.97);
 }
 
-.habbi-goal-pill-btn.btn-secondary,
-.habbi-goal-act-btn.btn-secondary {
-  background-color: #F8FAF5;
-  border: 1px solid #D5E7CD;
-  color: #1E6B20;
-}
-
-.habbi-goal-pill-btn.btn-secondary:hover,
-.habbi-goal-act-btn.btn-secondary:hover {
-  background-color: #EBF5E7;
-}
-
-.device-screen.dark-theme .habbi-goal-pill-btn.btn-secondary,
-.device-screen.dark-theme .habbi-goal-act-btn.btn-secondary {
-  background-color: #20281E !important;
-  border-color: #31422E !important;
-  color: #86EFAC !important;
-}
-
-.device-screen.dark-theme .habbi-goal-pill-btn.btn-secondary:hover,
-.device-screen.dark-theme .habbi-goal-act-btn.btn-secondary:hover {
-  background-color: #293527 !important;
-}
-
-.habbi-goal-pill-btn.btn-primary,
-.habbi-goal-act-btn.btn-primary {
+.habbi-daily-goal-btn.btn-primary {
   background-color: var(--primary, #6CCB4F);
   border: 1px solid var(--primary, #6CCB4F);
   color: #FFFFFF !important;
 }
 
-.habbi-goal-pill-btn.btn-primary:hover,
-.habbi-goal-act-btn.btn-primary:hover {
+.habbi-daily-goal-btn.btn-primary:hover {
   background-color: #5BB83F;
 }
 
-.habbi-goal-tab-later,
-.habbi-goal-later-link {
+.habbi-daily-goal-btn.btn-secondary {
+  background-color: var(--bg-color-alt, #F8FAF5);
+  border: 1px solid var(--border-color, #E5E7EB);
+  color: var(--text-primary);
+}
+
+.habbi-daily-goal-btn.btn-secondary:hover {
+  background-color: #EBF5E7;
+}
+
+.device-screen.dark-theme .habbi-daily-goal-btn.btn-secondary {
+  background-color: #26262D !important;
+  border-color: #383842 !important;
+  color: #F3F4F6 !important;
+}
+
+.device-screen.dark-theme .habbi-daily-goal-btn.btn-secondary:hover {
+  background-color: #32323A !important;
+}
+
+.habbi-daily-goal-later {
   background: transparent;
   border: none;
   color: var(--text-muted, #526071);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
-  padding: 4px 6px;
+  padding: 8px 4px 4px;
   cursor: pointer;
   text-decoration: underline;
-  text-underline-offset: 2.5px;
-  white-space: nowrap;
+  text-underline-offset: 3px;
   transition: color 0.15s ease;
   display: inline-block;
   line-height: 1;
 }
 
-.habbi-goal-tab-later:hover,
-.habbi-goal-later-link:hover {
+.habbi-daily-goal-later:hover {
   color: var(--text-primary);
 }
 
-.device-screen.dark-theme .habbi-goal-tab-later,
-.device-screen.dark-theme .habbi-goal-later-link {
+.device-screen.dark-theme .habbi-daily-goal-later {
   color: #9CA3AF !important;
 }
 
-.device-screen.dark-theme .habbi-goal-tab-later:hover,
-.device-screen.dark-theme .habbi-goal-later-link:hover {
+.device-screen.dark-theme .habbi-daily-goal-later:hover {
   color: #F3F4F6 !important;
 }
 
 @media (max-width: 340px) {
-  .habbi-goal-tab,
-  .habbi-goal-evolution-card {
-    margin: 3px 10px 5px;
-    padding: 3px 6px 3px 8px;
+  .habbi-daily-goal-modal-card {
+    padding: 18px 16px 16px;
+    max-width: 290px;
   }
-  .habbi-goal-tab-title,
-  .habbi-goal-card-title {
-    font-size: 10.5px;
+  .habbi-daily-goal-question {
+    font-size: 15px;
+    margin-bottom: 16px;
   }
-  .habbi-goal-pill-btn,
-  .habbi-goal-act-btn {
-    height: 24px;
-    min-height: 24px;
-    font-size: 10px;
-    padding: 0 8px;
-  }
-  .habbi-goal-tab-later,
-  .habbi-goal-later-link {
-    font-size: 10px;
-    padding: 2px 4px;
-  }
-  .habbi-suggested-stepper {
-    gap: 10px;
+  .habbi-daily-goal-btn {
+    height: 42px;
+    min-height: 42px;
+    font-size: 13px;
   }
 }
 

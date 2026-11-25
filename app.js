@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
       metaHabitualUnit: 'cigarros por dia',
 
       // Evolução de Meta Diária (Home)
-      goalPromptTitle: 'Meta de hoje',
+      goalPromptTitle: 'Sua meta de hoje',
       goalPromptQuestion: 'Continuar com {0} ou tentar {1}?',
       goalPromptMetYesterday: 'Ontem você mandou bem!',
       goalPromptOverYesterday: 'Ontem foi um dia desafiador, e tudo bem!',
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goalPromptKeepBtn: 'Manter {0}',
       goalPromptReduceBtn: 'Tentar {0}',
       goalPromptZeroKeepBtn: 'Continuar sem fumar',
-      goalPromptLaterBtn: 'Depois',
+      goalPromptLaterBtn: 'Decidir depois',
       goalToastKept: 'Meta mantida em {0} cigarros hoje.',
       goalToastReduced: 'Nova meta definida: {0} cigarros hoje! Um passo de cada vez.',
       goalToastZero: 'Excelente! Meta de 0 cigarros mantida para hoje.',
@@ -824,7 +824,7 @@ document.addEventListener('DOMContentLoaded', () => {
       metaHabitualUnit: 'cigarettes per day',
 
       // Daily Goal Evolution (Home)
-      goalPromptTitle: "Today's goal",
+      goalPromptTitle: "Your today's goal",
       goalPromptQuestion: 'Keep {0} or try {1}?',
       goalPromptMetYesterday: 'You did great yesterday!',
       goalPromptOverYesterday: 'Yesterday was challenging, and that\'s okay!',
@@ -835,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goalPromptKeepBtn: 'Keep {0}',
       goalPromptReduceBtn: 'Try {0}',
       goalPromptZeroKeepBtn: 'Keep smoke-free',
-      goalPromptLaterBtn: 'Later',
+      goalPromptLaterBtn: 'Decide later',
       goalToastKept: 'Goal maintained at {0} cigarettes today.',
       goalToastReduced: 'New goal set: {0} cigarettes today! One step at a time.',
       goalToastZero: 'Great! 0 cigarettes goal maintained for today.',
@@ -1380,7 +1380,7 @@ document.addEventListener('DOMContentLoaded', () => {
       metaHabitualUnit: 'cigarrillos por día',
 
       // Evolución de Meta Diaria (Home)
-      goalPromptTitle: 'Meta de hoy',
+      goalPromptTitle: 'Tu meta de hoy',
       goalPromptQuestion: '¿Continuar con {0} o intentar {1}?',
       goalPromptMetYesterday: '¡Ayer lo hiciste genial!',
       goalPromptOverYesterday: '¡Ayer fue un día desafiante, y no pasa nada!',
@@ -1391,7 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goalPromptKeepBtn: 'Mantener {0}',
       goalPromptReduceBtn: 'Intentar {0}',
       goalPromptZeroKeepBtn: 'Continuar sin fumar',
-      goalPromptLaterBtn: 'Después',
+      goalPromptLaterBtn: 'Decidir después',
       goalToastKept: 'Meta mantenida en {0} cigarrillos hoy.',
       goalToastReduced: '¡Nueva meta definida: {0} cigarrillos hoy! Paso a paso.',
       goalToastZero: '¡Excelente! Meta de 0 cigarrillos mantenida para hoy.',
@@ -6495,31 +6495,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <span id="home-meta-registered">0</span><small> / <span id="home-meta-cigs">11</span> <span id="home-today-word">hoje</span></small>
           </div>
           <div class="wl-home-sub-stat">
-            <strong id="home-display-days">0</strong> <span id="home-display-days-label">dias sem fumar</span> \u2022 <span id="home-meta-pct">0%</span> <span id="home-meta-of-today-label">da meta de hoje</span>
+            <strong id="home-display-days">0</strong> <span id="home-display-days-label">dias sem fumar</span>
+            <span id="home-meta-pct" style="display:none;">0%</span>
+            <span id="home-meta-of-today-label" style="display:none;">da meta de hoje</span>
           </div>
           <button type="button" class="wl-home-nosmoke-badge" id="home-nosmoke-badge" onclick="handleHomeNoSmokeToday()" style="display:none;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"></polyline></svg>
             <span id="home-nosmoke-badge-text">N\u00e3o fumei hoje</span>
           </button>
           <div class="wl-home-overmeta-banner" id="home-overmeta-banner" style="display:none;" role="status"></div>
-        </div>
-
-        <!-- Aba Discreta de Ajuste Diário de Meta (recolhida por padrão, expande ao toque) -->
-        <div class="habbi-goal-tab habbi-goal-evolution-card" id="habbi-goal-evolution-card" style="display:none;" role="region" aria-label="Meta de hoje">
-          <div class="habbi-goal-tab-summary" id="habbi-goal-tab-toggle" onclick="toggleDailyGoalTab(event)" role="button" tabindex="0" aria-expanded="false" aria-controls="habbi-goal-tab-body" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDailyGoalTab(event);}">
-            <span class="habbi-goal-tab-badge habbi-goal-card-badge" id="habbi-goal-badge-txt">Meta de hoje</span>
-            <span class="habbi-goal-tab-title habbi-goal-card-title" id="habbi-goal-card-title">Continuar com 11 ou tentar 10?</span>
-            <span class="habbi-goal-tab-chevron" aria-hidden="true">\u25be</span>
-            <button type="button" class="habbi-goal-tab-close habbi-goal-card-close" id="btn-goal-close" onclick="event.stopPropagation(); handleDailyGoalDecision('later')" aria-label="Fechar" title="Depois">\u2715</button>
-          </div>
-          <p class="habbi-goal-card-desc" id="habbi-goal-card-desc" style="display:none;"></p>
-          <div class="habbi-goal-tab-body" id="habbi-goal-tab-body">
-            <div class="habbi-goal-tab-actions habbi-goal-card-actions" id="habbi-goal-card-actions">
-              <button type="button" class="btn btn-secondary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">Manter 11</button>
-              <button type="button" class="btn btn-primary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">Tentar 10</button>
-            </div>
-            <button type="button" class="habbi-goal-tab-later habbi-goal-later-link" id="btn-goal-later" onclick="handleDailyGoalDecision('later')">Depois</button>
-          </div>
         </div>
 
         <div class="wl-cig-demo-stage wl-home-cig-stage" id="home-cig-stage">
@@ -11253,12 +11237,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // -------------------------------------------------------------
-  // LÓGICA DE EVOLUÇÃO GRADUAL DE METAS (DIÁRIA, LEVE E SEM COBRANÇA)
+  // LÓGICA DE DECISÃO DIÁRIA DE META (MODAL AUTOMÁTICO NO 1º ACESSO DO DIA)
   // -------------------------------------------------------------
   function shouldShowDailyGoalPrompt() {
+    if (typeof currentScreen !== 'undefined' && currentScreen !== 10) return false;
     if (!userState.onboardingCompleted) return false;
-    // Não exibe o card se o tutorial interativo estiver ativo ou ainda não concluído pelo usuário
+    if (!userState.hasConfiguredFirstGoal && !userState.habitualCigsCustomized) return false;
     if (window.habbiTutorialActive || !userState.tutorialCompleted) return false;
+    if (window.habbiSupabaseSyncing) return false;
+
     const todayKey = getDateKey(new Date());
     if (userState.lastGoalPromptDateKey && userState.lastGoalPromptDateKey >= todayKey) {
       return false;
@@ -11266,68 +11253,32 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  function toggleDailyGoalTab(e) {
-    if (e && e.target && e.target.closest('#btn-goal-close')) return;
-    const tab = document.getElementById('habbi-goal-evolution-card');
-    if (!tab) return;
-    const isExp = tab.classList.toggle('is-expanded');
-    const toggleBtn = document.getElementById('habbi-goal-tab-toggle');
-    if (toggleBtn) {
-      toggleBtn.setAttribute('aria-expanded', isExp ? 'true' : 'false');
-    }
-  }
-
   function renderDailyGoalPrompt() {
-    const card = document.getElementById('habbi-goal-evolution-card');
-    if (!card) return;
+    const modal = document.getElementById('habbi-daily-goal-modal') || document.getElementById('habbi-goal-evolution-card');
+    if (!modal) return;
 
     if (!shouldShowDailyGoalPrompt()) {
-      card.style.display = 'none';
+      modal.style.display = 'none';
+      if (typeof closeAccessibleDialog === 'function') closeAccessibleDialog(modal);
       return;
     }
-
-    card.classList.remove('is-expanded');
-    const toggleBtn = document.getElementById('habbi-goal-tab-toggle');
-    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
-
-    const todayKey = getDateKey(new Date());
-    const yesterdayDate = new Date();
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-    const yesterdayKey = getDateKey(yesterdayDate);
-
-    const yesterdayRec = userState.dailyRecords[yesterdayKey];
-    const yesterdayCigs = yesterdayRec ? Math.max(0, parseInt(yesterdayRec.cigs, 10) || 0) : null;
-    const yesterdayMeta = (yesterdayRec && typeof yesterdayRec.meta === 'number' && yesterdayRec.meta >= 0)
-      ? yesterdayRec.meta
-      : ((typeof userState.todayMeta === 'number' && userState.todayMeta >= 0) ? userState.todayMeta : 11);
 
     const currentMeta = (typeof userState.todayMeta === 'number' && userState.todayMeta >= 0)
       ? userState.todayMeta
       : 11;
 
-    const hadYesterdayRecord = Boolean(yesterdayRec && (
-      (Array.isArray(yesterdayRec.events) && yesterdayRec.events.length > 0) ||
-      yesterdayRec.smokeFree ||
-      yesterdayRec.dayCompleted ||
-      (typeof yesterdayRec.cigs === 'number' && yesterdayRec.cigs > 0)
-    ));
-    const exceededYesterday = Boolean(hadYesterdayRecord && yesterdayCigs !== null && yesterdayCigs > yesterdayMeta);
-
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
-    const badgeEl = document.getElementById('habbi-goal-badge-txt');
-    const titleEl = document.getElementById('habbi-goal-card-title');
-    const descEl = document.getElementById('habbi-goal-card-desc');
-    const actionsEl = document.getElementById('habbi-goal-card-actions');
-    const laterLink = document.getElementById('btn-goal-later');
+    const badgeEl = document.getElementById('habbi-daily-goal-badge') || document.getElementById('habbi-goal-badge-txt');
+    const titleEl = document.getElementById('habbi-daily-goal-title') || document.getElementById('habbi-goal-card-title');
+    const actionsEl = document.getElementById('habbi-daily-goal-actions') || document.getElementById('habbi-goal-card-actions');
 
     if (badgeEl) {
-      badgeEl.innerText = t.goalPromptTitle || 'Meta de hoje';
-      badgeEl.classList.toggle('is-challenge', exceededYesterday);
-    }
-    if (laterLink) {
-      laterLink.innerText = t.goalPromptLaterBtn || 'Depois';
+      badgeEl.innerText = t.goalPromptTitle || (
+        activeLang === 'EN' ? "Today's goal" :
+        (activeLang === 'ES' ? 'Tu meta de hoy' : 'Sua meta de hoje')
+      );
     }
 
     if (currentMeta === 0) {
@@ -11337,10 +11288,10 @@ document.addEventListener('DOMContentLoaded', () => {
           (activeLang === 'ES' ? '¿Continuar sin fumar hoy?' : 'Continuar sem fumar hoje?')
         );
       }
-      if (descEl) descEl.innerText = '';
       if (actionsEl) {
         actionsEl.innerHTML = `
-          <button type="button" class="btn btn-primary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
+          <button type="button" class="btn btn-primary habbi-daily-goal-btn" id="btn-daily-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
+          <button type="button" class="habbi-daily-goal-later" id="btn-daily-goal-later" onclick="handleDailyGoalDecision('later')">${escapeHtml(t.goalPromptLaterBtn || 'Decidir depois')}</button>
         `;
       }
     } else {
@@ -11351,7 +11302,6 @@ document.addEventListener('DOMContentLoaded', () => {
       )).replace('{0}', String(currentMeta)).replace('{1}', String(suggestedTarget));
 
       if (titleEl) titleEl.innerText = questionText;
-      if (descEl) descEl.innerText = '';
 
       const keepBtnLabel = (t.goalPromptKeepBtn || (
         activeLang === 'EN' ? 'Keep {0}' :
@@ -11363,15 +11313,24 @@ document.addEventListener('DOMContentLoaded', () => {
         (activeLang === 'ES' ? 'Intentar {0}' : 'Tentar {0}')
       )).replace('{0}', String(suggestedTarget));
 
+      const laterBtnLabel = t.goalPromptLaterBtn || (
+        activeLang === 'EN' ? 'Decide later' :
+        (activeLang === 'ES' ? 'Decidir después' : 'Decidir depois')
+      );
+
       if (actionsEl) {
         actionsEl.innerHTML = `
-          <button type="button" class="btn btn-secondary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
-          <button type="button" class="btn btn-primary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
+          <button type="button" class="btn btn-secondary habbi-daily-goal-btn" id="btn-daily-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
+          <button type="button" class="btn btn-primary habbi-daily-goal-btn" id="btn-daily-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
+          <button type="button" class="habbi-daily-goal-later" id="btn-daily-goal-later" onclick="handleDailyGoalDecision('later')">${escapeHtml(laterBtnLabel)}</button>
         `;
       }
     }
 
-    card.style.display = 'block';
+    modal.style.display = 'flex';
+    if (typeof openAccessibleDialog === 'function') {
+      openAccessibleDialog(modal, () => handleDailyGoalDecision('later'), 'habbi-daily-goal-title');
+    }
   }
 
   function handleDailyGoalDecision(decision) {
@@ -11380,8 +11339,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
-    const card = document.getElementById('habbi-goal-evolution-card');
-    if (card) card.style.display = 'none';
+    const modal = document.getElementById('habbi-daily-goal-modal') || document.getElementById('habbi-goal-evolution-card');
+    if (modal) {
+      modal.style.display = 'none';
+      if (typeof closeAccessibleDialog === 'function') closeAccessibleDialog(modal);
+    }
 
     if (decision === 'keep') {
       const todayRec = getOrCreateDayRecord(todayKey);
@@ -11413,7 +11375,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.shouldShowDailyGoalPrompt = shouldShowDailyGoalPrompt;
   window.renderDailyGoalPrompt = renderDailyGoalPrompt;
   window.checkDailyGoalPrompt = renderDailyGoalPrompt;
-  window.toggleDailyGoalTab = toggleDailyGoalTab;
+  window.openDailyGoalModal = renderDailyGoalPrompt;
+  window.closeDailyGoalModal = () => handleDailyGoalDecision('later');
   window.handleDailyGoalDecision = handleDailyGoalDecision;
   window.getDateKey = getDateKey;
   window.getSafeTodayMeta = getSafeTodayMeta;
@@ -12520,7 +12483,15 @@ document.addEventListener('DOMContentLoaded', () => {
               const uEmail = session.user.email || '';
               const uName = session.user.user_metadata?.full_name || '';
               switchToAccountProfile({ email: uEmail, name: uName, supabaseUserId: session.user.id });
-              const cloudData = await window.HabbiSupabaseAuthSync.pullCloudDataToLocal(session.user.id);
+              window.habbiSupabaseSyncing = true;
+              let cloudData = null;
+              try {
+                cloudData = await window.HabbiSupabaseAuthSync.pullCloudDataToLocal(session.user.id);
+              } catch (pullErr) {
+                console.warn('[Habbi Supabase] Erro ao carregar dados do usuário:', pullErr);
+              } finally {
+                window.habbiSupabaseSyncing = false;
+              }
               if (cloudData) {
                 if (cloudData.profile && cloudData.profile.display_name) userState.name = cloudData.profile.display_name;
                 if (cloudData.prefs) {
