@@ -11804,14 +11804,21 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.simulateSocialLogin = function(provider) {
-    const email = provider === 'Apple' ? 'usuario@icloud.com' : 'usuario@gmail.com';
-    const name = provider === 'Apple' ? 'Usuário Apple' : 'Usuário Google';
-    switchToAccountProfile({ email, name });
-    showToast(`Conectado com ${provider}!`);
-    const target = userState.authReturnScreen || 10;
-    userState.authReturnScreen = 10;
-    showScreen(target);
+    // DESATIVADO TEMPORARIAMENTE: Não simula login, não cria sessão, não cadastra e não navega para a Home
+    console.warn(`[Habbi Auth] Autenticação com ${provider} desativada temporariamente aguardando integração oficial.`);
+    return false;
   };
+
+  // Desativar completamente cliques e interações nos botões sociais temporariamente desativados
+  document.querySelectorAll('.btn-social-auth').forEach(btn => {
+    btn.disabled = true;
+    btn.setAttribute('aria-disabled', 'true');
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return false;
+    }, true);
+  });
 
   const logoutBtn = document.getElementById('settings-logout');
   if (logoutBtn) {

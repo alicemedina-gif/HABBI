@@ -11907,5 +11907,37 @@ button.wl-conquista-bag-stage {
   }
 }
 
+/* ============================================================================
+   3. BOTÕES SOCIAIS (GOOGLE / APPLE) TEMPORARIAMENTE DESATIVADOS
+   Preservam 100% da aparência visual oficial (cores, ícones, dimensões, bordas)
+   sem aplicar opacidade reduzida, filtro cinza ou alteração visual de disabled.
+   Cliques e toques completamente desativados sem simulação de login.
+   ============================================================================ */
+.btn-social-auth,
+button.btn-social-auth,
+.btn-social-auth:disabled,
+button.btn-social-auth:disabled {
+  opacity: 1 !important;
+  filter: none !important;
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
+  cursor: default;
+  pointer-events: none;
+}
+
+.device-screen.dark-theme .btn-social-auth,
+.device-screen.dark-theme button.btn-social-auth,
+.device-screen.dark-theme .btn-social-auth:disabled,
+.device-screen.dark-theme button.btn-social-auth:disabled {
+  opacity: 1 !important;
+  filter: none !important;
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+
 
 
