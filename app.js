@@ -11270,20 +11270,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeLang = (userState.currentLang || 'PT').toUpperCase();
     const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
 
-    const badgeEl = document.getElementById('habbi-daily-goal-badge') || document.getElementById('habbi-goal-badge-txt');
     const titleEl = document.getElementById('habbi-daily-goal-title') || document.getElementById('habbi-goal-card-title');
+    const questionEl = document.getElementById('habbi-daily-goal-question');
     const actionsEl = document.getElementById('habbi-daily-goal-actions') || document.getElementById('habbi-goal-card-actions');
 
-    if (badgeEl) {
-      badgeEl.innerText = t.goalPromptTitle || (
+    if (titleEl) {
+      titleEl.innerText = t.goalPromptTitle || (
         activeLang === 'EN' ? "Today's goal" :
         (activeLang === 'ES' ? 'Tu meta de hoy' : 'Sua meta de hoje')
       );
     }
 
     if (currentMeta === 0) {
-      if (titleEl) {
-        titleEl.innerText = t.goalPromptZeroShort || (
+      if (questionEl) {
+        questionEl.innerText = t.goalPromptZeroShort || (
           activeLang === 'EN' ? 'Stay smoke-free today?' :
           (activeLang === 'ES' ? '¿Continuar sin fumar hoy?' : 'Continuar sem fumar hoje?')
         );
@@ -11291,7 +11291,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (actionsEl) {
         actionsEl.innerHTML = `
           <button type="button" class="btn btn-primary habbi-daily-goal-btn" id="btn-daily-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
-          <button type="button" class="habbi-daily-goal-later" id="btn-daily-goal-later" onclick="handleDailyGoalDecision('later')">${escapeHtml(t.goalPromptLaterBtn || 'Decidir depois')}</button>
         `;
       }
     } else {
@@ -11301,7 +11300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         (activeLang === 'ES' ? '¿Continuar con {0} o intentar {1}?' : 'Continuar com {0} ou tentar {1}?')
       )).replace('{0}', String(currentMeta)).replace('{1}', String(suggestedTarget));
 
-      if (titleEl) titleEl.innerText = questionText;
+      if (questionEl) questionEl.innerText = questionText;
 
       const keepBtnLabel = (t.goalPromptKeepBtn || (
         activeLang === 'EN' ? 'Keep {0}' :
@@ -11313,23 +11312,17 @@ document.addEventListener('DOMContentLoaded', () => {
         (activeLang === 'ES' ? 'Intentar {0}' : 'Tentar {0}')
       )).replace('{0}', String(suggestedTarget));
 
-      const laterBtnLabel = t.goalPromptLaterBtn || (
-        activeLang === 'EN' ? 'Decide later' :
-        (activeLang === 'ES' ? 'Decidir después' : 'Decidir depois')
-      );
-
       if (actionsEl) {
         actionsEl.innerHTML = `
           <button type="button" class="btn btn-secondary habbi-daily-goal-btn" id="btn-daily-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
           <button type="button" class="btn btn-primary habbi-daily-goal-btn" id="btn-daily-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
-          <button type="button" class="habbi-daily-goal-later" id="btn-daily-goal-later" onclick="handleDailyGoalDecision('later')">${escapeHtml(laterBtnLabel)}</button>
         `;
       }
     }
 
     modal.style.display = 'flex';
     if (typeof openAccessibleDialog === 'function') {
-      openAccessibleDialog(modal, () => handleDailyGoalDecision('later'), 'habbi-daily-goal-title');
+      openAccessibleDialog(modal, () => handleDailyGoalDecision('keep'), 'habbi-daily-goal-title');
     }
   }
 
@@ -11376,7 +11369,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.renderDailyGoalPrompt = renderDailyGoalPrompt;
   window.checkDailyGoalPrompt = renderDailyGoalPrompt;
   window.openDailyGoalModal = renderDailyGoalPrompt;
-  window.closeDailyGoalModal = () => handleDailyGoalDecision('later');
+  window.closeDailyGoalModal = () => handleDailyGoalDecision('keep');
   window.handleDailyGoalDecision = handleDailyGoalDecision;
   window.getDateKey = getDateKey;
   window.getSafeTodayMeta = getSafeTodayMeta;

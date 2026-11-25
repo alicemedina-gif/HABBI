@@ -11761,69 +11761,62 @@ button.wl-conquista-bag-stage {
    2. MODAL DE DECISÃO DE META DIÁRIA (1º ACESSO DO DIA - SOBRE A HOME)
    Overlay centralizado sobre a Home, sem deslocar nenhum elemento da tela.
    Zero gradientes, zero blur, cores sólidas via tokens CSS, 100% acessível (WCAG 2.2 AA).
+   Coerência absoluta com o Design System oficial do Habbi.
    ============================================================================ */
 .habbi-daily-goal-modal-card {
-  max-width: 320px;
+  max-width: 300px;
   width: 100%;
   background-color: var(--card-bg, #FFFFFF);
   border: 1px solid var(--border-color, #E5E7EB);
   border-radius: var(--border-radius-lg, 20px);
-  padding: 24px 20px 20px;
+  padding: 22px 20px 20px;
   box-sizing: border-box;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
 .device-screen.dark-theme .habbi-daily-goal-modal-card {
   background-color: #1E1E24 !important;
   border-color: #2D2D36 !important;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
 }
 
-.habbi-daily-goal-badge {
-  font-size: 11px;
+.habbi-daily-goal-title {
+  font-size: 18px;
   font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #1E6B20;
-  background-color: #E3F7D8;
-  border: 1px solid #BCE5A6;
-  padding: 4px 14px;
-  border-radius: 999px;
-  display: inline-block;
-  margin-bottom: 12px;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin: 0 0 6px;
 }
 
-.device-screen.dark-theme .habbi-daily-goal-badge {
-  background-color: rgba(108, 203, 79, 0.18) !important;
-  border-color: rgba(108, 203, 79, 0.45) !important;
-  color: #86EFAC !important;
+.device-screen.dark-theme .habbi-daily-goal-title {
+  color: #F3F4F6 !important;
 }
 
 .habbi-daily-goal-question {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1.35;
-  margin: 0 0 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 18px;
 }
 
 .device-screen.dark-theme .habbi-daily-goal-question {
-  color: #F3F4F6 !important;
+  color: #9CA3AF !important;
 }
 
 .habbi-daily-goal-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 9px;
   width: 100%;
 }
 
 .habbi-daily-goal-btn {
   width: 100%;
-  height: 44px;
-  min-height: 44px;
-  border-radius: 999px;
+  height: 42px;
+  min-height: 42px;
+  border-radius: var(--border-radius-md, 14px);
   font-size: 14px;
   font-weight: 700;
   display: inline-flex;
@@ -11831,31 +11824,23 @@ button.wl-conquista-bag-stage {
   justify-content: center;
   box-shadow: none;
   cursor: pointer;
-  transition: transform 0.1s ease, background-color 0.15s ease;
+  box-sizing: border-box;
+  transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .habbi-daily-goal-btn:active {
   transform: scale(0.97);
 }
 
-.habbi-daily-goal-btn.btn-primary {
-  background-color: var(--primary, #6CCB4F);
-  border: 1px solid var(--primary, #6CCB4F);
-  color: #FFFFFF !important;
-}
-
-.habbi-daily-goal-btn.btn-primary:hover {
-  background-color: #5BB83F;
-}
-
+/* Botão Manter: Neutro */
 .habbi-daily-goal-btn.btn-secondary {
-  background-color: var(--bg-color-alt, #F8FAF5);
-  border: 1px solid var(--border-color, #E5E7EB);
-  color: var(--text-primary);
+  background-color: var(--card-bg, #FFFFFF);
+  border: 1.5px solid var(--border-color, #E5E7EB);
+  color: var(--text-primary, #1F2937);
 }
 
 .habbi-daily-goal-btn.btn-secondary:hover {
-  background-color: #EBF5E7;
+  background-color: var(--bg-color-alt, #F8FAF5);
 }
 
 .device-screen.dark-theme .habbi-daily-goal-btn.btn-secondary {
@@ -11868,46 +11853,38 @@ button.wl-conquista-bag-stage {
   background-color: #32323A !important;
 }
 
-.habbi-daily-goal-later {
-  background: transparent;
-  border: none;
-  color: var(--text-muted, #526071);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 4px 4px;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  transition: color 0.15s ease;
-  display: inline-block;
-  line-height: 1;
+/* Botão Tentar: Verde oficial Habbi */
+.habbi-daily-goal-btn.btn-primary {
+  background-color: var(--primary, #6CCB4F) !important;
+  border: 1px solid var(--primary, #6CCB4F) !important;
+  color: #FFFFFF !important;
 }
 
-.habbi-daily-goal-later:hover {
-  color: var(--text-primary);
-}
-
-.device-screen.dark-theme .habbi-daily-goal-later {
-  color: #9CA3AF !important;
-}
-
-.device-screen.dark-theme .habbi-daily-goal-later:hover {
-  color: #F3F4F6 !important;
+.habbi-daily-goal-btn.btn-primary:hover {
+  background-color: #5BB83F !important;
 }
 
 @media (max-width: 340px) {
   .habbi-daily-goal-modal-card {
     padding: 18px 16px 16px;
-    max-width: 290px;
+    max-width: 280px;
+  }
+  .habbi-daily-goal-title {
+    font-size: 16.5px;
+    margin-bottom: 4px;
   }
   .habbi-daily-goal-question {
-    font-size: 15px;
-    margin-bottom: 16px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .habbi-daily-goal-actions {
+    gap: 8px;
   }
   .habbi-daily-goal-btn {
-    height: 42px;
-    min-height: 42px;
+    height: 38px;
+    min-height: 38px;
     font-size: 13px;
+    border-radius: var(--border-radius-md, 14px);
   }
 }
 
