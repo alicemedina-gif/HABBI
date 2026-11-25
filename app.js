@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Navigation State
   let currentScreen = 1;
+  window.currentScreen = 1;
+  window.getCurrentScreen = function() { return currentScreen; };
   const totalScreens = 29;
 
   // Data e fuso horário locais do dispositivo
@@ -4519,8 +4521,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (screenNum === 16 && (currentScreen === 10 || currentScreen === 15 || currentScreen === 29)) {
       userState.calendarReturnScreen = currentScreen;
     }
-    if ((screenNum === 23 || screenNum === 24) && currentScreen === 21) {
-      userState.authReturnScreen = 21;
+    if (screenNum === 23 || screenNum === 24) {
+      if (currentScreen === 1) {
+        userState.authReturnScreen = 1;
+      } else if (currentScreen === 21) {
+        userState.authReturnScreen = 21;
+      } else if (currentScreen === 7) {
+        userState.authReturnScreen = 7;
+      }
     }
 
     // Limpeza de timers específicos ao sair de exercícios respiratórios e minijogos
@@ -4548,6 +4556,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const prevScreenNum = currentScreen;
     currentScreen = screenNum;
+    window.currentScreen = screenNum;
     localStorage.setItem('habbi-current-screen', screenNum);
 
     // Cancelar timers de roleta da splash caso esteja saindo da Tela 1
@@ -4577,6 +4586,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (onbSlider) {
         onbSlider.classList.remove('active');
       }
+      screenElements.forEach(s => {
+        if (s.classList.contains('onb-slide')) {
+          s.classList.remove('active');
+        }
+      });
     }
 
     // Suporte ao Carrossel Principal (Telas 29 ↔ 10 ↔ 15) como Janela Contínua
@@ -4617,7 +4631,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       screenElements.forEach(s => {
-        if (!s.classList.contains('carousel-slide') && !s.classList.contains('onb-slide')) {
+        if (!s.classList.contains('carousel-slide')) {
           s.classList.remove('active');
         }
       });
@@ -4631,7 +4645,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (parseInt(screen.dataset.screen) === screenNum) {
             screen.classList.add('active');
             screen.scrollTop = 0;
-          } else if (!screen.classList.contains('onb-slide') && !screen.classList.contains('carousel-slide')) {
+          } else if (!screen.classList.contains('carousel-slide')) {
             screen.classList.remove('active');
           }
         });
@@ -10043,9 +10057,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // 3. Telas de Login e Cadastro voltam para a tela de origem (Home por padrão, ou Calendário/Perfil)
+    // 3. Telas de Login e Cadastro voltam para a tela de origem (Splash/Onboarding/Perfil)
     if (fromScreenNum === 23 || fromScreenNum === 24) {
-      const returnScreen = userState.authReturnScreen || 10;
+      const defaultReturn = (fromScreenNum === 24) ? 7 : (userState.isAuthenticated ? 10 : 1);
+      const returnScreen = userState.authReturnScreen || defaultReturn;
       userState.authReturnScreen = 10;
       showScreen(returnScreen);
       return;
@@ -10385,10 +10400,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cloudData.profile && cloudData.profile.display_name) {
               userState.name = cloudData.profile.display_name;
             }
+            if (cloudData.prefs) {
+              if (typeof cloudData.prefs.has_configured_first_goal === 'boolean') userState.hasConfiguredFirstGoal = cloudData.prefs.has_configured_first_goal;
+              if (typeof cloudData.prefs.onboarding_completed === 'boolean') userState.onboardingCompleted = cloudData.prefs.onboarding_completed;
+              if (typeof cloudData.prefs.tutorial_completed === 'boolean') userState.tutorialCompleted = cloudData.prefs.tutorial_completed;
+            }
             if (cloudData.goals) {
               if (typeof cloudData.goals.today_meta === 'number') userState.todayMeta = cloudData.goals.today_meta;
               if (typeof cloudData.goals.habitual_cigs === 'number') userState.habitualCigs = cloudData.goals.habitual_cigs;
+              if (typeof cloudData.goals.habitual_cigs_customized === 'boolean') userState.habitualCigsCustomized = cloudData.goals.habitual_cigs_customized;
               if (typeof cloudData.goals.pack_price === 'number') userState.packPrice = cloudData.goals.pack_price;
+            } else if (!cloudData.prefs || !cloudData.prefs.has_configured_first_goal) {
+              userState.hasConfiguredFirstGoal = false;
+              userState.habitualCigsCustomized = false;
             }
             if (cloudData.dailyRecords && Object.keys(cloudData.dailyRecords).length > 0) {
               userState.dailyRecords = Object.assign({}, userState.dailyRecords, cloudData.dailyRecords);
@@ -10403,9 +10427,23 @@ document.addEventListener('DOMContentLoaded', () => {
           loginSubmit.disabled = false;
           loginSubmit.innerText = originalText;
           showToast('Sessão iniciada com sucesso!');
-          const targetScr = userState.authReturnScreen || 10;
-          userState.authReturnScreen = 10;
-          showScreen(targetScr);
+
+          // Verifica se a conta já possui consumo habitual e meta configurados
+          const hasGoalsConfigured = Boolean(
+            (cloudData && cloudData.goals && cloudData.goals.habitual_cigs_customized) ||
+            (cloudData && cloudData.prefs && (cloudData.prefs.has_configured_first_goal || cloudData.prefs.onboarding_completed)) ||
+            (cloudData && cloudData.dailyRecords && Object.keys(cloudData.dailyRecords).length > 0) ||
+            (!cloudData && (userState.hasConfiguredFirstGoal || userState.habitualCigsCustomized || userState.onboardingCompleted))
+          );
+
+          if (hasGoalsConfigured) {
+            userState.authReturnScreen = 10;
+            showScreen(10);
+          } else {
+            // Conta autenticada sem consumo habitual e meta configurados: encaminhar para a configuração pendente
+            userState.authReturnScreen = 10;
+            showScreen(7);
+          }
           return;
         } catch (err) {
           loginSubmit.disabled = false;
@@ -10417,9 +10455,18 @@ document.addEventListener('DOMContentLoaded', () => {
       // Fallback gracioso offline / local se o backend não estiver ativo
       switchToAccountProfile({ email: emailVal, name: '' });
       showToast('Sessão iniciada com sucesso!');
-      const targetScr = userState.authReturnScreen || 10;
-      userState.authReturnScreen = 10;
-      showScreen(targetScr);
+      const hasGoalsConfiguredOffline = Boolean(
+        userState.hasConfiguredFirstGoal ||
+        userState.habitualCigsCustomized ||
+        (userState.dailyRecords && Object.keys(userState.dailyRecords).length > 0)
+      );
+      if (hasGoalsConfiguredOffline) {
+        userState.authReturnScreen = 10;
+        showScreen(10);
+      } else {
+        userState.authReturnScreen = 10;
+        showScreen(7);
+      }
     });
   }
 
@@ -10475,6 +10522,16 @@ document.addEventListener('DOMContentLoaded', () => {
         errEl.style.display = 'none';
       }
 
+      // Salva snapshot da configuração de consumo habitual e meta realizada no onboarding (Tela 7)
+      const preSignupConfig = {
+        todayMeta: userState.todayMeta,
+        habitualCigs: userState.habitualCigs,
+        packPrice: userState.packPrice,
+        hasConfiguredFirstGoal: Boolean(userState.hasConfiguredFirstGoal),
+        habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
+        dailyRecords: Object.assign({}, userState.dailyRecords)
+      };
+
       if (window.HabbiSupabaseAuthSync && window.HabbiSupabaseAuthSync.isAvailable()) {
         const originalText = registerSubmit.innerText;
         registerSubmit.disabled = true;
@@ -10520,6 +10577,21 @@ document.addEventListener('DOMContentLoaded', () => {
           const userId = res.user ? res.user.id : null;
           switchToAccountProfile({ email: emailVal, name: nameVal, supabaseUserId: userId });
 
+          // Restaura a configuração de consumo e meta recém-definida na Tela 7
+          if (preSignupConfig.habitualCigsCustomized || preSignupConfig.hasConfiguredFirstGoal) {
+            userState.todayMeta = preSignupConfig.todayMeta;
+            userState.habitualCigs = preSignupConfig.habitualCigs;
+            userState.packPrice = preSignupConfig.packPrice;
+            userState.hasConfiguredFirstGoal = preSignupConfig.hasConfiguredFirstGoal;
+            userState.habitualCigsCustomized = preSignupConfig.habitualCigsCustomized;
+            if (preSignupConfig.dailyRecords && Object.keys(preSignupConfig.dailyRecords).length > 0) {
+              userState.dailyRecords = Object.assign({}, userState.dailyRecords, preSignupConfig.dailyRecords);
+            }
+          }
+          userState.onboardingCompleted = true;
+          savePersistedState();
+          refreshAllViews();
+
           if (visitorSnapshot && userId) {
             await window.HabbiSupabaseAuthSync.migrateLocalVisitorData(userId, visitorSnapshot);
           }
@@ -10527,9 +10599,8 @@ document.addEventListener('DOMContentLoaded', () => {
           registerSubmit.disabled = false;
           registerSubmit.innerText = originalText;
           showToast('Conta criada com sucesso!');
-          const targetScr = userState.authReturnScreen || 10;
           userState.authReturnScreen = 10;
-          showScreen(targetScr);
+          showScreen(10);
           return;
         } catch (err) {
           registerSubmit.disabled = false;
@@ -10540,10 +10611,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Fallback gracioso offline / local
       switchToAccountProfile({ email: emailVal, name: nameVal });
+      if (preSignupConfig.habitualCigsCustomized || preSignupConfig.hasConfiguredFirstGoal) {
+        userState.todayMeta = preSignupConfig.todayMeta;
+        userState.habitualCigs = preSignupConfig.habitualCigs;
+        userState.packPrice = preSignupConfig.packPrice;
+        userState.hasConfiguredFirstGoal = preSignupConfig.hasConfiguredFirstGoal;
+        userState.habitualCigsCustomized = preSignupConfig.habitualCigsCustomized;
+        if (preSignupConfig.dailyRecords && Object.keys(preSignupConfig.dailyRecords).length > 0) {
+          userState.dailyRecords = Object.assign({}, userState.dailyRecords, preSignupConfig.dailyRecords);
+        }
+      }
+      userState.onboardingCompleted = true;
+      savePersistedState();
+      refreshAllViews();
       showToast('Conta criada com sucesso!');
-      const targetScr = userState.authReturnScreen || 10;
       userState.authReturnScreen = 10;
-      showScreen(targetScr);
+      showScreen(10);
     });
   }
 
@@ -10562,9 +10645,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       userState.habitualCigsCustomized = true;
+      userState.hasConfiguredFirstGoal = true;
       userState.lastGoalPromptDateKey = getDateKey(new Date());
       userState.metaExceededModalShown = false;
-      userState.onboardingCompleted = true;
 
       const todayKey = getDateKey(new Date());
       const rec = getOrCreateDayRecord(todayKey);
@@ -10573,8 +10656,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       savePersistedState();
       refreshAllViews();
-      // Leva direto para a Home (Screen 10) para o usuário conhecer e explorar o app primeiro
-      showScreen(10);
+
+      const curSess = loadActiveSession();
+      const isAlreadyAuthed = Boolean(userState.isAuthenticated && curSess && curSess.mode === 'account');
+
+      if (isAlreadyAuthed) {
+        // Usuário autenticado que completou a configuração pendente: segue direto para a Home!
+        userState.onboardingCompleted = true;
+        savePersistedState();
+        refreshAllViews();
+        showScreen(10);
+      } else {
+        // Novo usuário vindo pelo fluxo inicial: segue para Criar conta (Screen 24) antes da Home!
+        userState.authReturnScreen = 7;
+        showScreen(24);
+      }
     });
   }
   const btnMotivationsSubmit = document.getElementById('btn-motivations-submit');
@@ -11154,6 +11250,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   function shouldShowDailyGoalPrompt() {
     if (!userState.onboardingCompleted) return false;
+    // Não exibe o card se o tutorial interativo estiver ativo ou ainda não concluído pelo usuário
+    if (window.habbiTutorialActive || !userState.tutorialCompleted) return false;
     const todayKey = getDateKey(new Date());
     if (userState.lastGoalPromptDateKey && userState.lastGoalPromptDateKey >= todayKey) {
       return false;
@@ -11596,7 +11694,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (_e) {}
     showToast('Você saiu da sua conta.');
-    showScreen(2);
+    userState.authReturnScreen = 1;
+    showScreen(1);
   };
 
   // Ação SEPARADA em Configurações: apagar registros apenas do perfil ativo
@@ -12130,6 +12229,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.startInteractiveTutorial = function() {
     window.habbiTutorialActive = true;
+    const goalCard = document.getElementById('habbi-goal-evolution-card');
+    if (goalCard) goalCard.style.display = 'none';
     currentTutorialStep = 0;
     renderTutorialStep(currentTutorialStep, true);
   };
@@ -12264,7 +12365,13 @@ document.addEventListener('DOMContentLoaded', () => {
     completeInteractiveTutorial(true);
   };
 
+  let firstTimeTutorialTimer = null;
+
   function completeInteractiveTutorial(skipped = false) {
+    if (firstTimeTutorialTimer) {
+      clearTimeout(firstTimeTutorialTimer);
+      firstTimeTutorialTimer = null;
+    }
     window.habbiTutorialActive = false;
     userState.tutorialCompleted = true;
     savePersistedState();
@@ -12281,13 +12388,23 @@ document.addEventListener('DOMContentLoaded', () => {
       showScreen(10);
     }
     hideTutorialSwipeHint();
+    if (typeof renderDailyGoalPrompt === 'function') {
+      renderDailyGoalPrompt();
+    }
   }
 
   function checkAndTriggerFirstTimeTutorial() {
+    if (firstTimeTutorialTimer) {
+      clearTimeout(firstTimeTutorialTimer);
+      firstTimeTutorialTimer = null;
+    }
     const completedOnb = Boolean(userState.onboardingCompleted);
     const tutorialDone = Boolean(userState.tutorialCompleted);
     if (!tutorialDone && !window.habbiTutorialActive && (completedOnb || currentScreen === 10)) {
-      setTimeout(() => {
+      const goalCard = document.getElementById('habbi-goal-evolution-card');
+      if (goalCard) goalCard.style.display = 'none';
+      firstTimeTutorialTimer = setTimeout(() => {
+        firstTimeTutorialTimer = null;
         const stillNotDone = !Boolean(userState.tutorialCompleted);
         if (!window.habbiTutorialActive && stillNotDone && currentScreen === 10) {
           startInteractiveTutorial();
@@ -12338,8 +12455,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Se o desenvolvedor ou usuário abriu uma tela específica no hash (ex: #16, #29, #12)
     initialScreen = hashScreen;
   } else {
-    // Padrão: Sempre inicia na Splash Screen (Tela 1), permitindo ver a roleta completa e iniciar o Onboarding com 1 toque
-    initialScreen = 1;
+    // Se há sessão de conta autenticada ativa
+    const curSess = loadActiveSession();
+    if (curSess && curSess.mode === 'account' && userState.isAuthenticated) {
+      const hasGoalsConfigured = Boolean(
+        userState.hasConfiguredFirstGoal ||
+        userState.habitualCigsCustomized ||
+        (userState.dailyRecords && Object.keys(userState.dailyRecords).length > 0)
+      );
+      if (hasGoalsConfigured) {
+        initialScreen = 10;
+      } else {
+        // Conta autenticada sem consumo habitual e meta: encaminha para Tela 7 antes da Home
+        initialScreen = 7;
+      }
+    } else {
+      // Padrão: Sempre inicia na Splash Screen (Tela 1), permitindo ver a roleta completa e iniciar o Onboarding com 1 toque
+      initialScreen = 1;
+    }
   }
 
   showScreen(initialScreen);
@@ -12368,10 +12501,19 @@ document.addEventListener('DOMContentLoaded', () => {
               const cloudData = await window.HabbiSupabaseAuthSync.pullCloudDataToLocal(session.user.id);
               if (cloudData) {
                 if (cloudData.profile && cloudData.profile.display_name) userState.name = cloudData.profile.display_name;
+                if (cloudData.prefs) {
+                  if (typeof cloudData.prefs.has_configured_first_goal === 'boolean') userState.hasConfiguredFirstGoal = cloudData.prefs.has_configured_first_goal;
+                  if (typeof cloudData.prefs.onboarding_completed === 'boolean') userState.onboardingCompleted = cloudData.prefs.onboarding_completed;
+                  if (typeof cloudData.prefs.tutorial_completed === 'boolean') userState.tutorialCompleted = cloudData.prefs.tutorial_completed;
+                }
                 if (cloudData.goals) {
                   if (typeof cloudData.goals.today_meta === 'number') userState.todayMeta = cloudData.goals.today_meta;
                   if (typeof cloudData.goals.habitual_cigs === 'number') userState.habitualCigs = cloudData.goals.habitual_cigs;
+                  if (typeof cloudData.goals.habitual_cigs_customized === 'boolean') userState.habitualCigsCustomized = cloudData.goals.habitual_cigs_customized;
                   if (typeof cloudData.goals.pack_price === 'number') userState.packPrice = cloudData.goals.pack_price;
+                } else if (!cloudData.prefs || !cloudData.prefs.has_configured_first_goal) {
+                  userState.hasConfiguredFirstGoal = false;
+                  userState.habitualCigsCustomized = false;
                 }
                 if (cloudData.dailyRecords && Object.keys(cloudData.dailyRecords).length > 0) {
                   userState.dailyRecords = Object.assign({}, userState.dailyRecords, cloudData.dailyRecords);
@@ -12381,6 +12523,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 savePersistedState();
                 refreshAllViews(true);
+              }
+              const hasGoalsConfigured = Boolean(
+                (cloudData && cloudData.goals && cloudData.goals.habitual_cigs_customized) ||
+                (cloudData && cloudData.prefs && (cloudData.prefs.has_configured_first_goal || cloudData.prefs.onboarding_completed)) ||
+                (cloudData && cloudData.dailyRecords && Object.keys(cloudData.dailyRecords).length > 0) ||
+                (!cloudData && (userState.hasConfiguredFirstGoal || userState.habitualCigsCustomized || userState.onboardingCompleted))
+              );
+              if (currentScreen === 1 || currentScreen === 23 || currentScreen === 24) {
+                if (hasGoalsConfigured) {
+                  showScreen(10);
+                } else {
+                  showScreen(7);
+                }
               }
             }
           }

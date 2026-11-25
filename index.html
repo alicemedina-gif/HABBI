@@ -41,7 +41,7 @@
               </button>
               <button type="button" class="wl-splash-white-start-btn" id="btn-splash-start" onclick="window.goToScreen(3)">INICIAR</button>
             </div>
-            <button type="button" class="wl-splash-login-link" id="btn-splash-login" onclick="if(window.clearSplashRoulette)window.clearSplashRoulette(); goToScreen(23);">Já tenho conta · Entrar</button>
+            <button type="button" class="wl-splash-login-link" id="btn-splash-login" onclick="if(window.clearSplashRoulette)window.clearSplashRoulette(); if(window.userState)window.userState.authReturnScreen = 1; goToScreen(23);">Já tenho conta · Entrar</button>
           </div>
         </section>
 
@@ -898,9 +898,6 @@
           </div>
 
 
-          <div style="text-align:center; color:var(--text-secondary); font-size:14px; font-weight:500; margin-bottom:12px;">
-            Não tem uma conta? <a href="#" onclick="goToScreen(24); return false;" style="color:var(--primary); text-decoration:none; font-weight:600;">Cadastre-se</a>
-          </div>
           <div class="grow"></div>
         </section>
 
