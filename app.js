@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goalPromptKeepBtn: 'Manter {0}',
       goalPromptReduceBtn: 'Tentar {0}',
       goalPromptZeroKeepBtn: 'Continuar sem fumar',
-      goalPromptLaterBtn: 'Decidir depois',
+      goalPromptLaterBtn: 'Depois',
       goalToastKept: 'Meta mantida em {0} cigarros hoje.',
       goalToastReduced: 'Nova meta definida: {0} cigarros hoje! Um passo de cada vez.',
       goalToastZero: 'Excelente! Meta de 0 cigarros mantida para hoje.',
@@ -835,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goalPromptKeepBtn: 'Keep {0}',
       goalPromptReduceBtn: 'Try {0}',
       goalPromptZeroKeepBtn: 'Keep smoke-free',
-      goalPromptLaterBtn: 'Decide later',
+      goalPromptLaterBtn: 'Later',
       goalToastKept: 'Goal maintained at {0} cigarettes today.',
       goalToastReduced: 'New goal set: {0} cigarettes today! One step at a time.',
       goalToastZero: 'Great! 0 cigarettes goal maintained for today.',
@@ -1391,7 +1391,7 @@ document.addEventListener('DOMContentLoaded', () => {
       goalPromptKeepBtn: 'Mantener {0}',
       goalPromptReduceBtn: 'Intentar {0}',
       goalPromptZeroKeepBtn: 'Continuar sin fumar',
-      goalPromptLaterBtn: 'Decidir después',
+      goalPromptLaterBtn: 'Después',
       goalToastKept: 'Meta mantenida en {0} cigarrillos hoy.',
       goalToastReduced: '¡Nueva meta definida: {0} cigarrillos hoy! Paso a paso.',
       goalToastZero: '¡Excelente! Meta de 0 cigarrillos mantenida para hoy.',
@@ -6504,22 +6504,21 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="wl-home-overmeta-banner" id="home-overmeta-banner" style="display:none;" role="status"></div>
         </div>
 
-        <!-- Ajuste Diário de Meta Compacto e Discreto (perguntado 1x por dia, sem bloquear) -->
-        <div class="habbi-goal-evolution-card" id="habbi-goal-evolution-card" style="display:none;" role="region" aria-label="Evolução da meta diária">
-          <div class="habbi-goal-card-top">
-            <div class="habbi-goal-card-header-left">
-              <span class="habbi-goal-card-badge" id="habbi-goal-badge-txt">Meta de hoje</span>
-              <span class="habbi-goal-card-title" id="habbi-goal-card-title">Continuar com 11 ou tentar 10?</span>
-            </div>
-            <button type="button" class="habbi-goal-card-close" id="btn-goal-close" onclick="handleDailyGoalDecision('later')" aria-label="Fechar" title="Decidir depois">\u2715</button>
+        <!-- Aba Discreta de Ajuste Diário de Meta (recolhida por padrão, expande ao toque) -->
+        <div class="habbi-goal-tab habbi-goal-evolution-card" id="habbi-goal-evolution-card" style="display:none;" role="region" aria-label="Meta de hoje">
+          <div class="habbi-goal-tab-summary" id="habbi-goal-tab-toggle" onclick="toggleDailyGoalTab(event)" role="button" tabindex="0" aria-expanded="false" aria-controls="habbi-goal-tab-body" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDailyGoalTab(event);}">
+            <span class="habbi-goal-tab-badge habbi-goal-card-badge" id="habbi-goal-badge-txt">Meta de hoje</span>
+            <span class="habbi-goal-tab-title habbi-goal-card-title" id="habbi-goal-card-title">Continuar com 11 ou tentar 10?</span>
+            <span class="habbi-goal-tab-chevron" aria-hidden="true">\u25be</span>
+            <button type="button" class="habbi-goal-tab-close habbi-goal-card-close" id="btn-goal-close" onclick="event.stopPropagation(); handleDailyGoalDecision('later')" aria-label="Fechar" title="Depois">\u2715</button>
           </div>
           <p class="habbi-goal-card-desc" id="habbi-goal-card-desc" style="display:none;"></p>
-          <div class="habbi-goal-card-bottom">
-            <div class="habbi-goal-card-actions" id="habbi-goal-card-actions">
-              <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">Manter 11</button>
-              <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">Tentar 10</button>
+          <div class="habbi-goal-tab-body" id="habbi-goal-tab-body">
+            <div class="habbi-goal-tab-actions habbi-goal-card-actions" id="habbi-goal-card-actions">
+              <button type="button" class="btn btn-secondary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">Manter 11</button>
+              <button type="button" class="btn btn-primary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">Tentar 10</button>
             </div>
-            <button type="button" class="habbi-goal-later-link" id="btn-goal-later" onclick="handleDailyGoalDecision('later')">Decidir depois</button>
+            <button type="button" class="habbi-goal-tab-later habbi-goal-later-link" id="btn-goal-later" onclick="handleDailyGoalDecision('later')">Depois</button>
           </div>
         </div>
 
@@ -11267,6 +11266,17 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
+  function toggleDailyGoalTab(e) {
+    if (e && e.target && e.target.closest('#btn-goal-close')) return;
+    const tab = document.getElementById('habbi-goal-evolution-card');
+    if (!tab) return;
+    const isExp = tab.classList.toggle('is-expanded');
+    const toggleBtn = document.getElementById('habbi-goal-tab-toggle');
+    if (toggleBtn) {
+      toggleBtn.setAttribute('aria-expanded', isExp ? 'true' : 'false');
+    }
+  }
+
   function renderDailyGoalPrompt() {
     const card = document.getElementById('habbi-goal-evolution-card');
     if (!card) return;
@@ -11275,6 +11285,10 @@ document.addEventListener('DOMContentLoaded', () => {
       card.style.display = 'none';
       return;
     }
+
+    card.classList.remove('is-expanded');
+    const toggleBtn = document.getElementById('habbi-goal-tab-toggle');
+    if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
 
     const todayKey = getDateKey(new Date());
     const yesterdayDate = new Date();
@@ -11313,7 +11327,7 @@ document.addEventListener('DOMContentLoaded', () => {
       badgeEl.classList.toggle('is-challenge', exceededYesterday);
     }
     if (laterLink) {
-      laterLink.innerText = t.goalPromptLaterBtn || 'Decidir depois';
+      laterLink.innerText = t.goalPromptLaterBtn || 'Depois';
     }
 
     if (currentMeta === 0) {
@@ -11326,7 +11340,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (descEl) descEl.innerText = '';
       if (actionsEl) {
         actionsEl.innerHTML = `
-          <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
+          <button type="button" class="btn btn-primary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
         `;
       }
     } else {
@@ -11351,8 +11365,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (actionsEl) {
         actionsEl.innerHTML = `
-          <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
-          <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
+          <button type="button" class="btn btn-secondary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
+          <button type="button" class="btn btn-primary habbi-goal-pill-btn habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
         `;
       }
     }
@@ -11399,6 +11413,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.shouldShowDailyGoalPrompt = shouldShowDailyGoalPrompt;
   window.renderDailyGoalPrompt = renderDailyGoalPrompt;
   window.checkDailyGoalPrompt = renderDailyGoalPrompt;
+  window.toggleDailyGoalTab = toggleDailyGoalTab;
   window.handleDailyGoalDecision = handleDailyGoalDecision;
   window.getDateKey = getDateKey;
   window.getSafeTodayMeta = getSafeTodayMeta;
