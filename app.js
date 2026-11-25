@@ -269,12 +269,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Evolução de Meta Diária (Home)
       goalPromptTitle: 'Meta de hoje',
+      goalPromptQuestion: 'Continuar com {0} ou tentar {1}?',
       goalPromptMetYesterday: 'Ontem você mandou bem!',
       goalPromptOverYesterday: 'Ontem foi um dia desafiador, e tudo bem!',
       goalPromptNormal: 'Novo dia, novo passo',
       goalPromptZero: 'Meta sem fumar mantida!',
       goalPromptZeroDesc: 'Você já conquistou a meta de 0 cigarros. Vamos continuar sem fumar hoje?',
-      goalPromptKeepBtn: 'Continuar com {0}',
+      goalPromptZeroShort: 'Continuar sem fumar hoje?',
+      goalPromptKeepBtn: 'Manter {0}',
       goalPromptReduceBtn: 'Tentar {0}',
       goalPromptZeroKeepBtn: 'Continuar sem fumar',
       goalPromptLaterBtn: 'Decidir depois',
@@ -823,12 +825,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Daily Goal Evolution (Home)
       goalPromptTitle: "Today's goal",
+      goalPromptQuestion: 'Keep {0} or try {1}?',
       goalPromptMetYesterday: 'You did great yesterday!',
       goalPromptOverYesterday: 'Yesterday was challenging, and that\'s okay!',
       goalPromptNormal: 'New day, new step',
       goalPromptZero: 'Smoke-free goal active!',
       goalPromptZeroDesc: 'You have reached 0 cigarettes goal. Keep smoke-free today?',
-      goalPromptKeepBtn: 'Keep at {0}',
+      goalPromptZeroShort: 'Stay smoke-free today?',
+      goalPromptKeepBtn: 'Keep {0}',
       goalPromptReduceBtn: 'Try {0}',
       goalPromptZeroKeepBtn: 'Keep smoke-free',
       goalPromptLaterBtn: 'Decide later',
@@ -1377,12 +1381,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Evolución de Meta Diaria (Home)
       goalPromptTitle: 'Meta de hoy',
+      goalPromptQuestion: '¿Continuar con {0} o intentar {1}?',
       goalPromptMetYesterday: '¡Ayer lo hiciste genial!',
       goalPromptOverYesterday: '¡Ayer fue un día desafiante, y no pasa nada!',
       goalPromptNormal: 'Nuevo día, nuevo paso',
       goalPromptZero: '¡Meta sin fumar activa!',
       goalPromptZeroDesc: 'Has alcanzado la meta de 0 cigarrillos. ¿Continuar sin fumar hoy?',
-      goalPromptKeepBtn: 'Continuar con {0}',
+      goalPromptZeroShort: '¿Continuar sin fumar hoy?',
+      goalPromptKeepBtn: 'Mantener {0}',
       goalPromptReduceBtn: 'Intentar {0}',
       goalPromptZeroKeepBtn: 'Continuar sin fumar',
       goalPromptLaterBtn: 'Decidir después',
@@ -6498,21 +6504,23 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="wl-home-overmeta-banner" id="home-overmeta-banner" style="display:none;" role="status"></div>
         </div>
 
-        <!-- Card discreto de Evolução Diária da Meta (perguntado 1x por dia, sem bloquear) -->
+        <!-- Ajuste Diário de Meta Compacto e Discreto (perguntado 1x por dia, sem bloquear) -->
         <div class="habbi-goal-evolution-card" id="habbi-goal-evolution-card" style="display:none;" role="region" aria-label="Evolução da meta diária">
           <div class="habbi-goal-card-top">
-            <div class="habbi-goal-card-badge-wrap">
+            <div class="habbi-goal-card-header-left">
               <span class="habbi-goal-card-badge" id="habbi-goal-badge-txt">Meta de hoje</span>
+              <span class="habbi-goal-card-title" id="habbi-goal-card-title">Continuar com 11 ou tentar 10?</span>
             </div>
-            <button type="button" class="habbi-goal-card-close" id="btn-goal-close" onclick="handleDailyGoalDecision('later')" aria-label="Fechar">\u2715</button>
+            <button type="button" class="habbi-goal-card-close" id="btn-goal-close" onclick="handleDailyGoalDecision('later')" aria-label="Fechar" title="Decidir depois">\u2715</button>
           </div>
-          <h3 class="habbi-goal-card-title" id="habbi-goal-card-title">Novo dia, novo passo</h3>
-          <p class="habbi-goal-card-desc" id="habbi-goal-card-desc">Como voc\u00ea prefere definir sua meta hoje?</p>
-          <div class="habbi-goal-card-actions" id="habbi-goal-card-actions">
-            <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">Continuar com 14</button>
-            <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">Tentar 13</button>
+          <p class="habbi-goal-card-desc" id="habbi-goal-card-desc" style="display:none;"></p>
+          <div class="habbi-goal-card-bottom">
+            <div class="habbi-goal-card-actions" id="habbi-goal-card-actions">
+              <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">Manter 11</button>
+              <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">Tentar 10</button>
+            </div>
+            <button type="button" class="habbi-goal-later-link" id="btn-goal-later" onclick="handleDailyGoalDecision('later')">Decidir depois</button>
           </div>
-          <button type="button" class="habbi-goal-later-link" id="btn-goal-later" onclick="handleDailyGoalDecision('later')">Decidir depois</button>
         </div>
 
         <div class="wl-cig-demo-stage wl-home-cig-stage" id="home-cig-stage">
@@ -11309,39 +11317,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (currentMeta === 0) {
-      if (titleEl) titleEl.innerText = t.goalPromptZero || 'Meta sem fumar mantida!';
-      if (descEl) descEl.innerText = t.goalPromptZeroDesc || (activeLang === 'EN' ? 'You have reached 0 cigarettes goal. Keep smoke-free today?' : (activeLang === 'ES' ? 'Has alcanzado la meta de 0 cigarrillos. ¿Continuar sin fumar hoy?' : 'Você já conquistou a meta de 0 cigarros. Vamos continuar sem fumar hoje?'));
+      if (titleEl) {
+        titleEl.innerText = t.goalPromptZeroShort || (
+          activeLang === 'EN' ? 'Stay smoke-free today?' :
+          (activeLang === 'ES' ? '¿Continuar sin fumar hoy?' : 'Continuar sem fumar hoje?')
+        );
+      }
+      if (descEl) descEl.innerText = '';
       if (actionsEl) {
         actionsEl.innerHTML = `
           <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(t.goalPromptZeroKeepBtn || 'Continuar sem fumar')}</button>
         `;
       }
-    } else if (exceededYesterday) {
-      if (titleEl) titleEl.innerText = t.goalPromptOverYesterday || 'Ontem foi um dia desafiador, e tudo bem!';
-      const tplDesc = activeLang === 'EN'
-        ? 'Every day is a fresh start. Would you like to keep the same goal of {0} and try again today?'
-        : (activeLang === 'ES' ? 'Cada día es un nuevo comienzo. ¿Quieres mantener la meta de {0} e intentarlo hoy de nuevo?' : 'Cada dia é um novo recomeço. Deseja manter a meta de {0} para tentar novamente hoje?');
-      if (descEl) descEl.innerText = tplDesc.replace('{0}', String(currentMeta));
-      const keepBtnLabel = (t.goalPromptKeepBtn || 'Continuar com {0}').replace('{0}', String(currentMeta));
-      const reduceBtnLabel = (t.goalPromptReduceBtn || 'Tentar {0}').replace('{0}', String(Math.max(0, currentMeta - 1)));
-      if (actionsEl) {
-        actionsEl.innerHTML = `
-          <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
-          <button type="button" class="btn btn-primary habbi-goal-act-btn" id="btn-goal-reduce" onclick="handleDailyGoalDecision('reduce')">${escapeHtml(reduceBtnLabel)}</button>
-        `;
-      }
     } else {
-      if (hadYesterdayRecord) {
-        if (titleEl) titleEl.innerText = t.goalPromptMetYesterday || 'Ontem você mandou bem!';
-      } else {
-        if (titleEl) titleEl.innerText = t.goalPromptNormal || 'Novo dia, novo passo';
-      }
-      const tplDesc = activeLang === 'EN'
-        ? 'Would you like to keep {0} cigarettes or try reducing 1 cigarette today?'
-        : (activeLang === 'ES' ? '¿Quieres mantener {0} cigarrillos o intentar reducir 1 cigarrillo hoy?' : 'Deseja continuar com {0} cigarros ou tentar reduzir mais 1 cigarro hoje?');
-      if (descEl) descEl.innerText = tplDesc.replace('{0}', String(currentMeta));
-      const keepBtnLabel = (t.goalPromptKeepBtn || 'Continuar com {0}').replace('{0}', String(currentMeta));
-      const reduceBtnLabel = (t.goalPromptReduceBtn || 'Tentar {0}').replace('{0}', String(Math.max(0, currentMeta - 1)));
+      const suggestedTarget = Math.max(0, currentMeta - 1);
+      const questionText = (t.goalPromptQuestion || (
+        activeLang === 'EN' ? 'Keep {0} or try {1}?' :
+        (activeLang === 'ES' ? '¿Continuar con {0} o intentar {1}?' : 'Continuar com {0} ou tentar {1}?')
+      )).replace('{0}', String(currentMeta)).replace('{1}', String(suggestedTarget));
+
+      if (titleEl) titleEl.innerText = questionText;
+      if (descEl) descEl.innerText = '';
+
+      const keepBtnLabel = (t.goalPromptKeepBtn || (
+        activeLang === 'EN' ? 'Keep {0}' :
+        (activeLang === 'ES' ? 'Mantener {0}' : 'Manter {0}')
+      )).replace('{0}', String(currentMeta));
+
+      const reduceBtnLabel = (t.goalPromptReduceBtn || (
+        activeLang === 'EN' ? 'Try {0}' :
+        (activeLang === 'ES' ? 'Intentar {0}' : 'Tentar {0}')
+      )).replace('{0}', String(suggestedTarget));
+
       if (actionsEl) {
         actionsEl.innerHTML = `
           <button type="button" class="btn btn-secondary habbi-goal-act-btn" id="btn-goal-keep" onclick="handleDailyGoalDecision('keep')">${escapeHtml(keepBtnLabel)}</button>
