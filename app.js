@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     onboardingCompleted: false,
     tutorialCompleted: false,
     hasConfiguredFirstGoal: false,
+    pendingFirstCigarettePrompt: false,
     sacola100Celebrated: false,
     currentScreenSaved: 1
   };
@@ -654,18 +655,30 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaGoalModalSave: 'Salvar objetivo',
       savingsSheetTitle: 'Parâmetros de economia',
       savingsCfgHabitual: 'Consumo habitual',
-      savingsCfgHabitualDesc: 'Cigarros fumados por dia antes',
+      savingsCfgHabitualDesc: 'Cigarros por dia',
       savingsCfgPrice: 'Preço do maço (R$)',
       savingsCfgPriceDesc: 'Valor pago em cada maço',
       savingsCfgPerPack: 'Cigarros por maço',
       savingsCfgPerPackDesc: 'Quantidade padrão por maço',
-      savingsCfgFreqTitle: 'Frequência habitual de compra',
+      savingsCfgFreqTitle: 'Compra de maços',
+      savingsCfgFreqDesc: 'Intervalo estimado',
+      savingsFreqFormat: 'A cada {0} dias',
       savingsFreqDaily: '1 por dia',
       savingsFreq2Days: 'A cada 2 dias',
       savingsFreq3Days: 'A cada 3 dias',
       savingsFreqWeekly: '1 por semana',
       savingsCfgDone: 'Pronto',
       savingsHistDone: 'Fechar',
+
+      // Modais de Cadastro de Visitante e Registro Inicial
+      guestSignupTitle: 'Salve sua evolução',
+      guestSignupDesc: 'Crie sua conta para registrar seu consumo com segurança, acompanhar seu histórico diário e não perder suas conquistas.',
+      guestSignupCreate: 'Criar conta',
+      guestSignupCancel: 'Continuar explorando',
+      postSignupTitle: 'Conta criada com sucesso!',
+      postSignupDesc: 'Deseja registrar o seu primeiro cigarro agora ou prefere deixar para depois?',
+      postSignupRegisterNow: 'Registrar agora',
+      postSignupLater: 'Depois',
 
       // Modais SOS
       waterTitle: 'Que tal um copo de água?',
@@ -1210,18 +1223,30 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaGoalModalSave: 'Save goal',
       savingsSheetTitle: 'Savings parameters',
       savingsCfgHabitual: 'Habitual intake',
-      savingsCfgHabitualDesc: 'Cigarettes smoked daily previously',
+      savingsCfgHabitualDesc: 'Cigarettes per day',
       savingsCfgPrice: 'Pack price (R$)',
       savingsCfgPriceDesc: 'Price paid per cigarette pack',
       savingsCfgPerPack: 'Cigarettes per pack',
       savingsCfgPerPackDesc: 'Standard quantity per pack',
-      savingsCfgFreqTitle: 'Habitual buying frequency',
+      savingsCfgFreqTitle: 'Pack purchase',
+      savingsCfgFreqDesc: 'Estimated interval',
+      savingsFreqFormat: 'Every {0} days',
       savingsFreqDaily: '1 per day',
       savingsFreq2Days: 'Every 2 days',
       savingsFreq3Days: 'Every 3 days',
       savingsFreqWeekly: '1 per week',
       savingsCfgDone: 'Done',
       savingsHistDone: 'Close',
+
+      // Guest signup and post-signup modals
+      guestSignupTitle: 'Save your progress',
+      guestSignupDesc: 'Create your account to safely log daily consumption, track your history, and never lose achievements.',
+      guestSignupCreate: 'Create account',
+      guestSignupCancel: 'Keep exploring',
+      postSignupTitle: 'Account created successfully!',
+      postSignupDesc: 'Would you like to log your first cigarette now or leave it for later?',
+      postSignupRegisterNow: 'Log now',
+      postSignupLater: 'Later',
 
       // SOS Modals
       waterTitle: 'How about a glass of water?',
@@ -1766,18 +1791,30 @@ document.addEventListener('DOMContentLoaded', () => {
       conquistaGoalModalSave: 'Guardar objetivo',
       savingsSheetTitle: 'Parámetros de ahorro',
       savingsCfgHabitual: 'Consumo habitual',
-      savingsCfgHabitualDesc: 'Cigarrillos fumados por día antes',
+      savingsCfgHabitualDesc: 'Cigarrillos por día',
       savingsCfgPrice: 'Precio de la cajetilla (R$)',
       savingsCfgPriceDesc: 'Precio pagado por cada cajetilla',
       savingsCfgPerPack: 'Cigarrillos por cajetilla',
       savingsCfgPerPackDesc: 'Cantidad estándar por cajetilla',
-      savingsCfgFreqTitle: 'Frecuencia habitual de compra',
+      savingsCfgFreqTitle: 'Compra de cajetillas',
+      savingsCfgFreqDesc: 'Intervalo estimado',
+      savingsFreqFormat: 'Cada {0} días',
       savingsFreqDaily: '1 al día',
       savingsFreq2Days: 'Cada 2 días',
       savingsFreq3Days: 'Cada 3 días',
       savingsFreqWeekly: '1 por semana',
       savingsCfgDone: 'Listo',
       savingsHistDone: 'Cerrar',
+
+      // Modales de registro de invitado y post-registro
+      guestSignupTitle: 'Guarda tu evolución',
+      guestSignupDesc: 'Crea tu cuenta para registrar tu consumo de forma segura, seguir tu historial y no perder tus logros.',
+      guestSignupCreate: 'Crear cuenta',
+      guestSignupCancel: 'Seguir explorando',
+      postSignupTitle: '¡Cuenta creada con éxito!',
+      postSignupDesc: '¿Deseas registrar tu primer cigarrillo ahora o prefieres dejarlo para después?',
+      postSignupRegisterNow: 'Registrar ahora',
+      postSignupLater: 'Después',
 
       // SOS Modals
       waterTitle: '¿Qué tal un vaso de agua?',
@@ -2807,20 +2844,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const sheetTitle = document.getElementById('wl-sav-sheet-title');
       if (sheetTitle) sheetTitle.innerText = t.savingsSheetTitle || 'Parâmetros de economia';
       const cfgInfos = document.querySelectorAll('.wl-sav-cfg-info');
-      if (cfgInfos.length >= 3) {
-        cfgInfos[0].innerHTML = `<strong>${t.savingsCfgHabitual || 'Consumo habitual'}</strong><span>${t.savingsCfgHabitualDesc || 'Cigarros fumados por dia antes'}</span>`;
+      if (cfgInfos.length >= 1) {
+        cfgInfos[0].innerHTML = `<strong>${t.savingsCfgHabitual || 'Consumo habitual'}</strong><span>${t.savingsCfgHabitualDesc || 'Cigarros por dia'}</span>`;
+      }
+      if (cfgInfos.length >= 2) {
         cfgInfos[1].innerHTML = `<strong>${t.savingsCfgPrice || 'Preço do maço (R$)'}</strong><span>${t.savingsCfgPriceDesc || 'Valor pago em cada maço'}</span>`;
-        cfgInfos[2].innerHTML = `<strong>${t.savingsCfgPerPack || 'Cigarros por maço'}</strong><span>${t.savingsCfgPerPackDesc || 'Quantidade padrão por maço'}</span>`;
       }
-      const freqSub = document.querySelector('.wl-sav-cfg-sub');
-      if (freqSub) freqSub.innerText = t.savingsCfgFreqTitle || 'Frequência habitual de compra';
-      const freqChips = document.querySelectorAll('.wl-sav-freq-chip');
-      if (freqChips.length >= 4) {
-        freqChips[0].innerText = t.savingsFreqDaily || '1 por dia';
-        freqChips[1].innerText = t.savingsFreq2Days || 'A cada 2 dias';
-        freqChips[2].innerText = t.savingsFreq3Days || 'A cada 3 dias';
-        freqChips[3].innerText = t.savingsFreqWeekly || '1 por semana';
+      if (cfgInfos.length >= 3) {
+        cfgInfos[2].innerHTML = `<strong id="wl-sav-cfg-freq-lbl">${t.savingsCfgFreqTitle || 'Compra de maços'}</strong><span id="wl-sav-cfg-freq-desc">${t.savingsCfgFreqDesc || 'Intervalo estimado'}</span>`;
       }
+      const freqValEl = document.getElementById('wl-sav-cfg-freq-val');
+      if (freqValEl && typeof formatPackFreqLabel === 'function') {
+        freqValEl.innerText = formatPackFreqLabel(userState.packFreqDays || 2);
+      }
+      const guestTitle = document.getElementById('habbi-guest-signup-title');
+      if (guestTitle) guestTitle.innerText = t.guestSignupTitle || 'Salve sua evolução';
+      const guestDesc = document.getElementById('habbi-guest-signup-desc');
+      if (guestDesc) guestDesc.innerText = t.guestSignupDesc || 'Crie sua conta para registrar seu consumo com segurança, acompanhar seu histórico diário e não perder suas conquistas.';
+      const guestCreateBtn = document.getElementById('btn-guest-signup-create');
+      if (guestCreateBtn) guestCreateBtn.innerText = t.guestSignupCreate || 'Criar conta';
+      const guestCancelBtn = document.getElementById('btn-guest-signup-cancel');
+      if (guestCancelBtn) guestCancelBtn.innerText = t.guestSignupCancel || 'Continuar explorando';
+
+      const postTitle = document.getElementById('habbi-post-signup-title');
+      if (postTitle) postTitle.innerText = t.postSignupTitle || 'Conta criada com sucesso!';
+      const postDesc = document.getElementById('habbi-post-signup-desc');
+      if (postDesc) postDesc.innerText = t.postSignupDesc || 'Deseja registrar o seu primeiro cigarro agora ou prefere deixar para depois?';
+      const postAddBtn = document.getElementById('btn-post-signup-add-now');
+      if (postAddBtn) postAddBtn.innerText = t.postSignupRegisterNow || 'Registrar agora';
+      const postLaterBtn = document.getElementById('btn-post-signup-add-later');
+      if (postLaterBtn) postLaterBtn.innerText = t.postSignupLater || 'Depois';
       const sheetDones = document.querySelectorAll('.wl-sav-sheet-done');
       sheetDones.forEach(btn => {
         if (btn.innerText.includes('Pronto') || btn.innerText.includes('Done') || btn.innerText.includes('Listo')) {
@@ -3111,6 +3164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       onboardingCompleted: Boolean(overrides.onboardingCompleted),
       tutorialCompleted: Boolean(overrides.tutorialCompleted),
       hasConfiguredFirstGoal: Boolean(overrides.hasConfiguredFirstGoal),
+      pendingFirstCigarettePrompt: Boolean(overrides.pendingFirstCigarettePrompt),
       sacola100Celebrated: Boolean(overrides.sacola100Celebrated),
       currentScreen: (typeof overrides.currentScreen === 'number' && overrides.currentScreen >= 1) ? overrides.currentScreen : 1
     };
@@ -3327,6 +3381,7 @@ document.addEventListener('DOMContentLoaded', () => {
       onboardingCompleted: Boolean(userState.onboardingCompleted),
       tutorialCompleted: Boolean(userState.tutorialCompleted),
       hasConfiguredFirstGoal: Boolean(userState.hasConfiguredFirstGoal),
+      pendingFirstCigarettePrompt: Boolean(userState.pendingFirstCigarettePrompt),
       sacola100Celebrated: Boolean(userState.sacola100Celebrated),
       currentScreen: typeof currentScreen === 'number' ? currentScreen : (userState.currentScreenSaved || 1)
     };
@@ -3365,6 +3420,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userState.lastGoalPromptDateKey = clean.lastGoalPromptDateKey || null;
     userState.tutorialCompleted = clean.tutorialCompleted;
     userState.hasConfiguredFirstGoal = clean.hasConfiguredFirstGoal;
+    userState.pendingFirstCigarettePrompt = Boolean(clean.pendingFirstCigarettePrompt);
     userState.sacola100Celebrated = clean.sacola100Celebrated;
     userState.currentScreenSaved = clean.currentScreen;
   }
@@ -4701,11 +4757,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Screen 10: Home
     if (screenNum === 10) {
       updateHomeScreen();
-      if (typeof window.checkDailyGoalPrompt === 'function') {
-        window.checkDailyGoalPrompt();
-      }
-      if (typeof window.checkAndTriggerFirstTimeTutorial === 'function') {
-        window.checkAndTriggerFirstTimeTutorial();
+      if (userState.pendingFirstCigarettePrompt && userState.isAuthenticated) {
+        setTimeout(() => {
+          if (currentScreen === 10 && userState.pendingFirstCigarettePrompt && typeof window.openPostSignupRegisterModal === 'function') {
+            window.openPostSignupRegisterModal();
+          }
+        }, 300);
+      } else {
+        if (typeof window.checkDailyGoalPrompt === 'function') {
+          window.checkDailyGoalPrompt();
+        }
+        if (typeof window.checkAndTriggerFirstTimeTutorial === 'function') {
+          window.checkAndTriggerFirstTimeTutorial();
+        }
       }
     }
 
@@ -4837,17 +4901,27 @@ document.addEventListener('DOMContentLoaded', () => {
     return `R$ ${num.toFixed(2).replace('.', ',')}`;
   }
 
-  function getPackFreqLabel(days) {
+  function formatPackFreqLabel(days) {
     const d = Math.max(1, parseInt(days, 10) || 2);
-    if (d === 1) return '1 maço por dia';
-    if (d === 7) return '1 maço por semana';
-    return `1 maço a cada ${d} dias`;
+    const activeLang = (userState.currentLang || 'PT').toUpperCase();
+    const t = (window.HABBI_I18N && window.HABBI_I18N[activeLang]) ? window.HABBI_I18N[activeLang] : (window.HABBI_I18N ? window.HABBI_I18N.PT : {});
+    if (d === 1) {
+      return t.savingsFreqDaily || '1 por dia';
+    }
+    const fmt = t.savingsFreqFormat || 'A cada {0} dias';
+    return fmt.replace('{0}', d);
+  }
+  window.formatPackFreqLabel = formatPackFreqLabel;
+
+  function getPackFreqLabel(days) {
+    return formatPackFreqLabel(days);
   }
 
   function computeSavingsMetrics() {
     const habitual = Math.max(1, parseInt(userState.habitualCigs, 10) || 12);
     const packPrice = Math.max(0.5, parseFloat(userState.packPrice) || 15);
-    const cigsPerPack = Math.max(1, parseInt(userState.cigsPerPack, 10) || 20);
+    const cigsPerPack = 20; // Padrão universal permanente de 20 cigarros por maço
+    userState.cigsPerPack = 20;
     const packFreqDays = Math.max(1, parseInt(userState.packFreqDays, 10) || 2);
     const costPerCig = packPrice / cigsPerPack;
     const fullDaySavings = habitual * costPerCig;
@@ -5113,14 +5187,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const cfgHabEl = document.getElementById('wl-sav-cfg-habitual-val');
     const cfgPriceEl = document.getElementById('wl-sav-cfg-price-input');
     const cfgPerPackEl = document.getElementById('wl-sav-cfg-perpack-val');
+    const cfgFreqValEl = document.getElementById('wl-sav-cfg-freq-val');
     if (cfgHabEl) cfgHabEl.innerText = m.habitual;
     if (cfgPriceEl && document.activeElement !== cfgPriceEl) {
       cfgPriceEl.value = m.packPrice.toFixed(2);
     }
-    if (cfgPerPackEl) cfgPerPackEl.innerText = m.cigsPerPack;
-    document.querySelectorAll('#wl-sav-freq-chips .wl-sav-freq-chip').forEach(btn => {
-      btn.classList.toggle('active', parseInt(btn.dataset.days, 10) === m.packFreqDays);
-    });
+    if (cfgPerPackEl) cfgPerPackEl.innerText = 20;
+    if (cfgFreqValEl && typeof formatPackFreqLabel === 'function') {
+      cfgFreqValEl.innerText = formatPackFreqLabel(m.packFreqDays);
+    }
 
     // Histórico acessível (na aba inferior de histórico da tela Sua economia)
     const historyCountEl = document.getElementById('wl-sav-history-count');
@@ -5323,9 +5398,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.adjustSavingsCigsPerPack = function(delta) {
-    const cur = Math.max(1, parseInt(userState.cigsPerPack, 10) || 20);
-    userState.cigsPerPack = Math.max(1, Math.min(40, cur + (parseInt(delta, 10) || 0)));
+  window.adjustSavingsPackFreq = function(delta) {
+    const cur = Math.max(1, parseInt(userState.packFreqDays, 10) || 2);
+    userState.packFreqDays = Math.max(1, Math.min(30, cur + (parseInt(delta, 10) || 0)));
+    savePersistedState();
+    updateSavingsDisplay();
+  };
+
+  window.adjustSavingsCigsPerPack = function(_delta) {
+    userState.cigsPerPack = 20;
     savePersistedState();
     updateSavingsDisplay();
   };
@@ -6949,7 +7030,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="wl-sav-cfg-row">
                 <div class="wl-sav-cfg-info">
                   <strong>Consumo habitual</strong>
-                  <span>Cigarros fumados por dia antes</span>
+                  <span>Cigarros por dia</span>
                 </div>
                 <div class="wl-sav-cfg-stepper">
                   <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsHabitual(-1)">−</button>
@@ -6972,23 +7053,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
               <div class="wl-sav-cfg-row">
                 <div class="wl-sav-cfg-info">
-                  <strong>Cigarros por maço</strong>
-                  <span>Quantidade padrão por maço</span>
+                  <strong id="wl-sav-cfg-freq-lbl">Compra de maços</strong>
+                  <span id="wl-sav-cfg-freq-desc">Intervalo estimado</span>
                 </div>
                 <div class="wl-sav-cfg-stepper">
-                  <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsCigsPerPack(-1)" aria-label="Diminuir cigarros por maço">−</button>
-                  <strong id="wl-sav-cfg-perpack-val">20</strong>
-                  <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsCigsPerPack(1)" aria-label="Aumentar cigarros por maço">+</button>
-                </div>
-              </div>
-
-              <div class="wl-sav-cfg-freq-block">
-                <span class="wl-sav-cfg-sub">Frequência habitual de compra</span>
-                <div class="wl-sav-freq-chips" id="wl-sav-freq-chips">
-                  <button type="button" class="wl-sav-freq-chip" data-days="1" onclick="selectSavingsPackFreq(1)">1 por dia</button>
-                  <button type="button" class="wl-sav-freq-chip active" data-days="2" onclick="selectSavingsPackFreq(2)">A cada 2 dias</button>
-                  <button type="button" class="wl-sav-freq-chip" data-days="3" onclick="selectSavingsPackFreq(3)">A cada 3 dias</button>
-                  <button type="button" class="wl-sav-freq-chip" data-days="7" onclick="selectSavingsPackFreq(7)">1 por semana</button>
+                  <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsPackFreq(-1)" aria-label="Diminuir intervalo de compra">−</button>
+                  <strong id="wl-sav-cfg-freq-val" style="min-width:110px; text-align:center; font-size:15px; font-weight:700; color:var(--text-primary); white-space:nowrap;">A cada 2 dias</strong>
+                  <button type="button" class="wl-sav-step-btn" onclick="adjustSavingsPackFreq(1)" aria-label="Aumentar intervalo de compra">+</button>
                 </div>
               </div>
 
@@ -7919,7 +7990,73 @@ document.addEventListener('DOMContentLoaded', () => {
     window.quickConfirmDay();
   };
 
+  window.openGuestSignupModal = function() {
+    const modal = document.getElementById('habbi-guest-signup-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    openAccessibleDialog(modal, window.closeGuestSignupModal, 'habbi-guest-signup-title');
+  };
+
+  window.closeGuestSignupModal = function() {
+    const modal = document.getElementById('habbi-guest-signup-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    closeAccessibleDialog(modal);
+    if (typeof checkAndTriggerFirstTimeTutorial === 'function') {
+      checkAndTriggerFirstTimeTutorial();
+    }
+  };
+
+  window.handleGuestSignupConfirm = function() {
+    userState.pendingFirstCigarettePrompt = true;
+    userState.authReturnScreen = 10;
+    window.closeGuestSignupModal();
+    showScreen(24);
+  };
+
+  window.openPostSignupRegisterModal = function() {
+    const modal = document.getElementById('habbi-post-signup-register-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+    openAccessibleDialog(modal, window.closePostSignupRegisterModal, 'habbi-post-signup-title');
+  };
+
+  window.closePostSignupRegisterModal = function() {
+    userState.pendingFirstCigarettePrompt = false;
+    savePersistedState();
+    const modal = document.getElementById('habbi-post-signup-register-modal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    closeAccessibleDialog(modal);
+    if (typeof checkAndTriggerFirstTimeTutorial === 'function') {
+      checkAndTriggerFirstTimeTutorial();
+    }
+  };
+
+  window.handlePostSignupRegisterNow = function() {
+    userState.pendingFirstCigarettePrompt = false;
+    savePersistedState();
+    const modal = document.getElementById('habbi-post-signup-register-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      closeAccessibleDialog(modal);
+    }
+    window.handleHomeAddCigarette();
+    if (typeof checkAndTriggerFirstTimeTutorial === 'function') {
+      checkAndTriggerFirstTimeTutorial();
+    }
+  };
+
   window.handleHomeAddCigarette = function() {
+    const curSess = loadActiveSession();
+    const isAuthed = Boolean(userState.isAuthenticated && curSess && curSess.mode === 'account');
+    if (!isAuthed) {
+      if (typeof window.openGuestSignupModal === 'function') {
+        window.openGuestSignupModal();
+      }
+      return;
+    }
+
     const todayKey = getDateKey(new Date());
     const rec = getOrCreateDayRecord(todayKey);
     if (Array.isArray(rec.events)) {
@@ -8967,17 +9104,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = document.createElement('div');
       target.className = 'reflex-leaf-target';
 
-      // Dimensões do alvo e limites da área jogável (consistente com tabuleiro de 280px)
+      // Dimensões do alvo e limites da área jogável (aproveitamento total do tabuleiro expandido)
       const targetWidth = 76;
       const targetHeight = 62;
-      const boardWidth = board.clientWidth || 280;
-      const boardHeight = board.clientHeight || 310;
+      const boardWidth = board.clientWidth || 340;
+      const boardHeight = board.clientHeight || 380;
 
-      const maxX = Math.max(12, boardWidth - targetWidth - 12);
-      const maxY = Math.max(46, boardHeight - targetHeight - 12);
+      const maxX = Math.max(10, boardWidth - targetWidth - 10);
+      const maxY = Math.max(44, boardHeight - targetHeight - 10);
 
-      const posX = Math.floor(Math.random() * (maxX - 12)) + 12;
-      const posY = Math.floor(Math.random() * (maxY - 46)) + 46; // Evita sobrepor o score badge
+      const posX = Math.floor(Math.random() * (maxX - 10)) + 10;
+      const posY = Math.floor(Math.random() * (maxY - 44)) + 44; // Evita sobrepor o score badge
 
       target.style.left = `${posX}px`;
       target.style.top = `${posY}px`;
@@ -10518,8 +10655,10 @@ document.addEventListener('DOMContentLoaded', () => {
         todayMeta: userState.todayMeta,
         habitualCigs: userState.habitualCigs,
         packPrice: userState.packPrice,
+        packFreqDays: userState.packFreqDays || 2,
         hasConfiguredFirstGoal: Boolean(userState.hasConfiguredFirstGoal),
         habitualCigsCustomized: Boolean(userState.habitualCigsCustomized),
+        pendingFirstCigarettePrompt: Boolean(userState.pendingFirstCigarettePrompt),
         dailyRecords: Object.assign({}, userState.dailyRecords)
       };
 
@@ -10573,11 +10712,15 @@ document.addEventListener('DOMContentLoaded', () => {
             userState.todayMeta = preSignupConfig.todayMeta;
             userState.habitualCigs = preSignupConfig.habitualCigs;
             userState.packPrice = preSignupConfig.packPrice;
+            userState.packFreqDays = preSignupConfig.packFreqDays || 2;
             userState.hasConfiguredFirstGoal = preSignupConfig.hasConfiguredFirstGoal;
             userState.habitualCigsCustomized = preSignupConfig.habitualCigsCustomized;
             if (preSignupConfig.dailyRecords && Object.keys(preSignupConfig.dailyRecords).length > 0) {
               userState.dailyRecords = Object.assign({}, userState.dailyRecords, preSignupConfig.dailyRecords);
             }
+          }
+          if (preSignupConfig.pendingFirstCigarettePrompt) {
+            userState.pendingFirstCigarettePrompt = true;
           }
           userState.onboardingCompleted = true;
           savePersistedState();
@@ -10606,11 +10749,15 @@ document.addEventListener('DOMContentLoaded', () => {
         userState.todayMeta = preSignupConfig.todayMeta;
         userState.habitualCigs = preSignupConfig.habitualCigs;
         userState.packPrice = preSignupConfig.packPrice;
+        userState.packFreqDays = preSignupConfig.packFreqDays || 2;
         userState.hasConfiguredFirstGoal = preSignupConfig.hasConfiguredFirstGoal;
         userState.habitualCigsCustomized = preSignupConfig.habitualCigsCustomized;
         if (preSignupConfig.dailyRecords && Object.keys(preSignupConfig.dailyRecords).length > 0) {
           userState.dailyRecords = Object.assign({}, userState.dailyRecords, preSignupConfig.dailyRecords);
         }
+      }
+      if (preSignupConfig.pendingFirstCigarettePrompt) {
+        userState.pendingFirstCigarettePrompt = true;
       }
       userState.onboardingCompleted = true;
       savePersistedState();
@@ -10648,20 +10795,10 @@ document.addEventListener('DOMContentLoaded', () => {
       savePersistedState();
       refreshAllViews();
 
-      const curSess = loadActiveSession();
-      const isAlreadyAuthed = Boolean(userState.isAuthenticated && curSess && curSess.mode === 'account');
-
-      if (isAlreadyAuthed) {
-        // Usuário autenticado que completou a configuração pendente: segue direto para a Home!
-        userState.onboardingCompleted = true;
-        savePersistedState();
-        refreshAllViews();
-        showScreen(10);
-      } else {
-        // Novo usuário vindo pelo fluxo inicial: segue para Criar conta (Screen 24) antes da Home!
-        userState.authReturnScreen = 7;
-        showScreen(24);
-      }
+      userState.onboardingCompleted = true;
+      savePersistedState();
+      refreshAllViews();
+      showScreen(10);
     });
   }
   const btnMotivationsSubmit = document.getElementById('btn-motivations-submit');
@@ -12383,6 +12520,11 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(firstTimeTutorialTimer);
       firstTimeTutorialTimer = null;
     }
+    const guestModal = document.getElementById('habbi-guest-signup-modal');
+    const postRegModal = document.getElementById('habbi-post-signup-register-modal');
+    const isAnyModalOpen = (guestModal && guestModal.style.display !== 'none') || (postRegModal && postRegModal.style.display !== 'none');
+    if (isAnyModalOpen) return;
+
     const completedOnb = Boolean(userState.onboardingCompleted);
     const tutorialDone = Boolean(userState.tutorialCompleted);
     if (!tutorialDone && !window.habbiTutorialActive && (completedOnb || currentScreen === 10)) {
@@ -12391,7 +12533,10 @@ document.addEventListener('DOMContentLoaded', () => {
       firstTimeTutorialTimer = setTimeout(() => {
         firstTimeTutorialTimer = null;
         const stillNotDone = !Boolean(userState.tutorialCompleted);
-        if (!window.habbiTutorialActive && stillNotDone && currentScreen === 10) {
+        const gModalNow = document.getElementById('habbi-guest-signup-modal');
+        const pModalNow = document.getElementById('habbi-post-signup-register-modal');
+        const modalOpenNow = (gModalNow && gModalNow.style.display !== 'none') || (pModalNow && pModalNow.style.display !== 'none');
+        if (!window.habbiTutorialActive && stillNotDone && currentScreen === 10 && !modalOpenNow) {
           startInteractiveTutorial();
         }
       }, 500);
@@ -12403,7 +12548,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Overlays (menu Hub, objetivo, parâmetros) ficam fora das telas que deslizam:
   // um ancestral com transform quebraria o posicionamento/cliques deles.
-  ['wl-hub-menu-modal', 'wl-goal-modal-overlay', 'wl-sav-sheet-overlay'].forEach(id => {
+  ['wl-hub-menu-modal', 'wl-goal-modal-overlay', 'wl-sav-sheet-overlay', 'habbi-guest-signup-modal', 'habbi-post-signup-register-modal'].forEach(id => {
     const el = document.getElementById(id);
     const host = document.querySelector('.device-screen');
     if (el && host && el.parentElement !== host) host.appendChild(el);

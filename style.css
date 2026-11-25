@@ -2446,8 +2446,7 @@ textarea:focus-visible,
   .sequence-grid,
   .memory-grid,
   .memory-grid.grid-4x2,
-  .math-game-layout,
-  .reflex-board {
+  .math-game-layout {
     max-width: 248px !important;
   }
   .habbi-simon-grid,
@@ -2487,8 +2486,9 @@ textarea:focus-visible,
     height: 28px !important;
   }
   .reflex-board {
-    height: 270px !important;
-    min-height: 250px !important;
+    max-width: calc(100% - 4px) !important;
+    height: 330px !important;
+    min-height: 300px !important;
     border-radius: 16px !important;
   }
   .reflex-leaf-target {
@@ -2528,13 +2528,13 @@ textarea:focus-visible,
   }
 }
 
-/* Minigames Reflex Board (Consistente com largura de 280px) */
+/* Minigames Reflex Board (Área expandida com foco tátil e responsividade) */
 .reflex-board {
   position: relative;
   width: 100%;
-  height: 310px;
-  min-height: 290px;
-  max-width: 280px;
+  height: 380px;
+  min-height: 340px;
+  max-width: 350px;
   background-color: var(--card-bg, #FFFFFF);
   border: 1.5px solid var(--border-color, #E2E8F0);
   border-radius: 20px;
@@ -10739,7 +10739,7 @@ textarea:focus-visible,
 }
 
 .screen[data-screen="15"] #game-execution-panel {
-  padding: 6px 24px 20px;
+  padding: 4px 12px 14px;
   box-sizing: border-box;
 }
 

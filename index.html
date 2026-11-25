@@ -1332,6 +1332,30 @@
         </div>
       </div>
 
+      <!-- MODAL: CONVITE DE CADASTRO PARA VISITANTE AO REGISTRAR CIGARRO -->
+      <div id="habbi-guest-signup-modal" class="habbi-flat-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="habbi-guest-signup-title" onclick="if(event.target===this)closeGuestSignupModal()">
+        <div class="habbi-flat-modal-card" style="max-width:340px; padding:22px 20px;">
+          <h3 id="habbi-guest-signup-title" style="margin:0 0 8px; font-size:18px; font-weight:800; color:var(--text-primary); line-height:1.25;">Salve sua evolução</h3>
+          <p id="habbi-guest-signup-desc" style="margin:0 0 20px; font-size:14px; color:var(--text-secondary); line-height:1.45;">Crie sua conta para registrar seu consumo com segurança, acompanhar seu histórico diário e não perder suas conquistas.</p>
+          <div class="habbi-flat-modal-actions" style="display:flex; flex-direction:column; gap:10px;">
+            <button type="button" class="btn btn-primary habbi-modal-btn" id="btn-guest-signup-create" onclick="handleGuestSignupConfirm()">Criar conta</button>
+            <button type="button" class="btn btn-secondary habbi-modal-btn" id="btn-guest-signup-cancel" onclick="closeGuestSignupModal()">Continuar explorando</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: CONCLUIR REGISTRO DO CIGARRO APÓS CADASTRO -->
+      <div id="habbi-post-signup-register-modal" class="habbi-flat-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="habbi-post-signup-title" onclick="if(event.target===this)closePostSignupRegisterModal()">
+        <div class="habbi-flat-modal-card" style="max-width:340px; padding:22px 20px;">
+          <h3 id="habbi-post-signup-title" style="margin:0 0 8px; font-size:18px; font-weight:800; color:var(--text-primary); line-height:1.25;">Conta criada com sucesso!</h3>
+          <p id="habbi-post-signup-desc" style="margin:0 0 20px; font-size:14px; color:var(--text-secondary); line-height:1.45;">Deseja registrar o seu primeiro cigarro agora ou prefere deixar para depois?</p>
+          <div class="habbi-flat-modal-actions" style="display:flex; flex-direction:column; gap:10px;">
+            <button type="button" class="btn btn-primary habbi-modal-btn" id="btn-post-signup-add-now" onclick="handlePostSignupRegisterNow()">Registrar agora</button>
+            <button type="button" class="btn btn-secondary habbi-modal-btn" id="btn-post-signup-add-later" onclick="closePostSignupRegisterModal()">Depois</button>
+          </div>
+        </div>
+      </div>
+
       <!-- TUTORIAL INTERATIVO DE PRIMEIROS PASSOS -->
       <div class="habbi-tutorial-overlay" id="habbi-tutorial-overlay" style="display:none;" aria-live="polite">
         <div class="habbi-tutorial-spotlight" id="habbi-tutorial-spotlight"></div>
