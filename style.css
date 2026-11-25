@@ -1050,8 +1050,8 @@ p {
 }
 
 /* Accessible Auth Links & Checkbox Touch Targets (Screens 23 & 24) */
-.screen[data-screen="23"] a,
-.screen[data-screen="24"] a {
+.screen[data-screen="23"] a:not(.terms-link),
+.screen[data-screen="24"] a:not(.terms-link) {
   color: #166534 !important;
   font-weight: 700 !important;
   min-height: 44px;
@@ -1059,8 +1059,8 @@ p {
   align-items: center;
 }
 
-.screen[data-screen="23"] label,
-.screen[data-screen="24"] label {
+.screen[data-screen="23"] label:not(.form-label),
+.screen[data-screen="24"] label:not(.form-label):not(.register-terms-label) {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -11937,6 +11937,95 @@ button.btn-social-auth:disabled {
   background-color: var(--card-bg) !important;
   border-color: var(--border-color) !important;
 }
+
+/* ============================================================================
+   4. TERMOS DE USO E POLÍTICA DE PRIVACIDADE (TELA 24 - CADASTRO)
+   Alinhamento vertical preciso entre checkbox e texto, quebra natural e
+   coesa, sem palavras isoladas ou espaços exagerados entre os links.
+   Área de toque acessível (WCAG 2.2 AA) e links no verde oficial do Habbi.
+   ============================================================================ */
+.register-terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+}
+
+.register-terms-checkbox {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 1px 0 0 0;
+  accent-color: var(--primary, #6CCB4F);
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.screen[data-screen="24"] label.register-terms-label,
+label.register-terms-label {
+  display: block !important;
+  min-height: unset !important;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: 500;
+  line-height: 1.45;
+  text-align: left;
+  margin: 0;
+  flex: 1;
+}
+
+.device-screen.dark-theme label.register-terms-label {
+  color: var(--text-secondary, #9CA3AF) !important;
+}
+
+.terms-link,
+.screen[data-screen="24"] a.terms-link {
+  min-height: unset !important;
+  height: auto !important;
+  display: inline !important;
+  color: var(--primary, #6CCB4F) !important;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: text-decoration 0.15s ease;
+}
+
+.terms-link:hover,
+.screen[data-screen="24"] a.terms-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.device-screen.dark-theme .terms-link,
+.device-screen.dark-theme .screen[data-screen="24"] a.terms-link {
+  color: #A8E67A !important;
+}
+
+@media (max-width: 340px) {
+  .register-terms-row {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .register-terms-checkbox {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    min-height: 17px;
+    margin-top: 1px;
+  }
+  .screen[data-screen="24"] label.register-terms-label,
+  label.register-terms-label {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+}
+
 
 
 
